@@ -1,10 +1,8 @@
 package com.evry.fruktkorgpersistence;
 
-import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
-import java.io.File;
 import java.util.List;
 
 public class FruktkorgTest {
@@ -21,14 +18,14 @@ public class FruktkorgTest {
     private static Configuration config;
     private static SessionFactory factory;
     private static Session hibernateSession;
-    private EntityManager em;
+    private static EntityManager em;
 
     @BeforeAll
-    public void init() {
-        config = new AnnotationConfiguration();
-        config.configure(new File("hibernate-test.cfg.xml"));
-        factory = config.buildSessionFactory();
-        hibernateSession = factory.openSession();
+    public static void init() {
+//        config = new AnnotationConfiguration();
+//        config.configure(new File("hibernate-test.cfg.xml"));
+//        factory = config.buildSessionFactory();
+//        hibernateSession = factory.openSession();
         em = Persistence.createEntityManagerFactory("test").createEntityManager();
     }
 
