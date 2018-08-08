@@ -1,6 +1,9 @@
 package com.evry.fruktkorg.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "fruktkorg")
@@ -14,10 +17,22 @@ public class Fruktkorg {
     @Column(name = "name")
     private String name;
 
+    @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Frukt> fruktList;
+
     public Fruktkorg() {}
 
     public Fruktkorg(String name) {
         this.name = name;
+    }
+
+    public List<Frukt> getFruktList() {
+        return fruktList;
+    }
+
+    public void setFruktList(List<Frukt> fruktList) {
+        this.fruktList = fruktList;
     }
 
     public long getId() {
