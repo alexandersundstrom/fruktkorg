@@ -1,12 +1,10 @@
-package com.evry.fruktkorg.persistence;
+package com.evry.fruktkorgpersistence;
 
-import com.evry.fruktkorg.model.Fruktkorg;
-import org.springframework.stereotype.Service;
+import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service
 public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
 
@@ -18,5 +16,11 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     @Transactional
     public List<Fruktkorg> listFruktkorg() {
         return fruktkorgDAO.listFruktkorg();
+    }
+
+    @Override
+    @Transactional
+    public List<Fruktkorg> findFruktkorgByFrukt() {
+        return fruktkorgDAO.findFruktkorgByFrukt();
     }
 }

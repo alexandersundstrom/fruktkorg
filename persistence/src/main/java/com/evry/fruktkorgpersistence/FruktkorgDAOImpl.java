@@ -1,14 +1,13 @@
-package com.evry.fruktkorg.persistence;
+package com.evry.fruktkorgpersistence;
 
-import com.evry.fruktkorg.model.Fruktkorg;
-import org.springframework.stereotype.Repository;
+
+import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
-@Repository
 public class FruktkorgDAOImpl implements FruktkorgDAO {
 
     @PersistenceContext
@@ -19,5 +18,13 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
         CriteriaQuery<Fruktkorg> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Fruktkorg.class);
         criteriaQuery.from(Fruktkorg.class);
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<Fruktkorg> findFruktkorgByFrukt() {
+        return entityManager
+                .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f USING(fruktkorg_id) WHERE f.type = :fruktType", Fruktkorg.class)
+                .setParameter("fruktType", "banan")
+                .getResultList();
     }
 }

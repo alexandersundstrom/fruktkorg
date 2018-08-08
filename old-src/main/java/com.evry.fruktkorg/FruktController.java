@@ -41,6 +41,6 @@ public class FruktController {
     @GetMapping("/find-fruktkorg")
     @ResponseBody
     public ResponseEntity<JsonNode> findFruktkorg() {
-        return null;
+        return JS.message(HttpStatus.OK, fruktkorgService.findFruktkorgByFrukt());
     }
 }

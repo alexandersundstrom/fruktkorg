@@ -1,4 +1,4 @@
-package com.evry.fruktkorg.model;
+package com.evry.fruktkorgpersistence.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 

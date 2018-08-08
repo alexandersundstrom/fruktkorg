@@ -58,11 +58,6 @@ public class JPAConfig {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-//    @Bean
-//    public HibernateJpaSessionFactoryBean sessionFactory() {
-//        return new HibernateJpaSessionFactoryBean();
-//    }
-
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty(
