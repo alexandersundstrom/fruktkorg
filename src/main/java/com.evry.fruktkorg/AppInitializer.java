@@ -1,5 +1,6 @@
 package com.evry.fruktkorg;
 
+import com.evry.fruktkorg.config.WebConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {

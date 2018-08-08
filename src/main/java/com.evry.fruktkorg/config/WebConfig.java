@@ -1,4 +1,4 @@
-package com.evry.fruktkorg;
+package com.evry.fruktkorg.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
