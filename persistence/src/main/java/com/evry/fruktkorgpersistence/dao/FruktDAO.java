@@ -9,7 +9,7 @@ public interface FruktDAO {
     void setEntityManager(EntityManager entityManager);
 
     void persist(Frukt frukt);
-    void remove(Frukt frukt);
+    void remove(long fruktId);
     Frukt merge(Frukt frukt);
     void refresh(Frukt frukt);
 

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
+import java.util.Optional;
 
 public class FruktkorgDAOImpl implements FruktkorgDAO {
 
@@ -59,5 +60,18 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
         CriteriaQuery<Fruktkorg> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Fruktkorg.class);
         criteriaQuery.from(Fruktkorg.class);
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<Fruktkorg> findFruktkorgByFrukt() {
+        return entityManager
+                .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f USING(fruktkorg_id) WHERE f.type = :fruktType", Fruktkorg.class)
+                .setParameter("fruktType", "banan")
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Fruktkorg> findFruktkorgById(long fruktkorgId) {
+        return Optional.ofNullable(entityManager.find(Fruktkorg.class, fruktkorgId));
     }
 }
