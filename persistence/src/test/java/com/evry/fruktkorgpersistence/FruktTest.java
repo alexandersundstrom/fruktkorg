@@ -6,10 +6,6 @@ import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgpersistence.service.FruktService;
-import com.evry.fruktkorgpersistence.service.FruktServiceImpl;
-import com.evry.fruktkorgpersistence.service.FruktkorgService;
-import com.evry.fruktkorgpersistence.service.FruktkorgServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,77 +15,73 @@ import javax.persistence.Persistence;
 
 public class FruktTest {
 
-    private static FruktkorgService fruktkorgService;
-    private static FruktService fruktService;
+    private static FruktkorgDAO fruktkorgDAO; 
+    private static FruktDAO fruktDAO;
 
     @BeforeEach
     public void init() {
         EntityManager entityManager = Persistence.createEntityManagerFactory("test").createEntityManager();
 
-        FruktkorgDAO fruktkorgDAO = new FruktkorgDAOImpl();
+        fruktkorgDAO = new FruktkorgDAOImpl();
         fruktkorgDAO.setEntityManager(entityManager);
-
-        fruktkorgService = new FruktkorgServiceImpl(fruktkorgDAO);
-
-        FruktDAO fruktDAO = new FruktDAOImpl();
+        
+        fruktDAO = new FruktDAOImpl();
         fruktDAO.setEntityManager(entityManager);
-
-        fruktService = new FruktServiceImpl(fruktDAO);
     }
 
     @Test
-    public void saveFruktAndRead() {
+    public void saveAndReadFrukt() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
-        fruktkorgService.persist(fruktkorg);
+        fruktkorgDAO.persist(fruktkorg);
 
-        Frukt frukt = new Frukt("äpple", 3, fruktkorg);
+        Frukt frukt = new Frukt("Äpple", 3, fruktkorg);
 
-        fruktService.persist(frukt);
-        fruktkorgService.refresh(fruktkorg);
+        fruktDAO.persist(frukt);
+        fruktkorgDAO.refresh(fruktkorg);
 
-        Assertions.assertEquals(1, fruktService.listFrukt().size());
-        Assertions.assertEquals(1, fruktkorgService.listFruktkorg().size());
-        Assertions.assertEquals(1, fruktkorgService.listFruktkorg().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
+        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
+        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorg().size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorg().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
     }
 
     @Test
-    public void saveFruktAndReadEdit() {
+    public void saveReadAndEditFrukt() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
-        fruktkorgService.persist(fruktkorg);
+        fruktkorgDAO.persist(fruktkorg);
 
-        Frukt frukt = new Frukt("äpple", 3, fruktkorg);
+        Frukt frukt = new Frukt("Äpple", 3, fruktkorg);
 
-        fruktService.persist(frukt);
+        fruktDAO.persist(frukt);
 
-        Assertions.assertEquals(1, fruktService.listFrukt().size());
+        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
 
         frukt.setAmount(2);
 
-        fruktService.merge(frukt);
+        fruktDAO.merge(frukt);
 
-        Assertions.assertEquals(1, fruktService.listFrukt().size());
-        Assertions.assertEquals(2, fruktService.listFrukt().get(0).getAmount());
+        Assertions.assertEquals(1, fruktDAO.listFrukt().size(),"Should return 1 frukt");
+        Assertions.assertEquals(2, fruktDAO.listFrukt().get(0).getAmount(), "Amount of Äpplen should be 2");
     }
 
     @Test
     public void moveFruktToAnotherFruktkorg() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
-        fruktkorgService.persist(fruktkorg);
+        fruktkorgDAO.persist(fruktkorg);
 
-        Frukt frukt = new Frukt("äpple", 3, fruktkorg);
+        Frukt frukt = new Frukt("Äpple", 3, fruktkorg);
 
-        fruktService.persist(frukt);
+        fruktDAO.persist(frukt);
 
-        Assertions.assertEquals(1, fruktService.listFrukt().size());
+        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
 
         Fruktkorg fruktkorg2 = new Fruktkorg("Test Korg 2");
-        fruktkorgService.persist(fruktkorg2);
+        fruktkorgDAO.persist(fruktkorg2);
 
         frukt.setFruktkorg(fruktkorg2);
 
-        fruktService.merge(frukt);
+        fruktDAO.merge(frukt);
 
-        Assertions.assertEquals(1, fruktService.listFrukt().size());
-        Assertions.assertEquals(fruktkorg2.getId(), fruktService.listFrukt().get(0).getFruktkorg().getId());
+        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
+        Assertions.assertEquals(fruktkorg2.getId(), fruktDAO.listFrukt().get(0).getFruktkorg().getId(), "Fruktkorg should have changed");
     }
 }
