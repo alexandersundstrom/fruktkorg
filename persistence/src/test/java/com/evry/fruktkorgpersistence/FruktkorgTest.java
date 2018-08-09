@@ -13,10 +13,14 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import java.util.List;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class FruktkorgTest {
     private static FruktkorgDAO fruktkorgDAO;
     private static FruktDAO fruktDAO;
+    private static final Logger logger = LogManager.getLogger(FruktkorgTest.class);
 
     @BeforeEach
     public void init() {
