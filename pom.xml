@@ -10,6 +10,7 @@
 
     <modules>
         <module>persistence</module>
+        <module>service</module>
     </modules>
 
 </project>
