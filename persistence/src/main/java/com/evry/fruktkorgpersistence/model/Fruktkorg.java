@@ -48,9 +48,16 @@ public class Fruktkorg {
         return name;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Fruktkorg{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", fruktList=" + fruktList +
+                '}';
+    }
 }

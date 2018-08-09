@@ -63,4 +63,14 @@ public class Frukt {
     public void setFruktkorg(Fruktkorg fruktkorg) {
         this.fruktkorg = fruktkorg;
     }
+
+    @Override
+    public String toString() {
+        return "Frukt{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", amount=" + amount +
+                ", fruktkorg=" + fruktkorg +
+                '}';
+    }
 }

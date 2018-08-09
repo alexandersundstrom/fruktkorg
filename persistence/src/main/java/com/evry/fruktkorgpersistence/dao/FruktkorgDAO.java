@@ -13,6 +13,5 @@ public interface FruktkorgDAO {
     void refresh(Fruktkorg fruktkorg);
 
     List<Fruktkorg> listFruktkorg();
-    List<Fruktkorg> findFruktkorgByFrukt();
     void setEntityManager(EntityManager entityManager);
 }
