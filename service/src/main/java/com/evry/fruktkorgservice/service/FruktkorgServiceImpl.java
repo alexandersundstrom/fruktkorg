@@ -2,8 +2,8 @@ package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
-
-import java.util.List;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.utils.ModelUtils;
 
 public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
@@ -13,37 +13,18 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public List<Fruktkorg> listFruktkorg() {
-        return fruktkorgDAO.listFruktkorg();
-    }
+    public ImmutableFruktkorg createFruktkorg(ImmutableFruktkorg immutableFruktkorg) {
+        // TODO add null id validation
 
-    @Override
-    public List<Fruktkorg> findFruktkorgByFrukt() {
-        return fruktkorgDAO.findFruktkorgByFrukt();
-    }
+        Fruktkorg fruktkorg = ModelUtils.convertImmutableFruktkorg(immutableFruktkorg);
 
-    @Override
-    public void persist(Fruktkorg fruktkorg) {
         fruktkorgDAO.persist(fruktkorg);
+
+        return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
     @Override
-    public void remove(Fruktkorg fruktkorg) {
-        remove(fruktkorg.getId());
-    }
-
-    @Override
-    public void remove(long fruktkorgId) {
+    public void deleteFruktkorg(long fruktkorgId) {
         fruktkorgDAO.remove(fruktkorgId);
-    }
-
-    @Override
-    public Fruktkorg merge(Fruktkorg fruktkorg) {
-        return fruktkorgDAO.merge(fruktkorg);
-    }
-
-    @Override
-    public void refresh(Fruktkorg fruktkorg) {
-        fruktkorgDAO.refresh(fruktkorg);
     }
 }
