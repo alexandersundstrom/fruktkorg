@@ -14,6 +14,40 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     private EntityManager entityManager;
 
     @Override
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public void persist(Fruktkorg fruktkorg) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(fruktkorg);
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public void remove(long fruktkorgId) {
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("DELETE FROM fruktkorg WHERE fruktkorg_id = :fruktkorgId")
+                .setParameter("fruktkorgId", fruktkorgId)
+                .executeUpdate();
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public Fruktkorg merge(Fruktkorg fruktkorg) {
+        entityManager.getTransaction().begin();
+        Fruktkorg mergedFruktkorg = entityManager.merge(fruktkorg);
+        entityManager.getTransaction().commit();
+        return mergedFruktkorg;
+    }
+
+    @Override
+    public void refresh(Fruktkorg fruktkorg) {
+        entityManager.refresh(fruktkorg);
+    }
+
+    @Override
     public List<Fruktkorg> listFruktkorg() {
         CriteriaQuery<Fruktkorg> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Fruktkorg.class);
         criteriaQuery.from(Fruktkorg.class);

@@ -2,7 +2,6 @@ package com.evry.fruktkorgpersistence;
 
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public class FruktkorgServiceImpl implements FruktkorgService {
@@ -13,14 +12,37 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    @Transactional
     public List<Fruktkorg> listFruktkorg() {
         return fruktkorgDAO.listFruktkorg();
     }
 
     @Override
-    @Transactional
     public List<Fruktkorg> findFruktkorgByFrukt() {
         return fruktkorgDAO.findFruktkorgByFrukt();
+    }
+
+    @Override
+    public void persist(Fruktkorg fruktkorg) {
+        fruktkorgDAO.persist(fruktkorg);
+    }
+
+    @Override
+    public void remove(Fruktkorg fruktkorg) {
+        remove(fruktkorg.getId());
+    }
+
+    @Override
+    public void remove(long fruktkorgId) {
+        fruktkorgDAO.remove(fruktkorgId);
+    }
+
+    @Override
+    public Fruktkorg merge(Fruktkorg fruktkorg) {
+        return fruktkorgDAO.merge(fruktkorg);
+    }
+
+    @Override
+    public void refresh(Fruktkorg fruktkorg) {
+        fruktkorgDAO.refresh(fruktkorg);
     }
 }

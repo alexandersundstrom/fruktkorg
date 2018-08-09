@@ -3,6 +3,7 @@ package com.evry.fruktkorgpersistence.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,9 +18,9 @@ public class Fruktkorg {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Frukt> fruktList;
+    private List<Frukt> fruktList = new ArrayList<>();
 
     public Fruktkorg() {}
 
