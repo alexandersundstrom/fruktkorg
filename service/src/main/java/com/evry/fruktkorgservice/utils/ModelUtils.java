@@ -13,6 +13,7 @@ public class ModelUtils {
                 .setId(frukt.getId())
                 .setType(frukt.getType())
                 .setAmount(frukt.getAmount())
+                .setFruktkorgId(frukt.getFruktkorg().getId())
                 .createImmutableFrukt();
     }
 

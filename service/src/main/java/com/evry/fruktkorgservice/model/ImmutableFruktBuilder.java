@@ -4,6 +4,7 @@ public class ImmutableFruktBuilder {
     private long id;
     private String type;
     private int amount;
+    private long fruktkorgId;
 
     public ImmutableFruktBuilder setId(long id) {
         this.id = id;
@@ -20,7 +21,12 @@ public class ImmutableFruktBuilder {
         return this;
     }
 
+    public ImmutableFruktBuilder setFruktkorgId(long fruktkorgId) {
+        this.fruktkorgId = fruktkorgId;
+        return this;
+    }
+
     public ImmutableFrukt createImmutableFrukt() {
-        return new ImmutableFrukt(id, type, amount);
+        return new ImmutableFrukt(id, type, amount, fruktkorgId);
     }
 }

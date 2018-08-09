@@ -1,7 +1,9 @@
 package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
+import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 
@@ -26,5 +28,19 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     @Override
     public void deleteFruktkorg(long fruktkorgId) {
         fruktkorgDAO.remove(fruktkorgId);
+    }
+
+    @Override
+    public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) {
+        Fruktkorg fruktkorg = fruktkorgDAO.findFruktkorgById(immutableFrukt.getFruktkorgId());
+
+        Frukt fruktToAdd = ModelUtils.convertImmutableFrukt(immutableFrukt);
+        fruktToAdd.setFruktkorg(fruktkorg);
+
+        fruktkorg.getFruktList().add(fruktToAdd);
+
+        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+
+        return ModelUtils.convertFruktkorg(fruktkorg);
     }
 }
