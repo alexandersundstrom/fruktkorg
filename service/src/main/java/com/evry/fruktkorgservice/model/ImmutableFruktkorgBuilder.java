@@ -1,12 +1,13 @@
 package com.evry.fruktkorgservice.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ImmutableFruktkorgBuilder {
     private long id;
     private String name;
-    private List<ImmutableFrukt> fruktList;
+    private List<ImmutableFrukt> fruktList = new ArrayList<>();
 
     public ImmutableFruktkorgBuilder setId(long id) {
         this.id = id;
