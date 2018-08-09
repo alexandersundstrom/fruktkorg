@@ -1,4 +1,4 @@
-package com.evry.fruktkorgpersistence.service;
+package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
