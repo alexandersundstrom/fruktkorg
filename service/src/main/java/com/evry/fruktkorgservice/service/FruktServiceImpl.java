@@ -1,9 +1,6 @@
 package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.utils.ModelUtils;
 
 public class FruktServiceImpl implements FruktService {
     private FruktDAO fruktDAO;
@@ -14,6 +11,6 @@ public class FruktServiceImpl implements FruktService {
 
     @Override
     public void deleteFrukt(long fruktId) {
-
+        fruktDAO.remove(fruktId);
     }
 }

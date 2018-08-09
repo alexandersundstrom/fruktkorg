@@ -5,6 +5,7 @@ import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public interface FruktkorgDAO {
     void persist(Fruktkorg fruktkorg);
@@ -14,5 +15,8 @@ public interface FruktkorgDAO {
 
     List<Fruktkorg> listFruktkorg();
     List<Fruktkorg> findFruktkorgByFrukt();
+
+    Optional<Fruktkorg> findFruktkorgById(long fruktkorgId);
+
     void setEntityManager(EntityManager entityManager);
 }

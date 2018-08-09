@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
+import java.util.Optional;
 
 public class FruktkorgDAOImpl implements FruktkorgDAO {
 
@@ -60,5 +61,10 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
                 .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f USING(fruktkorg_id) WHERE f.type = :fruktType", Fruktkorg.class)
                 .setParameter("fruktType", "banan")
                 .getResultList();
+    }
+
+    @Override
+    public Optional<Fruktkorg> findFruktkorgById(long fruktkorgId) {
+        return Optional.ofNullable(entityManager.find(Fruktkorg.class, fruktkorgId));
     }
 }

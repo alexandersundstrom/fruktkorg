@@ -24,9 +24,9 @@ public class FruktDAOImpl implements FruktDAO {
     }
 
     @Override
-    public void remove(Frukt frukt) {
+    public void remove(long fruktId) {
         entityManager.getTransaction().begin();
-        entityManager.remove(frukt);
+        entityManager.remove(fruktId);
         entityManager.getTransaction().commit();
     }
 

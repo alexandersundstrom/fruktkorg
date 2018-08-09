@@ -7,6 +7,8 @@ import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 
+import java.util.Optional;
+
 public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
 
@@ -32,7 +34,13 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
     @Override
     public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) {
-        Fruktkorg fruktkorg = fruktkorgDAO.findFruktkorgById(immutableFrukt.getFruktkorgId());
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(immutableFrukt.getFruktkorgId());
+
+        if(!optFruktkorg.isPresent()) {
+            // TODO handle not found exception
+        }
+
+        Fruktkorg fruktkorg = optFruktkorg.get();
 
         Frukt fruktToAdd = ModelUtils.convertImmutableFrukt(immutableFrukt);
         fruktToAdd.setFruktkorg(fruktkorg);
