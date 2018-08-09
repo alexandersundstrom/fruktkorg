@@ -1,4 +1,4 @@
-package com.evry.fruktkorgpersistence;
+package com.evry.fruktkorgpersistence.service;
 
 
 import com.evry.fruktkorgpersistence.model.Fruktkorg;

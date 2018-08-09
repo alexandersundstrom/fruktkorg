@@ -1,5 +1,6 @@
-package com.evry.fruktkorgpersistence;
+package com.evry.fruktkorgpersistence.service;
 
+import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
 import java.util.List;

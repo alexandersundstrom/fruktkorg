@@ -1,7 +1,15 @@
 package com.evry.fruktkorgpersistence;
 
+import com.evry.fruktkorgpersistence.dao.FruktDAO;
+import com.evry.fruktkorgpersistence.dao.FruktDAOImpl;
+import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
+import com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgpersistence.service.FruktService;
+import com.evry.fruktkorgpersistence.service.FruktServiceImpl;
+import com.evry.fruktkorgpersistence.service.FruktkorgService;
+import com.evry.fruktkorgpersistence.service.FruktkorgServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,15 +39,16 @@ public class FruktkorgTest {
 
     @Test
     public void saveFruktkorgAndRead() {
+        final String NAME = "Test korg";
         Fruktkorg fruktkorg = new Fruktkorg();
-        fruktkorg.setName("Test korg");
+        fruktkorg.setName(NAME);
 
         fruktkorgService.persist(fruktkorg);
 
         List<Fruktkorg> fruktkorgar = fruktkorgService.listFruktkorg();
 
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( "Test korg", fruktkorgar.get(0).getName());
+        Assertions.assertEquals( NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
         Assertions.assertEquals(1, fruktkorg.getId());
         Assertions.assertEquals(fruktkorg.getId(), fruktkorgar.get(0).getId());
     }
