@@ -45,7 +45,6 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     }
 
     @Override
-//    @Transactional
     public void remove(long fruktkorgId) {
         logger.info("Removing Fruktkorg with id: " + fruktkorgId);
         EntityManager entityManager = getEntityManager();
@@ -55,6 +54,12 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
                 .setParameter("fruktkorgId", fruktkorgId)
                 .executeUpdate();
         entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public void remove(Fruktkorg fruktkorg) {
+        getEntityManager().detach(fruktkorg);
+        remove(fruktkorg.getId());
     }
 
     @Override

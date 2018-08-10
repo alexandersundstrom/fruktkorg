@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface FruktkorgDAO {
     void persist(Fruktkorg fruktkorg);
     void remove(long fruktkorgId);
+    void remove(Fruktkorg fruktkorg);
     Fruktkorg merge(Fruktkorg fruktkorg);
     void refresh(Fruktkorg fruktkorg);
 

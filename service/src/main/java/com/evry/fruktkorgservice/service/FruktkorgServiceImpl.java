@@ -31,7 +31,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
     @Override
     public void deleteFruktkorg(long fruktkorgId) throws FruktkorgMissingException, IllegalArgumentException {
-        fruktkorgDAO.remove(getFruktkorgById(fruktkorgId).getId());
+        fruktkorgDAO.remove(findFruktkorgById(fruktkorgId));
     }
 
     @Override
@@ -102,12 +102,15 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
     @Override
     public ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
+        return ModelUtils.convertFruktkorg(findFruktkorgById(fruktkorgId));
+    }
+
+    private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         validateId(fruktkorgId);
 
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
 
         return optFruktkorg
-                .map(ModelUtils::convertFruktkorg)
                 .orElseThrow(() -> new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgId, fruktkorgId));
     }
 
