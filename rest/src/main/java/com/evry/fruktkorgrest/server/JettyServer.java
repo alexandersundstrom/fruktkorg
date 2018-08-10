@@ -7,15 +7,10 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.Servlet;
-import javax.servlet.http.HttpServlet;
 
 public class JettyServer {
     private Server server;
     private ServletHandler servletHandler;
-
-    public void init() {
-        init(8080);
-    }
 
     public void init(int port) {
         server = new Server();
@@ -29,10 +24,6 @@ public class JettyServer {
     public void start() throws Exception {
         server.start();
         server.join();
-    }
-
-    public void registerServlet(Class<? extends HttpServlet> servletClass, String url) {
-        servletHandler.addServletWithMapping(servletClass, url);
     }
 
     public void registerServlet(Servlet servlet, String url) {

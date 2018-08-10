@@ -13,7 +13,6 @@ public class App {
         JettyServer jettyServer = new JettyServer();
 
         jettyServer.init(8080);
-//        jettyServer.registerServlet(FruktkorgServlet.class, "/*");
         jettyServer.registerServlet((Servlet)context.getBean("fruktkorgServlet"), "/*");
         jettyServer.start();
     }
