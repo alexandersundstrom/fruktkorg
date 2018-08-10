@@ -5,24 +5,37 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class FruktDAOImpl implements FruktDAO {
-    @PersistenceContext
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
     private EntityManager entityManager;
 
     private static final Logger logger = LogManager.getLogger(FruktDAOImpl.class);
 
+    private EntityManager getEntityManager() {
+        if (entityManager == null) {
+            entityManager = entityManagerFactory.createEntityManager();
+        }
+
+        return entityManager;
+    }
+
     @Override
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public void persist(Frukt frukt) {
         logger.debug("Persisting Frukt: " + frukt);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         entityManager.persist(frukt);
         entityManager.getTransaction().commit();
@@ -31,6 +44,8 @@ public class FruktDAOImpl implements FruktDAO {
     @Override
     public void remove(long fruktId) {
         logger.info("Removing frukt with id: " + fruktId);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         entityManager.remove(fruktId);
         entityManager.getTransaction().commit();
@@ -39,6 +54,8 @@ public class FruktDAOImpl implements FruktDAO {
     @Override
     public Frukt merge(Frukt frukt) {
         logger.debug("Merging Frukt: " + frukt);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         Frukt mergedFrukt = entityManager.merge(frukt);
         entityManager.getTransaction().commit();
@@ -47,12 +64,14 @@ public class FruktDAOImpl implements FruktDAO {
 
     @Override
     public void refresh(Frukt frukt) {
-        entityManager.refresh(frukt);
+        getEntityManager().refresh(frukt);
     }
 
     @Override
     public List<Frukt> listFrukt() {
         logger.debug("Fetching all Frukt");
+        EntityManager entityManager = getEntityManager();
+
         CriteriaQuery<Frukt> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Frukt.class);
         criteriaQuery.from(Frukt.class);
         return entityManager.createQuery(criteriaQuery).getResultList();

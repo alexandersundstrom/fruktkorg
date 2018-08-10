@@ -2,11 +2,11 @@ package com.evry.fruktkorgpersistence.dao;
 
 import com.evry.fruktkorgpersistence.model.Frukt;
 
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 public interface FruktDAO {
-    void setEntityManager(EntityManager entityManager);
+    void setEntityManagerFactory(EntityManagerFactory entityManagerFactory);
 
     void persist(Frukt frukt);
     void remove(long fruktId);

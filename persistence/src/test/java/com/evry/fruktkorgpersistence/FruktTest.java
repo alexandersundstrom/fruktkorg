@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class FruktTest {
@@ -20,13 +20,13 @@ public class FruktTest {
 
     @BeforeEach
     public void init() {
-        EntityManager entityManager = Persistence.createEntityManagerFactory("test").createEntityManager();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
         fruktkorgDAO = new FruktkorgDAOImpl();
-        fruktkorgDAO.setEntityManager(entityManager);
+        fruktkorgDAO.setEntityManagerFactory(entityManagerFactory);
         
         fruktDAO = new FruktDAOImpl();
-        fruktDAO.setEntityManager(entityManager);
+        fruktDAO.setEntityManagerFactory(entityManagerFactory);
     }
 
     @Test

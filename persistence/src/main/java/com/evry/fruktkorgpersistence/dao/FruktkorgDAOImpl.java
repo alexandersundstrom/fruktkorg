@@ -6,33 +6,50 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
 public class FruktkorgDAOImpl implements FruktkorgDAO {
 
-    @PersistenceContext
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
     private EntityManager entityManager;
+
     private static final Logger logger = LogManager.getLogger(FruktkorgDAOImpl.class);
 
+    private EntityManager getEntityManager() {
+        if (entityManager == null) {
+            entityManager = entityManagerFactory.createEntityManager();
+        }
+
+        return entityManager;
+    }
+
     @Override
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public void persist(Fruktkorg fruktkorg) {
         logger.debug("Persisting Fruktkorg: " + fruktkorg);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         entityManager.persist(fruktkorg);
         entityManager.getTransaction().commit();
     }
 
     @Override
+//    @Transactional
     public void remove(long fruktkorgId) {
         logger.info("Removing Fruktkorg with id: " + fruktkorgId);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("DELETE FROM fruktkorg WHERE fruktkorg_id = :fruktkorgId")
                 .setParameter("fruktkorgId", fruktkorgId)
@@ -43,6 +60,8 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     @Override
     public Fruktkorg merge(Fruktkorg fruktkorg) {
         logger.debug("Merging Fruktkorg: " + fruktkorg);
+        EntityManager entityManager = getEntityManager();
+
         entityManager.getTransaction().begin();
         Fruktkorg mergedFruktkorg = entityManager.merge(fruktkorg);
         entityManager.getTransaction().commit();
@@ -51,12 +70,14 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
 
     @Override
     public void refresh(Fruktkorg fruktkorg) {
-        entityManager.refresh(fruktkorg);
+        getEntityManager().refresh(fruktkorg);
     }
 
     @Override
     public List<Fruktkorg> listFruktkorg() {
         logger.debug("Fetching all Fruktkorgar");
+        EntityManager entityManager = getEntityManager();
+
         CriteriaQuery<Fruktkorg> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Fruktkorg.class);
         criteriaQuery.from(Fruktkorg.class);
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -64,7 +85,7 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
 
     @Override
     public List<Fruktkorg> findFruktkorgByFrukt() {
-        return entityManager
+        return getEntityManager()
                 .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f USING(fruktkorg_id) WHERE f.type = :fruktType", Fruktkorg.class)
                 .setParameter("fruktType", "banan")
                 .getResultList();
@@ -72,6 +93,6 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
 
     @Override
     public Optional<Fruktkorg> findFruktkorgById(long fruktkorgId) {
-        return Optional.ofNullable(entityManager.find(Fruktkorg.class, fruktkorgId));
+        return Optional.ofNullable(getEntityManager().find(Fruktkorg.class, fruktkorgId));
     }
 }

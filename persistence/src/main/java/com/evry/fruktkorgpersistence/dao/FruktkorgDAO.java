@@ -3,7 +3,7 @@ package com.evry.fruktkorgpersistence.dao;
 
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +18,5 @@ public interface FruktkorgDAO {
 
     Optional<Fruktkorg> findFruktkorgById(long fruktkorgId);
 
-    void setEntityManager(EntityManager entityManager);
+    void setEntityManagerFactory(EntityManagerFactory entityManagerFactory);
 }
