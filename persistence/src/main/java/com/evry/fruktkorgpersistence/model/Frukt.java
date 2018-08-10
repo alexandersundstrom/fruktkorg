@@ -70,7 +70,7 @@ public class Frukt {
                 "id=" + id +
                 ", type='" + type + '\'' +
                 ", amount=" + amount +
-                ", fruktkorg=" + fruktkorg +
+                ", fruktkorg=" + fruktkorg.getName() +
                 '}';
     }
 }
