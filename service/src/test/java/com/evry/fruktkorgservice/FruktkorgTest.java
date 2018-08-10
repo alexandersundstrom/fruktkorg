@@ -3,6 +3,7 @@ package com.evry.fruktkorgservice;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
@@ -162,5 +163,67 @@ class FruktkorgTest {
         Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
         Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
         Assertions.assertEquals(7, persistedFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 7" );
+    }
+
+    @Test
+    void removeSomeFruktFromFruktkorg() throws FruktkorgMissingException, FruktMissingException {
+        Fruktkorg returnFruktkorg = new Fruktkorg();
+        returnFruktkorg.setName("Korg");
+        returnFruktkorg.setId(1);
+
+        Frukt returnFrukt = new Frukt("banan", 5, returnFruktkorg);
+        returnFrukt.setId(1);
+        returnFruktkorg.getFruktList().add(returnFrukt);
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+
+        ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 3);
+
+        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one" );
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg" );
+        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
+        Assertions.assertEquals(2, immutableFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 2" );
+    }
+
+    @Test
+    void removeAllFruktFromFruktkorg() throws FruktkorgMissingException, FruktMissingException {
+        Fruktkorg returnFruktkorg = new Fruktkorg();
+        returnFruktkorg.setName("Korg");
+        returnFruktkorg.setId(1);
+
+        Frukt returnFrukt = new Frukt("banan", 5, returnFruktkorg);
+        returnFrukt.setId(1);
+        returnFruktkorg.getFruktList().add(returnFrukt);
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+
+        ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
+
+        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one" );
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg" );
+        Assertions.assertEquals(0, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
+    }
+
+    @Test
+    void removeMissingFruktFromFruktkorg() {
+        Fruktkorg returnFruktkorg = new Fruktkorg();
+        returnFruktkorg.setName("Korg");
+        returnFruktkorg.setId(1);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+
+        Assertions.assertThrows(FruktMissingException.class, () -> {
+            fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
+        });
+    }
+
+    @Test
+    void removeFruktFromMissingFruktkorg() {
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(FruktkorgMissingException.class, () -> {
+            fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
+        });
     }
 }

@@ -3,6 +3,7 @@ package com.evry.fruktkorgservice.service;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
@@ -38,7 +39,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
 
         if(!optFruktkorg.isPresent()) {
-            throw new FruktkorgMissingException("Fruktkorg with id: " + fruktkorgId + " not found");
+            throw new FruktkorgMissingException("Fruktkorg with id: " + fruktkorgId + " not found", fruktkorgId);
         }
 
         Fruktkorg fruktkorg = optFruktkorg.get();
@@ -51,11 +52,47 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             if(frukt.getType().equals(fruktToAdd.getType())) {
                 frukt.setAmount(frukt.getAmount() + fruktToAdd.getAmount());
                 foundFrukt = true;
+                break;
             }
         }
 
         if(!foundFrukt) {
             fruktkorg.getFruktList().add(fruktToAdd);
+        }
+
+        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+
+        return ModelUtils.convertFruktkorg(fruktkorg);
+    }
+
+    @Override
+    public ImmutableFruktkorg removeFruktFromFruktkorg(long fruktkorgId, String fruktType, int amount) throws FruktkorgMissingException, FruktMissingException {
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
+
+        if(!optFruktkorg.isPresent()) {
+            throw new FruktkorgMissingException("Fruktkorg with id: " + fruktkorgId + " not found", fruktkorgId);
+        }
+
+        Fruktkorg fruktkorg = optFruktkorg.get();
+
+        boolean foundFrukt = false;
+        for(Frukt frukt : fruktkorg.getFruktList()) {
+            if(!frukt.getType().equals(fruktType)) {
+                continue;
+            }
+
+            if(frukt.getAmount() > amount) {
+                frukt.setAmount(frukt.getAmount() - amount);
+            } else {
+                fruktkorg.getFruktList().remove(frukt);
+            }
+
+            foundFrukt = true;
+            break;
+        }
+
+        if(!foundFrukt) {
+            throw new FruktMissingException("Frukt with type: " + fruktType + " could not be found in fruktkorg with id: " + fruktkorgId, fruktType);
         }
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
