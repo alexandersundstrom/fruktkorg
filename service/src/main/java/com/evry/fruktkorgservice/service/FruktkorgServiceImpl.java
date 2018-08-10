@@ -3,6 +3,7 @@ package com.evry.fruktkorgservice.service;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
@@ -33,11 +34,11 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) {
+    public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) throws FruktkorgMissingException {
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
 
         if(!optFruktkorg.isPresent()) {
-            // TODO handle not found exception
+            throw new FruktkorgMissingException("Fruktkorg with id: " + fruktkorgId + " not found");
         }
 
         Fruktkorg fruktkorg = optFruktkorg.get();
@@ -45,7 +46,17 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         Frukt fruktToAdd = ModelUtils.convertImmutableFrukt(immutableFrukt);
         fruktToAdd.setFruktkorg(fruktkorg);
 
-        fruktkorg.getFruktList().add(fruktToAdd);
+        boolean foundFrukt = false;
+        for(Frukt frukt : fruktkorg.getFruktList()) {
+            if(frukt.getType().equals(fruktToAdd.getType())) {
+                frukt.setAmount(frukt.getAmount() + fruktToAdd.getAmount());
+                foundFrukt = true;
+            }
+        }
+
+        if(!foundFrukt) {
+            fruktkorg.getFruktList().add(fruktToAdd);
+        }
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
