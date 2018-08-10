@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-class FruktkorgTest {
+class FruktkorgServiceTest {
 
     private FruktkorgDAO fruktkorgDAO;
     private FruktkorgService fruktkorgService;
