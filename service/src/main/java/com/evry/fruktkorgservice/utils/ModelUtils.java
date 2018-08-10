@@ -40,7 +40,7 @@ public class ModelUtils {
     public static Fruktkorg convertImmutableFruktkorg(ImmutableFruktkorg immutableFruktkorg) {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setId(immutableFruktkorg.getId());
-        fruktkorg.setName(fruktkorg.getName());
+        fruktkorg.setName(immutableFruktkorg.getName());
 
         for(ImmutableFrukt immutableFrukt : immutableFruktkorg.getFruktList()) {
             Frukt frukt = convertImmutableFrukt(immutableFrukt);
