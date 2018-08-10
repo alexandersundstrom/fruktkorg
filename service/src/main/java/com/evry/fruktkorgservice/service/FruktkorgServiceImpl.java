@@ -34,7 +34,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
     @Override
     public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) {
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(immutableFrukt.getFruktkorgId());
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
 
         if(!optFruktkorg.isPresent()) {
             // TODO handle not found exception
