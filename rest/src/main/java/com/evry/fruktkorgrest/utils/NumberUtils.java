@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.utils;
+package com.evry.fruktkorgrest.utils;
 
 public class NumberUtils {
     public static boolean isLong(String number) {

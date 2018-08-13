@@ -1,13 +1,8 @@
 package com.evry.fruktkorgrest.servlet;
 
 import com.evry.fruktkorgrest.controller.FruktkorgController;
-import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.service.FruktkorgService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class FruktkorgServlet extends HttpServlet {
-
-
     private FruktkorgController fruktkorgController;
     private static final Logger logger = LogManager.getLogger(FruktkorgServlet.class);
 
@@ -42,13 +35,26 @@ public class FruktkorgServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getRequestURI();
+        resp.setContentType("application/json");
+
+        switch(path) {
+            case "/create-fruktkorg":
+                logger.debug("Got request to create fruktkorg");
+                fruktkorgController.createFruktkorg(req, resp);
+                break;
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getRequestURI();
         resp.setContentType("application/json");
 
         switch(path) {
             case "/fruktkorg":
-                logger.debug("Gor request to delete fruktkorg");
+                logger.debug("Got request to delete fruktkorg");
                 fruktkorgController.deleteFruktkorg(req, resp);
                 break;
         }

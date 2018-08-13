@@ -7,6 +7,8 @@ public class ImmutableFruktkorg {
     private String name;
     private List<ImmutableFrukt> fruktList;
 
+    private ImmutableFruktkorg() {}
+
     ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList) {
         this.id = id;
         this.name = name;
