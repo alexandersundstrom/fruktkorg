@@ -9,6 +9,8 @@ import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class FruktkorgServiceImpl implements FruktkorgService {
@@ -103,6 +105,19 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     @Override
     public ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         return ModelUtils.convertFruktkorg(findFruktkorgById(fruktkorgId));
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType) {
+        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt(fruktType);
+
+        List<ImmutableFruktkorg> immutableFruktkorgList = new ArrayList<>();
+
+        for(Fruktkorg fruktkorg : fruktkorgList) {
+            immutableFruktkorgList.add(ModelUtils.convertFruktkorg(fruktkorg));
+        }
+
+        return immutableFruktkorgList;
     }
 
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {

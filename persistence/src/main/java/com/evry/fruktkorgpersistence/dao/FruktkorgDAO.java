@@ -15,7 +15,7 @@ public interface FruktkorgDAO {
     void refresh(Fruktkorg fruktkorg);
 
     List<Fruktkorg> listFruktkorg();
-    List<Fruktkorg> findFruktkorgByFrukt();
+    List<Fruktkorg> findFruktkorgByFrukt(String fruktType);
 
     Optional<Fruktkorg> findFruktkorgById(long fruktkorgId);
 

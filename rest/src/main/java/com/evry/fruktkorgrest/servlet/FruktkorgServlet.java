@@ -4,7 +4,6 @@ import com.evry.fruktkorgrest.controller.FruktkorgController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +30,9 @@ public class FruktkorgServlet extends HttpServlet {
                 logger.debug("Got request to get fruktkorg");
                 fruktkorgController.getFruktkorg(req, resp);
                 break;
+            case "/fruktkorg/search":
+                logger.debug("Got request to search fruktkorg");
+                fruktkorgController.searchFruktkorg(req, resp);
         }
     }
 
@@ -58,9 +60,9 @@ public class FruktkorgServlet extends HttpServlet {
                 fruktkorgController.deleteFruktkorg(req, resp);
                 break;
 
-            case "/fruktkorg/":
-                //logger.debug("Got request to delete fruktkorg");
-                //fruktkorgController.deleteFruktkorg(req, resp);
+            case "/fruktkorg/remove-frukt":
+                logger.debug("Got request to remove frukt from fruktkorg");
+                fruktkorgController.removeFruktFromFruktkorg(req, resp);
                 break;
         }
     }

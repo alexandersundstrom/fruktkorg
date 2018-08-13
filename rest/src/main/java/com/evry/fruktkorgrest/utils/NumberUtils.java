@@ -9,4 +9,13 @@ public class NumberUtils {
             return false;
         }
     }
+
+    public static boolean isInteger(String number) {
+        try {
+            Integer.valueOf(number);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

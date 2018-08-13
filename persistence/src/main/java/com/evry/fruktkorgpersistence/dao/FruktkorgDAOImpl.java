@@ -89,10 +89,10 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     }
 
     @Override
-    public List<Fruktkorg> findFruktkorgByFrukt() {
+    public List<Fruktkorg> findFruktkorgByFrukt(String fruktType) {
         return getEntityManager()
-                .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f USING(fruktkorg_id) WHERE f.type = :fruktType", Fruktkorg.class)
-                .setParameter("fruktType", "banan")
+                .createNativeQuery("SELECT fk.* FROM fruktkorg fk JOIN frukt f ON(fk.fruktkorg_id = f.fruktkorg_id) WHERE f.type = ?1", Fruktkorg.class)
+                .setParameter(1, fruktType)
                 .getResultList();
     }
 

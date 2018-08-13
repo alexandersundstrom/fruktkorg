@@ -1,6 +1,7 @@
 package com.evry.fruktkorgrest.controller;
 
 import com.evry.fruktkorgrest.utils.NumberUtils;
+import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class FruktkorgController {
 
@@ -117,6 +119,74 @@ public class FruktkorgController {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.getWriter().print("{\"message\": \"Fruktkorg with id " + immutableFrukt.getFruktkorgId() + " was not found\"}");
         }
+    }
+
+    public void removeFruktFromFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String fruktkorgId = req.getParameter("fruktkorgId");
+        String fruktType = req.getParameter("fruktType");
+        String fruktAmount = req.getParameter("fruktAmount");
+
+
+        if(fruktkorgId == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Missing fruktkorg id\"}");
+            return;
+        }
+
+        if(!NumberUtils.isLong(fruktkorgId)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Fruktkorg id has to be an integer\"}");
+            return;
+        }
+
+        if(fruktType == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Missing frukt type\"}");
+            return;
+        }
+
+        if(fruktAmount == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Missing amount\"}");
+            return;
+        }
+
+        if(!NumberUtils.isInteger(fruktAmount)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Frukt amount has to be an integer\"}");
+            return;
+        }
+
+        ImmutableFruktkorg immutableFruktkorg;
+        try {
+            immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(Long.parseLong(fruktkorgId), fruktType, Integer.valueOf(fruktAmount));
+        } catch (FruktkorgMissingException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().print("{\"message\": \"Unable find fruktkorg with id " + fruktkorgId + "\"}");
+            return;
+        } catch (FruktMissingException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().print("{\"message\": \"Unable find frukt with type " + fruktType + " in fruktkorg with id " + fruktkorgId + "\"}");
+            return;
+        }
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorg));
+    }
+
+    public void searchFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String fruktType = req.getParameter("fruktType");
+
+        if(StringUtils.isEmpty(fruktType)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"Frukt type parameter missing\"}");
+            return;
+        }
+
+        List<ImmutableFruktkorg> immutableFruktkorgList = fruktkorgService.searchFruktkorgByFrukt(fruktType);
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorgList));
     }
 
     private boolean isIdInvalid(String id, HttpServletResponse response) throws IOException {

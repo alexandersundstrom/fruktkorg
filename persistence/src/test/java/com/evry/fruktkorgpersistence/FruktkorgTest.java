@@ -124,4 +124,48 @@ public class FruktkorgTest {
         Assertions.assertEquals( 0, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 0 frukt");
         Assertions.assertEquals( 0, fruktDAO.listFrukt().size(), "All frukt should have been removed");
     }
+
+    @Test
+    void findFruktkorgByFruktType() {
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setName("Test korg");
+
+        Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
+        fruktkorg.getFruktList().add(superBanan);
+
+        fruktkorgDAO.persist(fruktkorg);
+
+        List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorg();
+
+        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+
+        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt("Super Banan");
+
+        Assertions.assertEquals(1, fruktkorgList.size());
+        Fruktkorg searchFruktkorg = fruktkorgList.get(0);
+        Assertions.assertEquals(1, searchFruktkorg.getId());
+        Assertions.assertEquals(1, searchFruktkorg.getFruktList().size());
+        Assertions.assertEquals("Super Banan", searchFruktkorg.getFruktList().get(0).getType());
+    }
+
+    @Test
+    void findFruktkorgByWrongFruktType() {
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setName("Test korg");
+
+        Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
+        fruktkorg.getFruktList().add(superBanan);
+
+        fruktkorgDAO.persist(fruktkorg);
+
+        List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorg();
+
+        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+
+        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt("Vanlig Banan");
+
+        Assertions.assertEquals(0, fruktkorgList.size());
+    }
 }

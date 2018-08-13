@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 class FruktkorgServiceTest {
@@ -225,5 +227,52 @@ class FruktkorgServiceTest {
         Assertions.assertThrows(FruktkorgMissingException.class, () -> {
             fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
         });
+    }
+
+    @Test
+    void searchFruktkorgByFrukt() {
+        Frukt frukt = new Frukt();
+        frukt.setId(1);
+        frukt.setAmount(5);
+        frukt.setType("Super Banan");
+
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setId(1);
+        fruktkorg.setName("Korg");
+        frukt.setFruktkorg(fruktkorg);
+        fruktkorg.getFruktList().add(frukt);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgByFrukt("Super Banan"))
+                .thenReturn(Collections.singletonList(fruktkorg));
+
+        List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.searchFruktkorgByFrukt("Super Banan");
+
+        Assertions.assertEquals(1, fruktkorgList.size());
+        ImmutableFruktkorg immutableFruktkorg = fruktkorgList.get(0);
+        Assertions.assertEquals(1, immutableFruktkorg.getId());
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName());
+        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size());
+        Assertions.assertEquals("Super Banan", immutableFruktkorg.getFruktList().get(0).getType());
+    }
+
+    @Test
+    void searchFruktkorgByMissingFrukt() {
+        Frukt frukt = new Frukt();
+        frukt.setId(1);
+        frukt.setAmount(5);
+        frukt.setType("Super Banan");
+
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setId(1);
+        fruktkorg.setName("Korg");
+        frukt.setFruktkorg(fruktkorg);
+        fruktkorg.getFruktList().add(frukt);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgByFrukt("Super Banan"))
+                .thenReturn(Collections.singletonList(fruktkorg));
+
+        List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.searchFruktkorgByFrukt("Vanlig Banan");
+
+        Assertions.assertEquals(0, fruktkorgList.size());
     }
 }
