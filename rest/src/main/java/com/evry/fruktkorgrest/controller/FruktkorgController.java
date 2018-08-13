@@ -96,15 +96,15 @@ public class FruktkorgController {
         if(id == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().print("{\"message\": \"Fruktkorg id parameter missing\"}");
-            return false;
+            return true;
         }
 
         if(!NumberUtils.isLong(id)) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().print("{\"message\": \"Fruktkorg id has to be an integer\"}");
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
