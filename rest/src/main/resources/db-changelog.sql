@@ -1,3 +1,4 @@
+--changeset fruktmannen:1
 CREATE TABLE fruktkorg(
   fruktkorg_id SERIAL PRIMARY KEY,
   name TEXT NOT NULL
