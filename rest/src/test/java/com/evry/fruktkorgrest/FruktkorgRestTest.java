@@ -242,12 +242,10 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_CREATED, response.code());
+        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code());
         Assertions.assertNotNull(response.body());
-        ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
 
-        Assertions.assertEquals(1, responseFruktkorg.getId());
-        Assertions.assertEquals(immutableFruktkorg.getName(), responseFruktkorg.getName());
-        Assertions.assertEquals(immutableFruktkorg.getFruktList().size(), responseFruktkorg.getFruktList().size());
+        Assertions.assertTrue(jsonResponse.containsKey("message"));
     }
 }

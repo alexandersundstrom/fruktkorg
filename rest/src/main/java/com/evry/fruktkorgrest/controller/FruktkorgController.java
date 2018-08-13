@@ -4,9 +4,11 @@ import com.evry.fruktkorgrest.utils.NumberUtils;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.service.FruktkorgService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ public class FruktkorgController {
 
     public FruktkorgController (FruktkorgService fruktkorgService) {
         this.fruktkorgService = fruktkorgService;
+        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
     }
 
     public void getFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -76,6 +79,12 @@ public class FruktkorgController {
 
     public void createFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ImmutableFruktkorg immutableFruktkorg = objectMapper.readValue(req.getReader(), ImmutableFruktkorg.class);
+
+        if(StringUtils.isEmpty(immutableFruktkorg.getName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"The name has to be set\"}");
+            return;
+        }
 
         ImmutableFruktkorg createdFruktkorg = fruktkorgService.createFruktkorg(immutableFruktkorg);
 
