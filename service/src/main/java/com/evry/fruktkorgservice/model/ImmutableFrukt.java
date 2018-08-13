@@ -30,4 +30,14 @@ public class ImmutableFrukt {
     public long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "ImmutableFrukt{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", amount=" + amount +
+                ", fruktkorgId=" + fruktkorgId +
+                '}';
+    }
 }

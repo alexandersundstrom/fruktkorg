@@ -26,4 +26,13 @@ public class ImmutableFruktkorg {
     public List<ImmutableFrukt> getFruktList() {
         return fruktList;
     }
+
+    @Override
+    public String toString() {
+        return "ImmutableFruktkorg{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", fruktList=" + fruktList +
+                '}';
+    }
 }
