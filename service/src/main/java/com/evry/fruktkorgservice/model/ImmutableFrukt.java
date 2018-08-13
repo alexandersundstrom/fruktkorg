@@ -6,6 +6,8 @@ public class ImmutableFrukt {
     private int amount;
     private long fruktkorgId;
 
+    private ImmutableFrukt() {}
+
     ImmutableFrukt(long id, String type, int amount, long fruktkorgId) {
         this.id = id;
         this.type = type;

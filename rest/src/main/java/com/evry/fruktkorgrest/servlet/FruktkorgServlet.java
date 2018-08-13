@@ -19,7 +19,7 @@ public class FruktkorgServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getRequestURI();
         resp.setContentType("application/json");
 
@@ -35,7 +35,7 @@ public class FruktkorgServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getRequestURI();
         resp.setContentType("application/json");
 
@@ -48,7 +48,7 @@ public class FruktkorgServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getRequestURI();
         resp.setContentType("application/json");
 
@@ -60,6 +60,18 @@ public class FruktkorgServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String path = req.getRequestURI();
+        resp.setContentType("application/json");
+
+        switch(path) {
+            case "/fruktkorg/add-frukt":
+                logger.debug("Got request to add frukt to fruktkorg");
+                fruktkorgController.addFruktToFruktkorg(req, resp);
+                break;
+        }
+    }
 
     private void ping(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");

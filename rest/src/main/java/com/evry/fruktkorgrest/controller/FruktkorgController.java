@@ -2,6 +2,7 @@ package com.evry.fruktkorgrest.controller;
 
 import com.evry.fruktkorgrest.utils.NumberUtils;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -90,6 +91,32 @@ public class FruktkorgController {
 
         resp.setStatus(HttpServletResponse.SC_CREATED);
         resp.getWriter().print(objectMapper.writeValueAsString(createdFruktkorg));
+    }
+
+    public void addFruktToFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ImmutableFrukt immutableFrukt = objectMapper.readValue(req.getReader(), ImmutableFrukt.class);
+
+        if (immutableFrukt == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"A Frukt has to be provided\"}");
+            return;
+        }
+
+        if (StringUtils.isEmpty(immutableFrukt.getType())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("{\"message\": \"The type of the Frukt has to be set\"}");
+            return;
+        }
+
+        try {
+            ImmutableFruktkorg immutableFruktkorg = fruktkorgService.addFruktToFruktkorg(immutableFrukt.getId(), immutableFrukt);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorg));
+        } catch (FruktkorgMissingException e) {
+            logger.warn(e.getMessage(), e);
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().print("{\"message\": \"Fruktkorg with id " + immutableFrukt.getFruktkorgId() + " was not found\"}");
+        }
     }
 
     private boolean isIdInvalid(String id, HttpServletResponse response) throws IOException {

@@ -4,10 +4,13 @@ import com.evry.fruktkorgrest.controller.FruktkorgController;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.FruktkorgServiceImpl;
+import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -117,7 +120,7 @@ class FruktkorgRestTest {
     }
 
     @Test
-    void getFruktkorgMissingIdParameterTest() throws IOException, FruktkorgMissingException {
+    void getFruktkorgMissingIdParameterTest() throws IOException {
         Request request = new Request.Builder()
                 .url("http://localhost:" + PORT + "/fruktkorg")
                 .addHeader("Content-Type", "application/json")
@@ -135,7 +138,7 @@ class FruktkorgRestTest {
     }
 
     @Test
-    void getFruktkorgUnparsableIdParameterTest() throws IOException, FruktkorgMissingException {
+    void getFruktkorgUnparsableIdParameterTest() throws IOException {
         Request request = new Request.Builder()
                 .url("http://localhost:" + PORT + "/fruktkorg?id=very-wrong-id")
                 .addHeader("Content-Type", "application/json")
@@ -189,7 +192,7 @@ class FruktkorgRestTest {
     }
 
     @Test
-    void createFruktkorgTest() throws IOException, FruktkorgMissingException {
+    void createFruktkorgTest() throws IOException {
         Mockito.when(fruktkorgService.createFruktkorg(Mockito.any(ImmutableFruktkorg.class)))
                 .thenReturn(new ImmutableFruktkorgBuilder()
                         .setId(1)
@@ -219,7 +222,7 @@ class FruktkorgRestTest {
     }
 
     @Test
-    void createFruktkorgMissingRequestBodyTest() throws IOException, FruktkorgMissingException {
+    void createFruktkorgMissingRequestBodyTest() throws IOException {
         Mockito.when(fruktkorgService.createFruktkorg(Mockito.any(ImmutableFruktkorg.class)))
                 .thenReturn(new ImmutableFruktkorgBuilder()
                         .setId(1)
@@ -244,5 +247,58 @@ class FruktkorgRestTest {
         Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
 
         Assertions.assertTrue(jsonResponse.containsKey("message"));
+    }
+
+    @Test
+    void addFruktToFruktkorg() throws IOException, FruktkorgMissingException {
+        final long fruktkorgId = 1;
+        final String fruktType = "Banan";
+        final int fruktAmount = 5;
+        final long fruktId = 1;
+        final String fruktkorgName = "Korg";
+
+        ImmutableFrukt immutableFrukt = new ImmutableFruktBuilder()
+                .setFruktkorgId(fruktkorgId)
+                .setType(fruktType)
+                .setAmount(fruktAmount)
+                .createImmutableFrukt();
+
+        ImmutableFrukt returnImmutableFrukt = new ImmutableFruktBuilder()
+                .setFruktkorgId(fruktkorgId )
+                .setType(fruktType)
+                .setAmount(fruktAmount)
+                .setId(fruktId)
+                .createImmutableFrukt();
+
+        Mockito.when(fruktkorgService.addFruktToFruktkorg(Mockito.anyLong(), Mockito.any(ImmutableFrukt.class)))
+                .thenReturn(new ImmutableFruktkorgBuilder()
+                        .setId(fruktkorgId)
+                        .setName(fruktkorgName)
+                        .addFrukt(returnImmutableFrukt)
+                        .createImmutableFruktkorg()
+                );
+
+
+        Request request = new Request.Builder()
+                .url("http://localhost:" + PORT + "/fruktkorg/add-frukt")
+                .addHeader("Content-Type", "application/json")
+                .put(RequestBody.create(MediaType.parse("application/json"), objectMapper.writeValueAsString(immutableFrukt)))
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
+        Assertions.assertNotNull(response.body());
+        ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
+
+        Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
+        Assertions.assertEquals(fruktkorgName, responseFruktkorg.getName(), "Fruktkorg name should be the same");
+        Assertions.assertEquals(1, responseFruktkorg.getFruktList().size(), "Size of Fruktkorg should be the same ");
+
+        ImmutableFrukt responseFrukt = responseFruktkorg.getFruktList().get(0);
+        Assertions.assertEquals(fruktId, responseFrukt.getId(), "Id of Frukt should be the same");
+        Assertions.assertEquals(fruktType, responseFrukt.getType(), "Type of Frutk should be the same");
+        Assertions.assertEquals(fruktAmount, responseFrukt.getAmount(), "Amount of Frukt should be the same");
+        Assertions.assertEquals(fruktkorgId, responseFrukt.getFruktkorgId(), "id of the Fruktkorg should be the same");
     }
 }
