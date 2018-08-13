@@ -69,7 +69,7 @@ class FruktkorgRestTest {
             } catch (IOException e) {
                 Thread.sleep(100);
             }
-        } while(serverStarted);
+        } while (serverStarted);
     }
 
     @AfterAll
@@ -82,9 +82,9 @@ class FruktkorgRestTest {
     void getFruktkorgTest() throws FruktkorgMissingException, IOException {
         Mockito.when(fruktkorgService.getFruktkorgById(1)).thenReturn(
                 new ImmutableFruktkorgBuilder()
-                .setId(1)
-                .setName("Korg")
-                .createImmutableFruktkorg()
+                        .setId(1)
+                        .setName("Korg")
+                        .createImmutableFruktkorg()
         );
 
         Request request = new Request.Builder()
@@ -95,13 +95,13 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
         ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
 
-        Assertions.assertEquals(1, responseFruktkorg.getId());
-        Assertions.assertEquals("Korg", responseFruktkorg.getName());
-        Assertions.assertEquals(0, responseFruktkorg.getFruktList().size());
+        Assertions.assertEquals(1, responseFruktkorg.getId(), "Id should be the same");
+        Assertions.assertEquals("Korg", responseFruktkorg.getName(), "Name should be the same");
+        Assertions.assertEquals(0, responseFruktkorg.getFruktList().size(), "Amount of Frukt should be the same");
     }
 
     @Test
@@ -116,12 +116,13 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_NOT_FOUND, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_NOT_FOUND, response.code(), "Response should be NOT FOUND");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
 
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 
     @Test
@@ -134,12 +135,13 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code(), "Response should be a BAD REQUEST");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
 
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 
     @Test
@@ -152,12 +154,13 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code(), "Response should be a BAD REQUEST");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
 
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 
     @Test
@@ -170,11 +173,12 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
-        Assertions.assertNotNull(response.body());
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 
     @Test
@@ -189,11 +193,12 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_NOT_FOUND, response.code());
-        Assertions.assertNotNull(response.body());
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Assertions.assertEquals(HttpServletResponse.SC_NOT_FOUND, response.code(), "Response should be NOT FOUND");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 
     @Test
@@ -217,13 +222,13 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_CREATED, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_CREATED, response.code(), "Response should be CREATED");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
         ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
 
-        Assertions.assertEquals(1, responseFruktkorg.getId());
-        Assertions.assertEquals(immutableFruktkorg.getName(), responseFruktkorg.getName());
-        Assertions.assertEquals(immutableFruktkorg.getFruktList().size(), responseFruktkorg.getFruktList().size());
+        Assertions.assertEquals(1, responseFruktkorg.getId(), "The id of the created Fruktkorg should be the same");
+        Assertions.assertEquals(immutableFruktkorg.getName(), responseFruktkorg.getName(), "The name of the Fruktkorg should be the same");
+        Assertions.assertEquals(immutableFruktkorg.getFruktList().size(), responseFruktkorg.getFruktList().size(), "The amount of Frukt in thr  Fruktkorg should be the same");
     }
 
     @Test
@@ -247,11 +252,12 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code());
-        Assertions.assertNotNull(response.body());
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code(), "Response should be a BAD REQUEST");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Should contain a message");
     }
 
     @Test
@@ -269,7 +275,7 @@ class FruktkorgRestTest {
                 .createImmutableFrukt();
 
         ImmutableFrukt returnImmutableFrukt = new ImmutableFruktBuilder()
-                .setFruktkorgId(fruktkorgId )
+                .setFruktkorgId(fruktkorgId)
                 .setType(fruktType)
                 .setAmount(fruktAmount)
                 .setId(fruktId)
@@ -292,8 +298,8 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), " Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
         ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
 
         Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
@@ -316,7 +322,7 @@ class FruktkorgRestTest {
         final String fruktkorgName = "Korg";
 
         ImmutableFrukt returnImmutableFrukt = new ImmutableFruktBuilder()
-                .setFruktkorgId(fruktkorgId )
+                .setFruktkorgId(fruktkorgId)
                 .setType(fruktType)
                 .setAmount(fruktAmount)
                 .setId(fruktId)
@@ -339,8 +345,8 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
-        Assertions.assertNotNull(response.body());
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
         ImmutableFruktkorg responseFruktkorg = objectMapper.readValue(response.body().string(), ImmutableFruktkorg.class);
 
         Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
@@ -358,15 +364,15 @@ class FruktkorgRestTest {
     void searchFruktkorgByFrukt() throws IOException {
         Mockito.when(fruktkorgService.searchFruktkorgByFrukt("Super Banan"))
                 .thenReturn(Collections.singletonList(new ImmutableFruktkorgBuilder()
-                    .setId(1)
-                    .setName("Korg")
-                    .addFrukt(new ImmutableFruktBuilder()
                         .setId(1)
-                        .setAmount(5)
-                        .setType("Super Banan")
-                        .setFruktkorgId(1)
-                        .createImmutableFrukt()
-                    ).createImmutableFruktkorg()));
+                        .setName("Korg")
+                        .addFrukt(new ImmutableFruktBuilder()
+                                .setId(1)
+                                .setAmount(5)
+                                .setType("Super Banan")
+                                .setFruktkorgId(1)
+                                .createImmutableFrukt()
+                        ).createImmutableFruktkorg()));
 
         Request request = new Request.Builder()
                 .url("http://localhost:" + PORT + "/fruktkorg/search?fruktType=Super Banan")
@@ -375,16 +381,17 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code());
-        Assertions.assertNotNull(response.body());
-        List<ImmutableFruktkorg> immutableFruktkorgList = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableFruktkorg>>() {});
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        List<ImmutableFruktkorg> immutableFruktkorgList = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableFruktkorg>>() {
+        });
 
-        Assertions.assertEquals(1, immutableFruktkorgList.size());
+        Assertions.assertEquals(1, immutableFruktkorgList.size(), "Should be 1 Fruktkorg found");
         ImmutableFruktkorg immutableFruktkorg = immutableFruktkorgList.get(0);
-        Assertions.assertEquals(1, immutableFruktkorg.getId());
-        Assertions.assertEquals("Korg", immutableFruktkorg.getName());
-        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size());
-        Assertions.assertEquals("Super Banan", immutableFruktkorg.getFruktList().get(0).getType());
+        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be the same");
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be the same");
+        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size(), "Amount of Frukt should be the same");
+        Assertions.assertEquals("Super Banan", immutableFruktkorg.getFruktList().get(0).getType(), "Frukt type should be Super Banan");
     }
 
     @Test
@@ -396,10 +403,11 @@ class FruktkorgRestTest {
 
         Response response = client.newCall(request).execute();
 
-        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code());
-        Assertions.assertNotNull(response.body());
-        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String,Object>>() {});
+        Assertions.assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.code(), "Response should be a BAD REQUEST");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        Map<String, Object> jsonResponse = objectMapper.readValue(response.body().string(), new TypeReference<HashMap<String, Object>>() {
+        });
 
-        Assertions.assertTrue(jsonResponse.containsKey("message"));
+        Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
     }
 }
