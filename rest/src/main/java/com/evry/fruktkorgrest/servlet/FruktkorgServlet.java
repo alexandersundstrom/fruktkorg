@@ -57,6 +57,11 @@ public class FruktkorgServlet extends HttpServlet {
                 logger.debug("Got request to delete fruktkorg");
                 fruktkorgController.deleteFruktkorg(req, resp);
                 break;
+
+            case "/fruktkorg/":
+                //logger.debug("Got request to delete fruktkorg");
+                //fruktkorgController.deleteFruktkorg(req, resp);
+                break;
         }
     }
 
