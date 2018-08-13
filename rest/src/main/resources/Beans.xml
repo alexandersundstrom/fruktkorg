@@ -9,6 +9,10 @@
     <context:annotation-config/>
 
     <bean id = "fruktkorgServlet" class = "com.evry.fruktkorgrest.servlet.FruktkorgServlet">
+        <constructor-arg ref="fruktkorgController" />
+    </bean>
+
+    <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
