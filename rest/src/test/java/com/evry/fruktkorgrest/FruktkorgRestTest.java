@@ -61,7 +61,7 @@ class FruktkorgRestTest {
         boolean serverStarted = false;
         do {
             Request request = new Request.Builder()
-                    .url("http://localhost:" + PORT + "/ping")
+                    .url("http://localhost:" + PORT + "/rest/ping")
                     .get()
                     .build();
             try {
@@ -89,7 +89,7 @@ class FruktkorgRestTest {
         );
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg?id=1")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg?id=1")
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -110,7 +110,7 @@ class FruktkorgRestTest {
         Mockito.when(fruktkorgService.getFruktkorgById(1)).thenThrow(FruktkorgMissingException.class);
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg?id=1")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg?id=1")
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -129,7 +129,7 @@ class FruktkorgRestTest {
     @Test
     void getFruktkorgMissingIdParameterTest() throws IOException {
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg")
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -148,7 +148,7 @@ class FruktkorgRestTest {
     @Test
     void getFruktkorgUnparsableIdParameterTest() throws IOException {
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg?id=very-wrong-id")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg?id=very-wrong-id")
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -167,7 +167,7 @@ class FruktkorgRestTest {
     @Test
     void deleteFruktkorgTest() throws IOException {
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg?id=1")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg?id=1")
                 .addHeader("Content-Type", "application/json")
                 .delete()
                 .build();
@@ -187,7 +187,7 @@ class FruktkorgRestTest {
         Mockito.doThrow(FruktkorgMissingException.class).when(fruktkorgService).deleteFruktkorg(1);
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg?id=1")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg?id=1")
                 .addHeader("Content-Type", "application/json")
                 .delete()
                 .build();
@@ -216,7 +216,7 @@ class FruktkorgRestTest {
                 .createImmutableFruktkorg();
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/create-fruktkorg")
+                .url("http://localhost:" + PORT + "/rest/create-fruktkorg")
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(MediaType.parse("application/json"), objectMapper.writeValueAsString(immutableFruktkorg)))
                 .build();
@@ -246,7 +246,7 @@ class FruktkorgRestTest {
                 .createImmutableFruktkorg();
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/create-fruktkorg")
+                .url("http://localhost:" + PORT + "/rest/create-fruktkorg")
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(MediaType.parse("application/json"), "{}"))
                 .build();
@@ -292,7 +292,7 @@ class FruktkorgRestTest {
 
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg/add-frukt")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg/add-frukt")
                 .addHeader("Content-Type", "application/json")
                 .put(RequestBody.create(MediaType.parse("application/json"), objectMapper.writeValueAsString(immutableFrukt)))
                 .build();
@@ -339,7 +339,7 @@ class FruktkorgRestTest {
 
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg/remove-frukt?fruktkorgId=" + fruktkorgId + "&fruktType=" + fruktType + "&fruktAmount=" + 1)
+                .url("http://localhost:" + PORT + "/rest/fruktkorg/remove-frukt?fruktkorgId=" + fruktkorgId + "&fruktType=" + fruktType + "&fruktAmount=" + 1)
                 .addHeader("Content-Type", "application/json")
                 .delete()
                 .build();
@@ -376,7 +376,7 @@ class FruktkorgRestTest {
                         ).createImmutableFruktkorg()));
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg/search?fruktType=Super Banan")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg/search?fruktType=Super Banan")
                 .get()
                 .build();
 
@@ -398,7 +398,7 @@ class FruktkorgRestTest {
     @Test
     void searchFruktkorgByFruktMissingParameter() throws IOException {
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/fruktkorg/search")
+                .url("http://localhost:" + PORT + "/rest/fruktkorg/search")
                 .get()
                 .build();
 
