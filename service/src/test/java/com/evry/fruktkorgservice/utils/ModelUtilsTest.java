@@ -9,6 +9,7 @@ import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -63,6 +64,8 @@ class ModelUtilsTest {
         fruktkorg.setName("Korg");
         fruktkorg.setId(1);
         fruktkorg.setFruktList(Collections.singletonList(frukt));
+        Timestamp updated = new Timestamp(System.currentTimeMillis());
+        fruktkorg.setLastChanged(updated);
 
         frukt.setFruktkorg(fruktkorg);
 
@@ -70,6 +73,7 @@ class ModelUtilsTest {
         assertEquals(immutableFruktkorg.getId(), fruktkorg.getId(), "Id should be the same");
         assertEquals(immutableFruktkorg.getName(), fruktkorg.getName(), "Name should be the same");
         assertEquals(1, immutableFruktkorg.getFruktList().size(),  "Amount of Frukt should be the same");
+        assertEquals(updated, immutableFruktkorg.getLastChanged(), "Last Change should be the same");
 
         ImmutableFrukt convertedfrukt = immutableFruktkorg.getFruktList().get(0);
         assertEquals(frukt.getId(),convertedfrukt.getId(), "Id should be the same");
@@ -81,9 +85,11 @@ class ModelUtilsTest {
 
     @Test
     void convertImmutableFruktkorg() {
+        Timestamp updated = new Timestamp(System.currentTimeMillis());
         ImmutableFruktkorg immutableFruktkorg = new ImmutableFruktkorgBuilder()
                 .setName("Korg")
                 .setId(1)
+                .setLastChanged(updated)
                 .addFrukt(new ImmutableFruktBuilder().
                         setType("Banan")
                         .setAmount(5)
@@ -97,7 +103,7 @@ class ModelUtilsTest {
         assertEquals(immutableFruktkorg.getId(), fruktkorg.getId(), "Id should be the same");
         assertEquals(immutableFruktkorg.getName(), fruktkorg.getName(), "Name should be the same");
         assertEquals(1, fruktkorg.getFruktList().size(),  "Amount of Frukt should be the same");
-
+        assertEquals(updated, fruktkorg.getLastChanged(), "Last Change should be the same");
         Frukt frukt = fruktkorg.getFruktList().get(0);
         ImmutableFrukt immutableFrukt = immutableFruktkorg.getFruktList().get(0);
 

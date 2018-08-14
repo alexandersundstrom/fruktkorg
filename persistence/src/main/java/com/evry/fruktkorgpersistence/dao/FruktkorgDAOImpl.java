@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.criteria.CriteriaQuery;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,7 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     @Override
     public void persist(Fruktkorg fruktkorg) {
         logger.debug("Persisting Fruktkorg: " + fruktkorg);
+        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
         EntityManager entityManager = getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -65,6 +67,7 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     @Override
     public Fruktkorg merge(Fruktkorg fruktkorg) {
         logger.debug("Merging Fruktkorg: " + fruktkorg);
+        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
         EntityManager entityManager = getEntityManager();
 
         entityManager.getTransaction().begin();

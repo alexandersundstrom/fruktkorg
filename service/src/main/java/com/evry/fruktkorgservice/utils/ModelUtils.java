@@ -28,7 +28,8 @@ public class ModelUtils {
     public static ImmutableFruktkorg convertFruktkorg(Fruktkorg fruktkorg) {
         ImmutableFruktkorgBuilder immutableFruktkorgBuilder = new ImmutableFruktkorgBuilder()
                 .setId(fruktkorg.getId())
-                .setName(fruktkorg.getName());
+                .setName(fruktkorg.getName())
+                .setLastChanged(fruktkorg.getLastChanged());
 
         for(Frukt frukt : fruktkorg.getFruktList()) {
             immutableFruktkorgBuilder.addFrukt(convertFrukt(frukt));
@@ -41,6 +42,7 @@ public class ModelUtils {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setId(immutableFruktkorg.getId());
         fruktkorg.setName(immutableFruktkorg.getName());
+        fruktkorg.setLastChanged(immutableFruktkorg.getLastChanged());
 
         for(ImmutableFrukt immutableFrukt : immutableFruktkorg.getFruktList()) {
             Frukt frukt = convertImmutableFrukt(immutableFrukt);

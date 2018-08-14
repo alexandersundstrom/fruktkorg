@@ -1,5 +1,6 @@
 package com.evry.fruktkorgrest.controller;
 
+import com.evry.fruktkorgrest.model.FruktkorgResponse;
 import com.evry.fruktkorgrest.utils.NumberUtils;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FruktkorgController {
@@ -52,7 +54,7 @@ public class FruktkorgController {
         }
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorg));
+        resp.getWriter().print(objectMapper.writeValueAsString(new FruktkorgResponse(fruktkorg)));
     }
 
     public void deleteFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -92,7 +94,7 @@ public class FruktkorgController {
         ImmutableFruktkorg createdFruktkorg = fruktkorgService.createFruktkorg(immutableFruktkorg);
 
         resp.setStatus(HttpServletResponse.SC_CREATED);
-        resp.getWriter().print(objectMapper.writeValueAsString(createdFruktkorg));
+        resp.getWriter().print(objectMapper.writeValueAsString(new FruktkorgResponse(createdFruktkorg)));
     }
 
     public void addFruktToFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -113,7 +115,7 @@ public class FruktkorgController {
         try {
             ImmutableFruktkorg immutableFruktkorg = fruktkorgService.addFruktToFruktkorg(immutableFrukt.getId(), immutableFrukt);
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorg));
+            resp.getWriter().print(objectMapper.writeValueAsString(new FruktkorgResponse(immutableFruktkorg)));
         } catch (FruktkorgMissingException e) {
             logger.warn(e.getMessage(), e);
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -171,7 +173,7 @@ public class FruktkorgController {
         }
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorg));
+        resp.getWriter().print(objectMapper.writeValueAsString(new FruktkorgResponse(immutableFruktkorg)));
     }
 
     public void searchFruktkorg(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -184,9 +186,12 @@ public class FruktkorgController {
         }
 
         List<ImmutableFruktkorg> immutableFruktkorgList = fruktkorgService.searchFruktkorgByFrukt(fruktType);
+        List<FruktkorgResponse> fruktkorgResponseList = new ArrayList<>();
+        immutableFruktkorgList
+                .forEach(immutableFruktkorg -> fruktkorgResponseList.add(new FruktkorgResponse(immutableFruktkorg)));
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorgList));
+        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgResponseList));
     }
 
     private boolean isIdInvalid(String id, HttpServletResponse response) throws IOException {

@@ -3,6 +3,7 @@ package com.evry.fruktkorgpersistence.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class Fruktkorg {
     @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Frukt> fruktList = new ArrayList<>();
+
+    @Column(name = "last_changed")
+    private Timestamp lastChanged;
 
     public Fruktkorg() {}
 
@@ -52,12 +56,21 @@ public class Fruktkorg {
         this.name = name;
     }
 
+    public Timestamp getLastChanged() {
+        return lastChanged;
+    }
+
+    public void setLastChanged(Timestamp updated) {
+        this.lastChanged = updated;
+    }
+
     @Override
     public String toString() {
         return "Fruktkorg{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", fruktList=" + fruktList +
+                ", lastChanged=" + lastChanged +
                 '}';
     }
 }

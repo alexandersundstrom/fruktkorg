@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class FruktkorgTest {
@@ -42,6 +43,7 @@ public class FruktkorgTest {
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals( NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
         Assertions.assertEquals(1, fruktkorg.getId(), "Id of fruktkorg should be 1");
+        Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
         Assertions.assertEquals(fruktkorg.getId(), fruktkorgar.get(0).getId(), "Id of fruktkorg should be 1");
     }
 
@@ -90,7 +92,8 @@ public class FruktkorgTest {
 
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals( "Test korg", fruktkorgar.get(0).getName(), "Should return the correct name");
-
+        Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
+        Timestamp firstChange = fruktkorg.getLastChanged();
         fruktkorg.setName("Super duper korg");
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
@@ -98,6 +101,8 @@ public class FruktkorgTest {
         fruktkorgar = fruktkorgDAO.listFruktkorg();
         Assertions.assertEquals( "Super duper korg", fruktkorg.getName(), "Should return the correct name after merge");
         Assertions.assertEquals( "Super duper korg", fruktkorgar.get(0).getName(), "Should return the correct name after merge");
+        Assertions.assertNotNull( fruktkorgar.get(0).getLastChanged(), "Last Changed should be the set by default");
+        Assertions.assertNotEquals( firstChange, fruktkorgar.get(0).getLastChanged(), "Last changed should be updated when Fruktkorg changes ");
     }
 
     @Test
