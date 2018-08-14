@@ -42,8 +42,8 @@ class FruktTest {
         fruktkorgDAO.refresh(fruktkorg);
 
         Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
-        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorg().size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorg().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
+        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorgar().size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorgar().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
     }
 
     @Test

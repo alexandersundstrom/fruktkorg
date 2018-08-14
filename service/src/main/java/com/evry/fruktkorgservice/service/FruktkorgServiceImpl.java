@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
@@ -129,6 +130,11 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         }
 
         return immutableFruktkorgList;
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> listFruktkorgar() {
+        return fruktkorgDAO.listFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
     }
 
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {

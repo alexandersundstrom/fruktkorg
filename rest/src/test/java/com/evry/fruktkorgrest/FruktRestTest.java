@@ -55,7 +55,7 @@ public class FruktRestTest {
         boolean serverStarted = false;
         do {
             Request request = new Request.Builder()
-                    .url("http://localhost:" + PORT + "/ping")
+                    .url("http://localhost:" + PORT + "/rest/ping")
                     .get()
                     .build();
             try {
@@ -78,7 +78,7 @@ public class FruktRestTest {
         Mockito.when(fruktService.getUniqueFruktTypes()).thenReturn(Arrays.asList("Banan", "Äpple"));
 
         Request request = new Request.Builder()
-                .url("http://localhost:" + PORT + "/frukt/unique-types")
+                .url("http://localhost:" + PORT + "/rest/frukt/unique-types")
                 .get()
                 .build();
 

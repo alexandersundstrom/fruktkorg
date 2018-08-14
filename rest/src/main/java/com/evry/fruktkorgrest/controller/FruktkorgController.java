@@ -194,6 +194,11 @@ public class FruktkorgController {
         resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgResponseList));
     }
 
+    public void getFruktkorgList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgService.listFruktkorgar()));
+    }
+
     private boolean isIdInvalid(String id, HttpServletResponse response) throws IOException {
         if(id == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -22,7 +22,7 @@ public class FruktkorgServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getRequestURI();
+        String path = req.getRequestURI().replace("/rest", "");
         resp.setContentType("application/json");
 
         switch(path) {
@@ -32,6 +32,10 @@ public class FruktkorgServlet extends HttpServlet {
             case "/fruktkorg":
                 logger.debug("Got request to get fruktkorg");
                 fruktkorgController.getFruktkorg(req, resp);
+                break;
+            case "/fruktkorg-list":
+                logger.debug("Got request to get fruktkorg list");
+                fruktkorgController.getFruktkorgList(req, resp);
                 break;
             case "/fruktkorg/search":
                 logger.debug("Got request to search fruktkorg");
@@ -44,7 +48,7 @@ public class FruktkorgServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getRequestURI();
+        String path = req.getRequestURI().replace("/rest", "");
         resp.setContentType("application/json");
 
         switch(path) {
@@ -57,7 +61,7 @@ public class FruktkorgServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getRequestURI();
+        String path = req.getRequestURI().replace("/rest", "");
         resp.setContentType("application/json");
 
         switch(path) {
@@ -75,7 +79,7 @@ public class FruktkorgServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getRequestURI();
+        String path = req.getRequestURI().replace("/rest", "");
         resp.setContentType("application/json");
 
         switch(path) {
