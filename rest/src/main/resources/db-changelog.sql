@@ -1,3 +1,5 @@
+--liquibase formatted sql
+
 --changeset fruktmannen:1
 CREATE TABLE fruktkorg(
   fruktkorg_id SERIAL PRIMARY KEY,
@@ -10,3 +12,6 @@ CREATE TABLE frukt(
   amount INTEGER NOT NULL,
   fruktkorg_id INTEGER REFERENCES fruktkorg(fruktkorg_id) ON DELETE CASCADE
 );
+
+--changeset fruktmannen:2
+ALTER TABLE fruktkorg ADD last_changed TIMESTAMP DEFAULT now() NOT NULL;
