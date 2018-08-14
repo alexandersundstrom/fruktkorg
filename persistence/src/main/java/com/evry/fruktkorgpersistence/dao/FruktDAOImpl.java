@@ -77,4 +77,12 @@ public class FruktDAOImpl implements FruktDAO {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    @Override
+    public List<String> listUniqueFruktTypes() {
+        logger.debug("Fetching all unique Frukt types");
+        EntityManager entityManager = getEntityManager();
+
+        return entityManager.createNativeQuery("SELECT DISTINCT type FROM frukt ORDER BY type ASC").getResultList();
+    }
+
 }

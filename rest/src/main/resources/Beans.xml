@@ -10,7 +10,18 @@
 
     <bean id = "fruktkorgServlet" class = "com.evry.fruktkorgrest.servlet.FruktkorgServlet">
         <constructor-arg ref="fruktkorgController" />
+        <constructor-arg ref="fruktController" />
     </bean>
+
+    <bean id = "fruktController" class = "com.evry.fruktkorgrest.controller.FruktController">
+        <constructor-arg ref="fruktService" />
+    </bean>
+
+    <bean id = "fruktService" class = "com.evry.fruktkorgservice.service.FruktServiceImpl">
+        <constructor-arg ref="fruktDAO"/>
+    </bean>
+
+    <bean id = "fruktDAO" class="com.evry.fruktkorgpersistence.dao.FruktDAOImpl" />
 
     <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />

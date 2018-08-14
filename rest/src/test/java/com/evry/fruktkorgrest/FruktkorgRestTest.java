@@ -1,5 +1,6 @@
 package com.evry.fruktkorgrest;
 
+import com.evry.fruktkorgrest.controller.FruktController;
 import com.evry.fruktkorgrest.controller.FruktkorgController;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
@@ -42,7 +43,7 @@ class FruktkorgRestTest {
 
         fruktkorgService = Mockito.mock(FruktkorgServiceImpl.class);
         FruktkorgController fruktkorgController = new FruktkorgController(fruktkorgService);
-        Servlet servlet = new FruktkorgServlet(fruktkorgController);
+        Servlet servlet = new FruktkorgServlet(fruktkorgController, Mockito.mock(FruktController.class));
 
         serverThread = new Thread(() -> {
             jettyServer = new JettyServer();

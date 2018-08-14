@@ -12,14 +12,16 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Arrays;
+import java.util.List;
 
-public class FruktTest {
+class FruktTest {
 
     private static FruktkorgDAO fruktkorgDAO; 
     private static FruktDAO fruktDAO;
 
     @BeforeEach
-    public void init() {
+    void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
         fruktkorgDAO = new FruktkorgDAOImpl();
@@ -30,7 +32,7 @@ public class FruktTest {
     }
 
     @Test
-    public void saveAndReadFrukt() {
+    void saveAndReadFrukt() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
         fruktkorgDAO.persist(fruktkorg);
 
@@ -45,7 +47,7 @@ public class FruktTest {
     }
 
     @Test
-    public void saveReadAndEditFrukt() {
+    void saveReadAndEditFrukt() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
         fruktkorgDAO.persist(fruktkorg);
 
@@ -64,7 +66,7 @@ public class FruktTest {
     }
 
     @Test
-    public void moveFruktToAnotherFruktkorg() {
+    void moveFruktToAnotherFruktkorg() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
         fruktkorgDAO.persist(fruktkorg);
 
@@ -83,5 +85,27 @@ public class FruktTest {
 
         Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
         Assertions.assertEquals(fruktkorg2.getId(), fruktDAO.listFrukt().get(0).getFruktkorg().getId(), "Fruktkorg should have changed");
+    }
+
+    @Test
+    void listUniqueFruktTypes() {
+        Fruktkorg fruktkorg1 = new Fruktkorg("Test Korg 1");
+        fruktkorgDAO.persist(fruktkorg1);
+
+        Fruktkorg fruktkorg2 = new Fruktkorg("Test Korg 2");
+        fruktkorgDAO.persist(fruktkorg2);
+
+        Frukt frukt1 = new Frukt("Äpple", 3, fruktkorg1);
+        fruktDAO.persist(frukt1);
+
+        Frukt frukt2 = new Frukt("Äpple", 3, fruktkorg2);
+        fruktDAO.persist(frukt2);
+
+        Frukt frukt3 = new Frukt("Banan", 3, fruktkorg2);
+        fruktDAO.persist(frukt3);
+
+        List<String> fruktTypes = fruktDAO.listUniqueFruktTypes();
+        Assertions.assertEquals(2, fruktTypes.size());
+        Assertions.assertIterableEquals(Arrays.asList("Banan", "Äpple"), fruktTypes);
     }
 }

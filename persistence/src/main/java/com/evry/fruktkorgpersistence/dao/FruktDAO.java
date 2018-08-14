@@ -14,4 +14,5 @@ public interface FruktDAO {
     void refresh(Frukt frukt);
 
     List<Frukt> listFrukt();
+    List<String> listUniqueFruktTypes();
 }
