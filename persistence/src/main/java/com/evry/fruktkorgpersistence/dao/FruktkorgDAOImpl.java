@@ -79,7 +79,7 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     }
 
     @Override
-    public List<Fruktkorg> listFruktkorg() {
+    public List<Fruktkorg> listFruktkorgar() {
         logger.debug("Fetching all Fruktkorgar");
         EntityManager entityManager = getEntityManager();
 

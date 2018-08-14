@@ -33,6 +33,10 @@ public class FruktkorgServlet extends HttpServlet {
                 logger.debug("Got request to get fruktkorg");
                 fruktkorgController.getFruktkorg(req, resp);
                 break;
+            case "/fruktkorg-list":
+                logger.debug("Got request to get fruktkorg list");
+                fruktkorgController.getFruktkorgList(req, resp);
+                break;
             case "/fruktkorg/search":
                 logger.debug("Got request to search fruktkorg");
                 fruktkorgController.searchFruktkorg(req, resp);

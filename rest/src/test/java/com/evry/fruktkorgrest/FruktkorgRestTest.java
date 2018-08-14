@@ -24,10 +24,7 @@ import org.mockito.Mockito;
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class FruktkorgRestTest {
     private static JettyServer jettyServer;
@@ -410,5 +407,36 @@ class FruktkorgRestTest {
         });
 
         Assertions.assertTrue(jsonResponse.containsKey("message"), "Response should contain a message");
+    }
+
+    @Test
+    void getFruktkorgList() throws IOException {
+        Mockito.when(fruktkorgService.listFruktkorgar()).thenReturn(Arrays.asList(
+                new ImmutableFruktkorgBuilder()
+                        .setId(1)
+                        .setName("Korg 1")
+                        .createImmutableFruktkorg(),
+                new ImmutableFruktkorgBuilder()
+                        .setId(2)
+                        .setName("Korg 2")
+                        .createImmutableFruktkorg(),
+                new ImmutableFruktkorgBuilder()
+                        .setId(3)
+                        .setName("Korg 3")
+                        .createImmutableFruktkorg()));
+
+        Request request = new Request.Builder()
+                .url("http://localhost:" + PORT + "/rest/fruktkorg-list")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        List<ImmutableFruktkorg> fruktkorgList = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableFruktkorg>>() {
+        });
+
+        Assertions.assertEquals(3, fruktkorgList.size());
     }
 }

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -274,5 +275,31 @@ class FruktkorgServiceTest {
         List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.searchFruktkorgByFrukt("Vanlig Banan");
 
         Assertions.assertEquals(0, fruktkorgList.size());
+    }
+
+    @Test
+    void listFruktkorgar() {
+        Fruktkorg fruktkorg1 = new Fruktkorg();
+        fruktkorg1.setId(1);
+        fruktkorg1.setName("Korg 1");
+
+        Fruktkorg fruktkorg2 = new Fruktkorg();
+        fruktkorg2.setId(2);
+        fruktkorg2.setName("Korg 2");
+
+        Fruktkorg fruktkorg3 = new Fruktkorg();
+        fruktkorg3.setId(3);
+        fruktkorg3.setName("Korg 3");
+
+        Mockito.when(fruktkorgDAO.listFruktkorgar())
+                .thenReturn(Arrays.asList(fruktkorg1, fruktkorg2, fruktkorg3));
+
+        List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.listFruktkorgar();
+
+        Assertions.assertEquals(3, fruktkorgList.size());
+        Assertions.assertEquals("Korg 1", fruktkorgList.get(0).getName());
+        Assertions.assertEquals("Korg 2", fruktkorgList.get(1).getName());
+        Assertions.assertEquals("Korg 3", fruktkorgList.get(2).getName());
+
     }
 }

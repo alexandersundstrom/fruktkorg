@@ -15,4 +15,5 @@ public interface FruktkorgService {
     ImmutableFruktkorg removeFruktFromFruktkorg(long fruktkorgId, String fruktType, int amount) throws FruktkorgMissingException, FruktMissingException;
     ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException;
     List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType);
+    List<ImmutableFruktkorg> listFruktkorgar();
 }
