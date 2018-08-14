@@ -26,6 +26,8 @@ public class App {
         servletContextHandler.setBaseResource(Resource.newResource(webResourceDirectory));
         servletContextHandler.setWelcomeFiles(new String[] { "index.html" });
 
+        servletContextHandler.getMimeTypes().addMimeMapping("html", "text/html; charset=utf-8");
+
         ServletHolder holderPwd = new ServletHolder("default",
                 DefaultServlet.class);
         holderPwd.setInitParameter("dirAllowed", "true");
