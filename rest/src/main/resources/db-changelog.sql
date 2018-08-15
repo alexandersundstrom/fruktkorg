@@ -18,3 +18,11 @@ ALTER TABLE fruktkorg ADD last_changed TIMESTAMP DEFAULT now() NOT NULL;
 
 --changeset fruktmannen:3
 ALTER TABLE public.fruktkorg ALTER COLUMN last_changed DROP NOT NULL;
+
+--changeset Alexander:4
+CREATE TABLE reports(
+    id SERIAL PRIMARY KEY NOT NULL,
+    location TEXT NOT NULL,
+    created TIMESTAMP DEFAULT now() NOT NULL,
+    read BOOLEAN DEFAULT false  NOT NULL
+);
