@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -187,12 +186,12 @@ public class FruktkorgController {
         }
 
         List<ImmutableFruktkorg> immutableFruktkorgList = fruktkorgService.searchFruktkorgByFrukt(fruktType);
-        List<FruktkorgResponse> fruktkorgResponseList = new ArrayList<>();
-        immutableFruktkorgList
-                .forEach(immutableFruktkorg -> fruktkorgResponseList.add(new FruktkorgResponse(immutableFruktkorg)));
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgResponseList));
+        resp.getWriter().print(objectMapper.writeValueAsString(immutableFruktkorgList
+                .stream()
+                .map(FruktkorgResponse::new)
+                .collect(Collectors.toList())));
     }
 
     public void getFruktkorgList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
