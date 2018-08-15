@@ -2,10 +2,8 @@ package com.evry.fruktkorgservice.utils;
 
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
+import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorgservice.model.*;
 
 public class ModelUtils {
     public static ImmutableFrukt convertFrukt(Frukt frukt) {
@@ -51,5 +49,24 @@ public class ModelUtils {
         }
 
         return fruktkorg;
+    }
+
+    public static ImmutableReport convertReport(Report report) {
+        return new ImmutableReportBuilder()
+                .setId(report.getId())
+                .setLocation(report.getLocation())
+                .setCreated(report.getCreated())
+                .setRead(report.isRead())
+                .createImmutableReport();
+    }
+
+    public static Report convertImmutableReport(ImmutableReport immutableReport) {
+        Report report = new Report();
+        report.setId(immutableReport.getId());
+        report.setLocation(immutableReport.getLocation());
+        report.setCreated(immutableReport.getCreated());
+        report.setRead(immutableReport.isRead());
+
+        return report;
     }
 }

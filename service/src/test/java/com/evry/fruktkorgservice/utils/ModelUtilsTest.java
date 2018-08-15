@@ -2,18 +2,16 @@ package com.evry.fruktkorgservice.utils;
 
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
-import org.junit.jupiter.api.Assertions;
+import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorgservice.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
+import java.time.Instant;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ModelUtilsTest {
 
@@ -111,5 +109,40 @@ class ModelUtilsTest {
         assertEquals(immutableFrukt.getType(), frukt.getType(), "Type should be the same");
         assertEquals(immutableFrukt.getAmount(), frukt.getAmount(), "Amount should be the same");
         assertEquals(immutableFrukt.getFruktkorgId(), frukt.getFruktkorg().getId(), "Id should be the same");
+    }
+
+    @Test
+    void convertReport() {
+        Instant created = Instant.now();
+
+        Report report = new Report();
+        report.setId(1);
+        report.setLocation("fake/location/report.xml");
+        report.setCreated(created);
+        report.setRead(false);
+
+        ImmutableReport immutableReport = ModelUtils.convertReport(report);
+        assertEquals(immutableReport.getId(), report.getId(), "Id should be the same");
+        assertEquals(immutableReport.getLocation(), report.getLocation(), "Location should be the same");
+        assertEquals(immutableReport.isRead(), report.isRead(),"Read should be the same");
+        assertEquals(created, immutableReport.getCreated(), "Created should be the same");
+    }
+
+    @Test
+    void convertImmutableReport() {
+        Instant created = Instant.now();
+        ImmutableReport immutableReport = new ImmutableReportBuilder()
+                .setId(1)
+                .setLocation("fake/location/report.xml")
+                .setCreated(created)
+                .setRead(false)
+                .createImmutableReport();
+
+        Report report = ModelUtils.convertImmutableReport(immutableReport);
+
+        assertEquals(immutableReport.getId(), report.getId(), "Id should be the same");
+        assertEquals(immutableReport.getLocation(), report.getLocation(), "Location should be the same");
+        assertEquals(immutableReport.getCreated(), report.getCreated() ,"Created should be the same");
+        assertEquals(immutableReport.isRead(), report.isRead(), "Read should be the same");
     }
 }
