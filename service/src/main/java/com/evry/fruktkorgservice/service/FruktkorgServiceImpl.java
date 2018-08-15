@@ -11,6 +11,7 @@ import com.evry.fruktkorgservice.utils.ModelUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +70,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             fruktkorg.getFruktList().add(fruktToAdd);
         }
 
+        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);

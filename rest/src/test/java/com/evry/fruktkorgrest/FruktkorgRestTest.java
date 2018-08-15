@@ -84,7 +84,6 @@ class FruktkorgRestTest {
                 new ImmutableFruktkorgBuilder()
                         .setId(1)
                         .setName("Korg")
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
                         .createImmutableFruktkorg()
         );
 
@@ -208,7 +207,6 @@ class FruktkorgRestTest {
                 .thenReturn(new ImmutableFruktkorgBuilder()
                         .setId(1)
                         .setName("Korg")
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
                         .createImmutableFruktkorg()
                 );
 
@@ -309,6 +307,7 @@ class FruktkorgRestTest {
         Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
         Assertions.assertEquals(fruktkorgName, responseFruktkorg.getName(), "Fruktkorg name should be the same");
         Assertions.assertEquals(1, responseFruktkorg.getFruktList().size(), "Size of Fruktkorg should be the same ");
+        Assertions.assertNotNull(responseFruktkorg.getLastChanged(), "Last changed should be set when there is at least one Frukt in the Fruktkorg");
 
         ImmutableFrukt responseFrukt = responseFruktkorg.getFruktList().get(0);
         Assertions.assertEquals(fruktId, responseFrukt.getId(), "Id of Frukt should be the same");
