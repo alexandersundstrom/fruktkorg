@@ -49,4 +49,28 @@
         <property name="password" value=""/>
     </bean>
 
+    <!--<bean id="simpleJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--<property name="targetObject" ref="fruktkorgServlet" />-->
+        <!--<property name="targetMethod" value="test" />-->
+    <!--</bean>-->
+
+    <!--<bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--<property name="jobDetail" ref="simpleJobDetail" />-->
+        <!--<property name="cronExpression" value="0/5 * * * * ?" />-->
+    <!--</bean>-->
+
+    <!--<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+        <!--<property name="jobDetails">-->
+            <!--<list>-->
+                <!--<ref bean="simpleJobDetail" />-->
+            <!--</list>-->
+        <!--</property>-->
+
+        <!--<property name="triggers">-->
+            <!--<list>-->
+                <!--<ref bean="cronTrigger" />-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
 </beans>
