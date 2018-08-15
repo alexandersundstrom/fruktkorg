@@ -11,6 +11,7 @@
     <bean id = "fruktkorgServlet" class = "com.evry.fruktkorgrest.servlet.FruktkorgServlet">
         <constructor-arg ref="fruktkorgController" />
         <constructor-arg ref="fruktController" />
+        <constructor-arg ref="reportController" />
     </bean>
 
     <bean id = "fruktController" class = "com.evry.fruktkorgrest.controller.FruktController">
@@ -32,6 +33,16 @@
     </bean>
 
     <bean id = "fruktkorgDAO" class="com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl" />
+
+    <bean id = "reportController" class = "com.evry.fruktkorgrest.controller.ReportController">
+        <constructor-arg ref="reportService" />
+    </bean>
+
+    <bean id = "reportService" class = "com.evry.fruktkorgservice.service.ReportServiceImpl">
+        <constructor-arg ref="reportDAO"/>
+    </bean>
+
+    <bean id = "reportDAO" class="com.evry.fruktkorgpersistence.dao.ReportDAOImpl" />
 
     <bean id="myEmf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="prodPU"/>

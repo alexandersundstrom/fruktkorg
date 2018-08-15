@@ -2,6 +2,7 @@ package com.evry.fruktkorgrest.servlet;
 
 import com.evry.fruktkorgrest.controller.FruktController;
 import com.evry.fruktkorgrest.controller.FruktkorgController;
+import com.evry.fruktkorgrest.controller.ReportController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -11,13 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class FruktkorgServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(FruktkorgServlet.class);
     private FruktkorgController fruktkorgController;
     private FruktController fruktController;
-    private static final Logger logger = LogManager.getLogger(FruktkorgServlet.class);
+    private ReportController reportController;
 
-    public FruktkorgServlet(FruktkorgController fruktkorgController, FruktController fruktController) {
+    public FruktkorgServlet(FruktkorgController fruktkorgController, FruktController fruktController, ReportController reportController) {
         this.fruktkorgController = fruktkorgController;
         this.fruktController = fruktController;
+        this.reportController = reportController;
     }
 
     @Override
@@ -44,6 +47,10 @@ public class FruktkorgServlet extends HttpServlet {
             case "/frukt/unique-types":
                 logger.debug("Got request to get unique types");
                 fruktController.getUniqueTypes(req, resp);
+                break;
+            case "/report-list":
+                logger.debug("Got request to get report list");
+                reportController.getReportList(req, resp);
                 break;
         }
     }

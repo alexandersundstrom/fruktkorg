@@ -8,6 +8,8 @@ public class ImmutableReport {
     private Instant created;
     private boolean read;
 
+    private ImmutableReport() {}
+
     ImmutableReport(long id, String location, Instant created, boolean read) {
         this.id = id;
         this.location = location;
