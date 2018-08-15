@@ -1,8 +1,14 @@
 package com.evry.fruktkorgservice.model;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "frukt")
 public class ImmutableFrukt {
     private long id;
+    @XmlElement(name = "type")
     private String type;
+    @XmlElement(name = "amount")
     private int amount;
     private long fruktkorgId;
 

@@ -54,23 +54,33 @@
         <!--<property name="targetMethod" value="test" />-->
     <!--</bean>-->
 
-    <!--<bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
-        <!--<property name="jobDetail" ref="simpleJobDetail" />-->
-        <!--<property name="cronExpression" value="0/5 * * * * ?" />-->
-    <!--</bean>-->
+    <bean name="complexJobDetail"    class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.evry.fruktkorgrest.job.FruktkorgReportJob" />
+        <property name="jobDataMap">
+            <map>
+                <entry key="fruktkorgService" value-ref="fruktkorgService" />
+            </map>
+        </property>
+        <property name="durability" value="true" />
+    </bean>
 
-    <!--<bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
-        <!--<property name="jobDetails">-->
-            <!--<list>-->
-                <!--<ref bean="simpleJobDetail" />-->
-            <!--</list>-->
-        <!--</property>-->
+    <bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="complexJobDetail" />
+        <property name="cronExpression" value="0 * * * * ?" />
+    </bean>
 
-        <!--<property name="triggers">-->
-            <!--<list>-->
-                <!--<ref bean="cronTrigger" />-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
+    <bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobDetails">
+            <list>
+                <ref bean="complexJobDetail" />
+            </list>
+        </property>
+
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
 
 </beans>
