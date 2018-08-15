@@ -2,7 +2,6 @@ package com.evry.fruktkorgrest.model;
 
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

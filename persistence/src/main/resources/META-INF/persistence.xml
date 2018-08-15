@@ -9,6 +9,7 @@
 
         <class>com.evry.fruktkorgpersistence.model.Fruktkorg</class>
         <class>com.evry.fruktkorgpersistence.model.Frukt</class>
+        <class>com.evry.fruktkorgpersistence.model.Report</class>
 
         <properties>
 

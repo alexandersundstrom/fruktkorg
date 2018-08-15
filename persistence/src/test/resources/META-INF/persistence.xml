@@ -8,6 +8,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.evry.fruktkorgpersistence.model.Fruktkorg</class>
         <class>com.evry.fruktkorgpersistence.model.Frukt</class>
+        <class>com.evry.fruktkorgpersistence.model.Report</class>
 
         <properties>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver" />

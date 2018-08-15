@@ -26,3 +26,9 @@ CREATE TABLE reports(
     created TIMESTAMP DEFAULT now() NOT NULL,
     read BOOLEAN DEFAULT false  NOT NULL
 );
+
+--changeset Mio:5
+ALTER TABLE reports RENAME TO report;
+
+--changeset Mio:6
+ALTER TABLE report RENAME COLUMN id TO report_id;
