@@ -38,7 +38,9 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     @Override
     public void persist(Fruktkorg fruktkorg) {
         logger.debug("Persisting Fruktkorg: " + fruktkorg);
-        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+        if (!fruktkorg.getFruktList().isEmpty()) {
+            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+        }
         EntityManager entityManager = getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -67,7 +69,6 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     @Override
     public Fruktkorg merge(Fruktkorg fruktkorg) {
         logger.debug("Merging Fruktkorg: " + fruktkorg);
-        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
         EntityManager entityManager = getEntityManager();
 
         entityManager.getTransaction().begin();

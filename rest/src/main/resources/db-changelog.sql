@@ -15,3 +15,6 @@ CREATE TABLE frukt(
 
 --changeset fruktmannen:2
 ALTER TABLE fruktkorg ADD last_changed TIMESTAMP DEFAULT now() NOT NULL;
+
+--changeset fruktmannen:3
+ALTER TABLE public.fruktkorg ALTER COLUMN last_changed DROP NOT NULL;

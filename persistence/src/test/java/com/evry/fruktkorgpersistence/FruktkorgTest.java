@@ -43,7 +43,7 @@ public class FruktkorgTest {
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals( NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
         Assertions.assertEquals(1, fruktkorg.getId(), "Id of fruktkorg should be 1");
-        Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
+        Assertions.assertNull(fruktkorg.getLastChanged(), "Last Changed should only be set when Frukts are added");
         Assertions.assertEquals(fruktkorg.getId(), fruktkorgar.get(0).getId(), "Id of fruktkorg should be 1");
     }
 
@@ -61,6 +61,7 @@ public class FruktkorgTest {
 
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
     }
 
     @Test
@@ -92,8 +93,6 @@ public class FruktkorgTest {
 
         Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals( "Test korg", fruktkorgar.get(0).getName(), "Should return the correct name");
-        Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
-        Timestamp firstChange = fruktkorg.getLastChanged();
         fruktkorg.setName("Super duper korg");
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
@@ -101,8 +100,7 @@ public class FruktkorgTest {
         fruktkorgar = fruktkorgDAO.listFruktkorgar();
         Assertions.assertEquals( "Super duper korg", fruktkorg.getName(), "Should return the correct name after merge");
         Assertions.assertEquals( "Super duper korg", fruktkorgar.get(0).getName(), "Should return the correct name after merge");
-        Assertions.assertNotNull( fruktkorgar.get(0).getLastChanged(), "Last Changed should be the set by default");
-        Assertions.assertNotEquals( firstChange, fruktkorgar.get(0).getLastChanged(), "Last changed should be updated when Fruktkorg changes ");
+        Assertions.assertNull(fruktkorgar.get(0).getLastChanged(), "Last Changed should only be set when Frukts are added");
     }
 
     @Test

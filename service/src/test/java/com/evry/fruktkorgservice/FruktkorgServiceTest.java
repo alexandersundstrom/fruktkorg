@@ -39,7 +39,6 @@ class FruktkorgServiceTest {
             Object[] arguments = invocationOnMock.getArguments();
             Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
             fruktkorg.setId(1);
-            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
             fruktkorg.setName("Korg");
 
             return null;
@@ -53,7 +52,7 @@ class FruktkorgServiceTest {
 
         Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
         Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set by default");
+        Assertions.assertNull(persistedFruktkorg.getLastChanged(), "Last Changed should only be set when Frukts are added");
     }
 
     @Test
@@ -62,6 +61,7 @@ class FruktkorgServiceTest {
             Object[] arguments = invocationOnMock.getArguments();
             Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
             fruktkorg.setId(1);
+            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
             fruktkorg.setName("Korg");
 
             Frukt frukt = new Frukt();
@@ -90,6 +90,7 @@ class FruktkorgServiceTest {
         Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
         Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
         Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Should be one Frukt in Fruktkorg" );
+        Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set when at least 1 Frukt is provided");
     }
 
     @Test
@@ -119,9 +120,6 @@ class FruktkorgServiceTest {
         Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
         Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
         Assertions.assertEquals(0, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 0" );
-        Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set by default");
-
-        Timestamp lastChanged = persistedFruktkorg.getLastChanged();
 
         ImmutableFrukt fruktToAdd = new ImmutableFruktBuilder()
                 .setType("banan")
@@ -134,7 +132,7 @@ class FruktkorgServiceTest {
         Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
         Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
         Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
-        Assertions.assertNotEquals(lastChanged, persistedFruktkorg.getLastChanged(),    "Last Changed should be updated when Fruktkorg changes");
+        Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set when at least 1 Frukt is provided");
     }
 
     @Test

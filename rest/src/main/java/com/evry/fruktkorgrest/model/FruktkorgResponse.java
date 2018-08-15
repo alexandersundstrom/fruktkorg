@@ -21,7 +21,7 @@ public class FruktkorgResponse {
     }
 
     public FruktkorgResponse(ImmutableFruktkorg immutableFruktkorg) {
-        this.lastChanged = simpleDateFormat.format(immutableFruktkorg.getLastChanged());
+        this.lastChanged = immutableFruktkorg.getLastChanged() != null ? simpleDateFormat.format(immutableFruktkorg.getLastChanged()): null;
         this.id = immutableFruktkorg.getId();
         this.name = immutableFruktkorg.getName();
         this.fruktList = immutableFruktkorg.getFruktList();
@@ -55,8 +55,8 @@ public class FruktkorgResponse {
         return lastChanged;
     }
 
-    public void setLastChanged(Timestamp lastChanged) {
-        this.lastChanged = simpleDateFormat.format(lastChanged);
+    public void setLastChangedFromTimeStamp(Timestamp lastChanged) {
+        this.lastChanged = lastChanged != null ? simpleDateFormat.format(lastChanged): null;
     }
 
     public void setLastChanged(String lastChanged) {
