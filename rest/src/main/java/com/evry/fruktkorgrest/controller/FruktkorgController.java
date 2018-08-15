@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FruktkorgController {
 
@@ -196,7 +197,10 @@ public class FruktkorgController {
 
     public void getFruktkorgList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgService.listFruktkorgar()));
+        resp.getWriter().print(objectMapper.writeValueAsString(fruktkorgService.listFruktkorgar()
+                .stream()
+                .map(FruktkorgResponse::new)
+                .collect(Collectors.toList())));
     }
 
     private boolean isIdInvalid(String id, HttpServletResponse response) throws IOException {
