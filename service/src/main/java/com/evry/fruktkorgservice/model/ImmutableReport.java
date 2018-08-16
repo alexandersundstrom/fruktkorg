@@ -1,8 +1,9 @@
 package com.evry.fruktkorgservice.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public class ImmutableReport {
+public class ImmutableReport implements Serializable {
     private long id;
     private String location;
     private Instant created;
