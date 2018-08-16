@@ -64,23 +64,24 @@ class ReportServiceTest {
     }
 
     @Test
-    void getReportById() throws ReportMissingException {
-        Instant created2 = Instant.now().minus(4, ChronoUnit.DAYS);
+    void getAndMarkReport() throws ReportMissingException {
+        Instant created = Instant.now().minus(4, ChronoUnit.DAYS);
 
-        Report report2 = new Report();
-        report2.setId(2);
-        report2.setCreated(created2);
-        report2.setLocation("fake/location/test/report2.xml");
-        report2.setRead(false);
+        Report report = new Report();
+        report.setId(1);
+        report.setCreated(created);
+        report.setLocation("fake/location/test/report.xml");
+        report.setRead(false);
 
-        Mockito.when(reportDAO.findReportById(2)).thenReturn(Optional.of(report2));
+        Mockito.when(reportDAO.findReportById(1)).thenReturn(Optional.of(report));
+        Mockito.when(reportDAO.merge(Mockito.any(Report.class))).thenReturn(report);
 
-        ImmutableReport immutableReport = reportService.getReportById(2);
+        ImmutableReport immutableReport = reportService.getAndMarkReport(1);
 
-        Assertions.assertEquals(2, immutableReport.getId());
-        Assertions.assertEquals("fake/location/test/report2.xml", immutableReport.getLocation());
-        Assertions.assertFalse(immutableReport.isRead());
-        Assertions.assertEquals(created2, immutableReport.getCreated());
+        Assertions.assertEquals(1, immutableReport.getId());
+        Assertions.assertEquals("fake/location/test/report.xml", immutableReport.getLocation());
+        Assertions.assertTrue(immutableReport.isRead());
+        Assertions.assertEquals(created, immutableReport.getCreated());
     }
 
     @Test
@@ -88,7 +89,7 @@ class ReportServiceTest {
         Mockito.when(reportDAO.findReportById(2)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ReportMissingException.class, () -> {
-            reportService.getReportById(2);
+            reportService.getAndMarkReport(2);
         });
     }
 }

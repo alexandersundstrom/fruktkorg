@@ -1,6 +1,7 @@
 package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
+import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableReport;
 import com.evry.fruktkorgservice.utils.ModelUtils;
@@ -24,12 +25,18 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ImmutableReport getReportById(long id) throws ReportMissingException {
-        return reportDAO.findReportById(id)
-                .map(ModelUtils::convertReport)
+    public ImmutableReport getAndMarkReport(long id) throws ReportMissingException {
+        Report report = reportDAO.findReportById(id)
                 .orElseThrow(() -> {
-            logger.warn("Unable to find report with id: " + id);
-            return new ReportMissingException("Unable to find report with id: " + id, id);
-        });
+                    logger.warn("Unable to find report with id: " + id);
+                    return new ReportMissingException("Unable to find report with id: " + id, id);
+                });
+
+        if (!report.isRead()) {
+           report.setRead(true);
+           report = reportDAO.merge(report);
+        }
+
+        return ModelUtils.convertReport(report);
     }
 }
