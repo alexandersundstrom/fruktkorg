@@ -8,4 +8,6 @@ import java.util.List;
 public interface ReportService {
     List<ImmutableReport> listReports();
     ImmutableReport getAndMarkReport(long id) throws ReportMissingException;
+
+    ImmutableReport createReport(String path);
 }

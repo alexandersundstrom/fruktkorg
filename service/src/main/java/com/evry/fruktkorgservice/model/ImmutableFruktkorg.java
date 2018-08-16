@@ -9,6 +9,7 @@ import java.util.List;
 public class ImmutableFruktkorg {
     @XmlElement(name = "id")
     private long id;
+    @XmlElement(name = "name")
     private String name;
     @XmlElement(name = "frukt")
     private List<ImmutableFrukt> fruktList;

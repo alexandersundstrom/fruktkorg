@@ -3,6 +3,7 @@ package com.evry.fruktkorgrest.job;
 import com.evry.fruktkorgrest.xml.Fruktkorgar;
 import com.evry.fruktkorgrest.xml.ReportValidationEventHandler;
 import com.evry.fruktkorgservice.service.FruktkorgService;
+import com.evry.fruktkorgservice.service.ReportService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
@@ -18,9 +19,12 @@ import javax.xml.bind.PropertyException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FruktkorgReportJob extends QuartzJobBean {
     private FruktkorgService fruktkorgService;
+    private ReportService reportService;
     private static final Logger logger = LogManager.getLogger(FruktkorgReportJob.class);
 
     @Override
@@ -65,18 +69,33 @@ public class FruktkorgReportJob extends QuartzJobBean {
             marshaller.setEventHandler(eventHandler);
         } catch (JAXBException e) {
             logger.error("Error setting event handler", e);
+            return;
         }
 
         Fruktkorgar fruktkorgar = new Fruktkorgar();
         fruktkorgar.fruktkorgList = fruktkorgService.listFruktkorgar();
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+        File reportFile = new File("fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
         try {
-            marshaller.marshal(fruktkorgar, System.out);
+            marshaller.marshal(fruktkorgar, reportFile);
         } catch (JAXBException e) {
             logger.error("Error marshalling fruktkorgar", e);
+            return;
         }
+
+        if(!reportFile.exists()) {
+            return;
+        }
+
+        reportService.createReport(reportFile.getAbsolutePath());
     }
 
     public void setFruktkorgService(FruktkorgService fruktkorgService) {
         this.fruktkorgService = fruktkorgService;
+    }
+
+    public void setReportService(ReportService reportService) {
+        this.reportService = reportService;
     }
 }

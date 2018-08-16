@@ -8,6 +8,7 @@ import com.evry.fruktkorgservice.utils.ModelUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,18 @@ public class ReportServiceImpl implements ReportService {
            report.setRead(true);
            report = reportDAO.merge(report);
         }
+
+        return ModelUtils.convertReport(report);
+    }
+
+    @Override
+    public ImmutableReport createReport(String path) {
+        Report report = new Report();
+        report.setRead(false);
+        report.setCreated(Instant.now());
+        report.setLocation(path);
+
+        reportDAO.persist(report);
 
         return ModelUtils.convertReport(report);
     }

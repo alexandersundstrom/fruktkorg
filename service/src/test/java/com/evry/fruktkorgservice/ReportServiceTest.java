@@ -92,4 +92,27 @@ class ReportServiceTest {
             reportService.getAndMarkReport(2);
         });
     }
+
+    @Test
+    void createReport() {
+        Instant now = Instant.now();
+
+        Mockito.doAnswer(invocationOnMock -> {
+            Object[] arguments = invocationOnMock.getArguments();
+            Report report = (Report)arguments[0];
+            report.setId(1);
+            report.setLocation("fake/location/report.xml");
+            report.setCreated(now);
+            report.setRead(false);
+
+            return null;
+        }).when(reportDAO).persist(Mockito.any(Report.class));
+
+        ImmutableReport immutableReport = reportService.createReport("fake/location/report.xml");
+
+        Assertions.assertEquals(1, immutableReport.getId());
+        Assertions.assertEquals("fake/location/report.xml", immutableReport.getLocation());
+        Assertions.assertEquals(now, immutableReport.getCreated());
+        Assertions.assertFalse(immutableReport.isRead());
+    }
 }

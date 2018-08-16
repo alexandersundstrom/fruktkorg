@@ -27,3 +27,4 @@ target/
 
 test.*.db
 
+fruktkorg-report-*.xml

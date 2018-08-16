@@ -70,6 +70,7 @@
         <property name="jobDataMap">
             <map>
                 <entry key="fruktkorgService" value-ref="fruktkorgService" />
+                <entry key="reportService" value-ref="reportService" />
             </map>
         </property>
         <property name="durability" value="true" />
