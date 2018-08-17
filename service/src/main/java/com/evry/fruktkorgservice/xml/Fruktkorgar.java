@@ -1,4 +1,4 @@
-package com.evry.fruktkorgrest.xml;
+package com.evry.fruktkorgservice.xml;
 
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 
