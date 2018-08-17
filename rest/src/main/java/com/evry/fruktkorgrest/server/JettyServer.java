@@ -64,4 +64,8 @@ public class JettyServer {
             server.stop();
         }
     }
+
+    public boolean isStarted() {
+        return server != null && server.isStarted();
+    }
 }

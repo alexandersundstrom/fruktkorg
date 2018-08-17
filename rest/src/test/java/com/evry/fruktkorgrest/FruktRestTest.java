@@ -53,19 +53,14 @@ class FruktRestTest {
 
         serverThread.start();
 
-        boolean serverStarted = false;
-        do {
-            Request request = new Request.Builder()
-                    .url("http://localhost:" + PORT + "/rest/ping")
-                    .get()
-                    .build();
-            try {
-                client.newCall(request).execute();
-                serverStarted = true;
-            } catch (IOException e) {
-                Thread.sleep(100);
+        int count = 0;
+        while(jettyServer == null || !jettyServer.isStarted()) {
+            Thread.sleep(200);
+            count++;
+            if (count == 25) {
+                break;
             }
-        } while (serverStarted);
+        }
     }
 
     @AfterAll

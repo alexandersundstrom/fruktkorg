@@ -38,6 +38,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public List<ImmutableReport> listReports(int limit, int offset) {
+        return reportDAO.listReports(limit,offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+    }
+
+    @Override
     public ImmutableReport getAndMarkReport(long id) throws ReportMissingException {
         Report report = reportDAO.findReportById(id)
                 .orElseThrow(() -> {
