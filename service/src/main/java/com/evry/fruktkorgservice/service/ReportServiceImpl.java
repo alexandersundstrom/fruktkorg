@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
@@ -63,7 +64,7 @@ public class ReportServiceImpl implements ReportService {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
-            schema = schemaFactory.newSchema(new File("src/main/resources/fruktkorg-report.xsd"));
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
         } catch (SAXException e) {
             logger.error("Error creating schema", e);
             return null;
@@ -137,7 +138,7 @@ public class ReportServiceImpl implements ReportService {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
-            schema = schemaFactory.newSchema(new File("src/main/resources/fruktkorg-report.xsd"));
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
         } catch (SAXException e) {
             logger.error("Error creating schema", e);
             return Collections.emptyList();
