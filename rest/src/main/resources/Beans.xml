@@ -39,7 +39,8 @@
     </bean>
 
     <bean id = "reportService" class = "com.evry.fruktkorgservice.service.ReportServiceImpl">
-        <constructor-arg ref="reportDAO"/>
+        <constructor-arg ref="reportDAO" />
+        <constructor-arg ref="fruktkorgService" />
     </bean>
 
     <bean id = "reportDAO" class="com.evry.fruktkorgpersistence.dao.ReportDAOImpl" />
@@ -69,7 +70,6 @@
         <property name="jobClass" value="com.evry.fruktkorgrest.job.FruktkorgReportJob" />
         <property name="jobDataMap">
             <map>
-                <entry key="fruktkorgService" value-ref="fruktkorgService" />
                 <entry key="reportService" value-ref="reportService" />
             </map>
         </property>

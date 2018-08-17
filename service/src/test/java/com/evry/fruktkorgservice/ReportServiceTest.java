@@ -3,7 +3,10 @@ package com.evry.fruktkorgservice;
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
+import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.ReportService;
 import com.evry.fruktkorgservice.service.ReportServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -19,12 +26,53 @@ import java.util.Optional;
 
 class ReportServiceTest {
     private ReportDAO reportDAO;
+    private FruktkorgService fruktkorgService;
     private ReportService reportService;
+
+    private final String TEST_XML = "" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+            "<fruktkorgar>\n" +
+            "    <fruktkorg>\n" +
+            "        <id>1</id>\n" +
+            "        <name>Korg 1</name>\n" +
+            "        <frukt>\n" +
+            "            <type>Banan</type>\n" +
+            "            <amount>5</amount>\n" +
+            "        </frukt>\n" +
+            "        <frukt>\n" +
+            "            <type>Kiwi</type>\n" +
+            "            <amount>1</amount>\n" +
+            "        </frukt>\n" +
+            "        <frukt>\n" +
+            "            <type>Ananas</type>\n" +
+            "            <amount>9</amount>\n" +
+            "        </frukt>\n" +
+            "        <lastChanged>\n" +
+            "            <nanos>505014000</nanos>\n" +
+            "        </lastChanged>\n" +
+            "    </fruktkorg>\n" +
+            "    <fruktkorg>\n" +
+            "        <id>2</id>\n" +
+            "        <name>Korg 2</name>\n" +
+            "        <frukt>\n" +
+            "            <type>Päron</type>\n" +
+            "            <amount>4</amount>\n" +
+            "        </frukt>\n" +
+            "        <frukt>\n" +
+            "            <type>Äpple</type>\n" +
+            "            <amount>4</amount>\n" +
+            "        </frukt>\n" +
+            "        <lastChanged>\n" +
+            "            <nanos>249953000</nanos>\n" +
+            "        </lastChanged>\n" +
+            "    </fruktkorg>\n" +
+            "</fruktkorgar>";
 
     @BeforeEach
     void init() {
+        fruktkorgService = Mockito.mock(FruktkorgService.class);
         reportDAO = Mockito.mock(ReportDAO.class);
-        reportService = new ReportServiceImpl(reportDAO);
+        reportService = new ReportServiceImpl(reportDAO, fruktkorgService);
     }
 
     @Test
@@ -130,25 +178,74 @@ class ReportServiceTest {
     }
 
     @Test
-    void createReport() {
+    void createReport() throws IOException {
         Instant now = Instant.now();
+
+        File reportFile = File.createTempFile("test-report-", ".xml");
+        reportFile.deleteOnExit();
 
         Mockito.doAnswer(invocationOnMock -> {
             Object[] arguments = invocationOnMock.getArguments();
             Report report = (Report)arguments[0];
             report.setId(1);
-            report.setLocation("fake/location/report.xml");
+            report.setLocation(reportFile.getAbsolutePath());
             report.setCreated(now);
             report.setRead(false);
 
             return null;
         }).when(reportDAO).persist(Mockito.any(Report.class));
 
-        ImmutableReport immutableReport = reportService.createReport("fake/location/report.xml");
+
+        ImmutableReport immutableReport = reportService.createReport(reportFile.getAbsolutePath());
 
         Assertions.assertEquals(1, immutableReport.getId());
-        Assertions.assertEquals("fake/location/report.xml", immutableReport.getLocation());
+        Assertions.assertEquals(reportFile.getAbsolutePath(), immutableReport.getLocation());
         Assertions.assertEquals(now, immutableReport.getCreated());
         Assertions.assertFalse(immutableReport.isRead());
+    }
+
+    @Test
+    void getFruktkorgarFromReport() throws ReportMissingException, IOException {
+        File reportFile = File.createTempFile("test-report-", ".xml");
+        reportFile.deleteOnExit();
+        Files.write(Paths.get(reportFile.getAbsolutePath()), TEST_XML.getBytes());
+
+        Report report = new Report();
+        report.setRead(true);
+        report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
+        report.setLocation(reportFile.getAbsolutePath());
+
+        Mockito.when(reportDAO.findReportById(1)).thenReturn(Optional.of(report));
+
+        List<ImmutableFruktkorg> immutableFruktkorgList = reportService.getFruktkorgarFromReport(1);
+
+        Assertions.assertEquals(2, immutableFruktkorgList.size());
+
+        ImmutableFruktkorg immutableFruktkorg1 = immutableFruktkorgList.get(0);
+        ImmutableFruktkorg immutableFruktkorg2 = immutableFruktkorgList.get(1);
+        Assertions.assertEquals(3, immutableFruktkorg1.getFruktList().size());
+        Assertions.assertEquals(2, immutableFruktkorg2.getFruktList().size());
+
+        ImmutableFrukt immutableBanan = immutableFruktkorg1.getFruktList().get(0);
+        ImmutableFrukt immutableKiwi = immutableFruktkorg1.getFruktList().get(1);
+        ImmutableFrukt immutableAnanas = immutableFruktkorg1.getFruktList().get(2);
+
+        Assertions.assertEquals("Banan", immutableBanan.getType());
+        Assertions.assertEquals(5, immutableBanan.getAmount());
+
+        Assertions.assertEquals("Kiwi", immutableKiwi.getType());
+        Assertions.assertEquals(1, immutableKiwi.getAmount());
+
+        Assertions.assertEquals("Ananas", immutableAnanas.getType());
+        Assertions.assertEquals(9, immutableAnanas.getAmount());
+
+        ImmutableFrukt immutableParon = immutableFruktkorg2.getFruktList().get(0);
+        ImmutableFrukt immutableApple = immutableFruktkorg2.getFruktList().get(1);
+
+        Assertions.assertEquals("Päron", immutableParon.getType());
+        Assertions.assertEquals(4, immutableParon.getAmount());
+
+        Assertions.assertEquals("Äpple", immutableApple.getType());
+        Assertions.assertEquals(4, immutableApple.getAmount());
     }
 }

@@ -1,4 +1,4 @@
-package com.evry.fruktkorgrest.xml;
+package com.evry.fruktkorgservice.xml;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

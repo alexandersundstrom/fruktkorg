@@ -1,7 +1,10 @@
 package com.evry.fruktkorgservice.model;
 
+import com.evry.fruktkorgservice.xml.TimestampAdapter;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class ImmutableFruktkorg {
     @XmlElement(name = "frukt")
     private List<ImmutableFrukt> fruktList;
     @XmlElement(name = "lastChanged")
+    @XmlJavaTypeAdapter(TimestampAdapter.class)
     private Timestamp lastChanged;
 
     public ImmutableFruktkorg() {}
