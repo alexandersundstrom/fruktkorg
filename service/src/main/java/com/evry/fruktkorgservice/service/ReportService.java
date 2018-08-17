@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReportService {
     List<ImmutableReport> listReports();
+    List<ImmutableReport> listReports(int limit, int offset);
     ImmutableReport getAndMarkReport(long id) throws ReportMissingException;
-
     ImmutableReport createReport(String path);
 }

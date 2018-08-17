@@ -61,19 +61,14 @@ class ReportRestTest {
 
         serverThread.start();
 
-        boolean serverStarted = false;
-        do {
-            Request request = new Request.Builder()
-                    .url("http://localhost:" + PORT + "/rest/ping")
-                    .get()
-                    .build();
-            try {
-                client.newCall(request).execute();
-                serverStarted = true;
-            } catch (IOException e) {
-                Thread.sleep(100);
+        int count = 0;
+        while(jettyServer == null || !jettyServer.isStarted()) {
+            Thread.sleep(200);
+            count++;
+            if (count == 25) {
+                break;
             }
-        } while (serverStarted);
+        }
     }
 
     @AfterAll
@@ -109,7 +104,51 @@ class ReportRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        List<ImmutableReport> immutableReports = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableReport>>() {});
+        List<ImmutableReport> immutableReports = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableReport>>() {
+        });
+
+        Assertions.assertEquals(2, immutableReports.size(), "Returned reports should be two");
+
+        Assertions.assertEquals(immutableReport1.getId(), immutableReports.get(0).getId());
+        Assertions.assertEquals(immutableReport1.getLocation(), immutableReports.get(0).getLocation());
+        Assertions.assertEquals(immutableReport1.getCreated(), immutableReports.get(0).getCreated());
+        Assertions.assertEquals(immutableReport1.isRead(), immutableReports.get(0).isRead());
+
+        Assertions.assertEquals(immutableReport2.getId(), immutableReports.get(1).getId());
+        Assertions.assertEquals(immutableReport2.getLocation(), immutableReports.get(1).getLocation());
+        Assertions.assertEquals(immutableReport2.getCreated(), immutableReports.get(1).getCreated());
+        Assertions.assertEquals(immutableReport2.isRead(), immutableReports.get(1).isRead());
+    }
+
+    @Test
+    void getReportListWithOffsetAndLimit() throws IOException {
+        ImmutableReport immutableReport1 = new ImmutableReportBuilder()
+                .setId(1)
+                .setLocation("fake/location/report1.xml")
+                .setCreated(Instant.now())
+                .setRead(false)
+                .createImmutableReport();
+
+        ImmutableReport immutableReport2 = new ImmutableReportBuilder()
+                .setId(2)
+                .setLocation("fake/location/report2.xml")
+                .setCreated(Instant.now().minus(4, ChronoUnit.DAYS))
+                .setRead(false)
+                .createImmutableReport();
+
+        Mockito.when(reportService.listReports(2, 0)).thenReturn(Arrays.asList(immutableReport1, immutableReport2));
+
+        Request request = new Request.Builder()
+                .url("http://localhost:" + PORT + "/rest/report-list?limit=2&offset=0")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
+        Assertions.assertNotNull(response.body(), "Request body should not be null");
+        List<ImmutableReport> immutableReports = objectMapper.readValue(response.body().string(), new TypeReference<List<ImmutableReport>>() {
+        });
 
         Assertions.assertEquals(2, immutableReports.size(), "Returned reports should be two");
 

@@ -57,6 +57,15 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     @Override
+    public List<Report> listReports(int limit, int offset) {
+        return getEntityManager()
+                .createNativeQuery("SELECT * FROM report", Report.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    @Override
     public Optional<Report> findReportById(long id) {
         try {
             return Optional.ofNullable((Report) getEntityManager()

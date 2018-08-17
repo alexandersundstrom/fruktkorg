@@ -64,6 +64,42 @@ class ReportServiceTest {
     }
 
     @Test
+    void listReportsWithLimitAndOffset() {
+        Instant created1 = Instant.now();
+        Instant created2 = Instant.now().minus(4, ChronoUnit.DAYS);
+
+        Report report1 = new Report();
+        report1.setId(1);
+        report1.setCreated(created1);
+        report1.setLocation("fake/location/test/report1.xml");
+        report1.setRead(false);
+
+        Report report2 = new Report();
+        report2.setId(2);
+        report2.setCreated(created2);
+        report2.setLocation("fake/location/test/report2.xml");
+        report2.setRead(false);
+
+        Mockito.when(reportDAO.listReports(2, 0)).thenReturn(Arrays.asList(report1, report2));
+
+        List<ImmutableReport> immutableReports = reportService.listReports(2, 0);
+
+        Assertions.assertEquals(2, immutableReports.size());
+        ImmutableReport immutableReport1 = immutableReports.get(0);
+
+        Assertions.assertEquals(1, immutableReport1.getId());
+        Assertions.assertEquals("fake/location/test/report1.xml", immutableReport1.getLocation());
+        Assertions.assertFalse(immutableReport1.isRead());
+        Assertions.assertEquals(created1, immutableReport1.getCreated());
+
+        ImmutableReport immutableReport2 = immutableReports.get(1);
+        Assertions.assertEquals(2, immutableReport2.getId());
+        Assertions.assertEquals("fake/location/test/report2.xml", immutableReport2.getLocation());
+        Assertions.assertFalse(immutableReport2.isRead());
+        Assertions.assertEquals(created2, immutableReport2.getCreated());
+    }
+
+    @Test
     void getAndMarkReport() throws ReportMissingException {
         Instant created = Instant.now().minus(4, ChronoUnit.DAYS);
 

@@ -143,4 +143,39 @@ class ReportTest {
         Assertions.assertNotNull(report.getCreated());
         Assertions.assertEquals("fake/location/test/report2.xml", report.getLocation());
     }
+
+    @Test
+    void listReportWithLimitAndOffset() {
+        Report report1 = new Report();
+        report1.setCreated(Instant.now());
+        report1.setLocation("fake/location/test/report1.xml");
+        report1.setRead(false);
+
+        reportDAO.persist(report1);
+
+        Report report2 = new Report();
+        report2.setCreated(Instant.now());
+        report2.setLocation("fake/location/test/report2.xml");
+        report2.setRead(false);
+
+        reportDAO.persist(report2);
+
+        Report report3 = new Report();
+        report3.setCreated(Instant.now());
+        report3.setLocation("fake/location/test/report2.xml");
+        report3.setRead(false);
+
+        reportDAO.persist(report3);
+
+        List<Report> reportList = reportDAO.listReports(1,0);
+        Assertions.assertEquals(1, reportList.size());
+        Assertions.assertEquals(report1, reportList.get(0));
+
+        reportList = reportDAO.listReports(1,1);
+        Assertions.assertEquals(1, reportList.size());
+        Assertions.assertEquals(report2, reportList.get(0));
+
+        reportList = reportDAO.listReports(3,0);
+        Assertions.assertEquals(3, reportList.size());
+    }
 }
