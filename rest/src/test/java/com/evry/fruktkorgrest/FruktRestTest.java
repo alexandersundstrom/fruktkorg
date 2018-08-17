@@ -54,12 +54,8 @@ class FruktRestTest {
         serverThread.start();
 
         int count = 0;
-        while(jettyServer == null || !jettyServer.isStarted()) {
+        while(jettyServer == null || !jettyServer.isStarted() || count++ < 25) {
             Thread.sleep(200);
-            count++;
-            if (count == 25) {
-                break;
-            }
         }
     }
 
