@@ -3,7 +3,9 @@ package com.evry.fruktkorgservice.service;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBException;
 import java.util.List;
 
 public interface ReportService {
@@ -13,5 +15,5 @@ public interface ReportService {
     ImmutableReport createReport(String path);
 
     List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException;
-    List<ImmutableFruktkorg> readFromByteArrayAndUpdateFruktkorgar(byte[] bytes);
+    void readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) throws Exception;
 }

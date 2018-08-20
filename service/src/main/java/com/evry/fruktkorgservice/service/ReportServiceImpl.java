@@ -1,7 +1,6 @@
 package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
@@ -21,7 +20,6 @@ import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<ImmutableReport> listReports(int limit, int offset) {
-        return reportDAO.listReports(limit,offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportDAO.listReports(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     @Override
@@ -55,8 +53,8 @@ public class ReportServiceImpl implements ReportService {
                 });
 
         if (!report.isRead()) {
-           report.setRead(true);
-           report = reportDAO.merge(report);
+            report.setRead(true);
+            report = reportDAO.merge(report);
         }
 
         return ModelUtils.convertReport(report);
@@ -116,7 +114,7 @@ public class ReportServiceImpl implements ReportService {
             return null;
         }
 
-        if(!reportFile.exists()) {
+        if (!reportFile.exists()) {
             return null;
         }
 
@@ -174,7 +172,7 @@ public class ReportServiceImpl implements ReportService {
 
         Fruktkorgar fruktkorgar = null;
         try {
-            fruktkorgar = (Fruktkorgar)unmarshaller.unmarshal(new File(report.getLocation()));
+            fruktkorgar = (Fruktkorgar) unmarshaller.unmarshal(new File(report.getLocation()));
         } catch (JAXBException e) {
             logger.error("Error unmachalling", e);
             return Collections.emptyList();
@@ -184,7 +182,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<ImmutableFruktkorg> readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) {
+    public void readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) throws Exception {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
@@ -195,13 +193,13 @@ public class ReportServiceImpl implements ReportService {
             unmarshaller.setSchema(schema);
             unmarshaller.setEventHandler(eventHandler);
 
+            Fruktkorgar fruktkorgar = (Fruktkorgar) unmarshaller.unmarshal(new ByteArrayInputStream(bytes));
+            //Do some logic on fruktkorgar to persist
 
-            Fruktkorgar fruktkorgar = (Fruktkorgar)unmarshaller.unmarshal(new ByteArrayInputStream(bytes));
-            return fruktkorgar.fruktkorgList;
 
         } catch (Exception e) {
-            logger.error("Error creating schema", e);
-            return new ArrayList<>();
+            logger.error("Error when creating Fruktkorgar from XML", e);
+            throw e;
         }
     }
 }
