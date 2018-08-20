@@ -13,4 +13,5 @@ public interface ReportService {
     ImmutableReport createReport(String path);
 
     List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException;
+    List<ImmutableFruktkorg> readFromByteArrayAndUpdateFruktkorgar(byte[] bytes);
 }

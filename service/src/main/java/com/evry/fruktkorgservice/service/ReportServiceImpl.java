@@ -1,6 +1,7 @@
 package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
+import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
@@ -17,8 +18,10 @@ import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -178,5 +181,27 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return fruktkorgar.fruktkorgList;
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+        try {
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
+            JAXBContext jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
+            unmarshaller.setSchema(schema);
+            unmarshaller.setEventHandler(eventHandler);
+
+
+            Fruktkorgar fruktkorgar = (Fruktkorgar)unmarshaller.unmarshal(new ByteArrayInputStream(bytes));
+            return fruktkorgar.fruktkorgList;
+
+        } catch (Exception e) {
+            logger.error("Error creating schema", e);
+            return new ArrayList<>();
+        }
     }
 }
