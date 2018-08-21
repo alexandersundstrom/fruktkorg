@@ -3,22 +3,21 @@ package com.evry.fruktkorgrest.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-
-import java.sql.Timestamp;
+import java.time.Instant;
 
 class FruktkortResponseTest {
 
     @Test
     void createFruktkorgResponse() {
         FruktkorgResponse fruktkorgResponse = new FruktkorgResponse();
-        fruktkorgResponse.setLastChangedFromTimeStamp(Timestamp.valueOf("2018-08-14 08:00:00"));
-        Assertions.assertEquals("14 augusti 08:00", fruktkorgResponse.getLastChanged(), "Timestamp provided, expected last change to be converted to String");
+        fruktkorgResponse.setLastChangedFromInstant(Instant.parse("2018-08-14T08:00:00.00Z"));
+        Assertions.assertEquals("14 augusti 10:00", fruktkorgResponse.getLastChanged(), "Instant provided, expected last change to be converted to String");
     }
 
     @Test
     void createFruktkorgResponseWithLastChangeNull() {
         FruktkorgResponse fruktkorgResponse = new FruktkorgResponse();
         fruktkorgResponse.setLastChanged(null);
-        Assertions.assertNull(fruktkorgResponse.getLastChanged(), "When no timestamp is provided, last changed should be null");
+        Assertions.assertNull(fruktkorgResponse.getLastChanged(), "When no instant is provided, last changed should be null");
     }
 }

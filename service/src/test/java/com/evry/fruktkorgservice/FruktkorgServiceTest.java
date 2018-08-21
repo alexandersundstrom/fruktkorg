@@ -11,12 +11,13 @@ import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.FruktkorgServiceImpl;
+import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,7 @@ class FruktkorgServiceTest {
             Object[] arguments = invocationOnMock.getArguments();
             Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
             fruktkorg.setId(1);
-            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+            fruktkorg.setLastChanged(Instant.now());
             fruktkorg.setName("Korg");
 
             Frukt frukt = new Frukt();
@@ -100,7 +101,7 @@ class FruktkorgServiceTest {
             Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
             fruktkorg.setId(1);
             fruktkorg.setName("Korg");
-            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+            fruktkorg.setLastChanged(Instant.now());
 
             return null;
         }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
@@ -300,6 +301,41 @@ class FruktkorgServiceTest {
         Assertions.assertEquals("Korg 1", fruktkorgList.get(0).getName());
         Assertions.assertEquals("Korg 2", fruktkorgList.get(1).getName());
         Assertions.assertEquals("Korg 3", fruktkorgList.get(2).getName());
+    }
 
+    @Test
+    void updateFruktkorg() throws FruktkorgMissingException {
+        Fruktkorg fruktkorg1 = new Fruktkorg();
+        fruktkorg1.setId(1);
+        fruktkorg1.setName("Korg 1");
+        fruktkorg1.setLastChanged(Instant.now());
+
+        Frukt frukt1 = new Frukt("Banan", 5, fruktkorg1);
+        frukt1.setId(1);
+
+        fruktkorg1.getFruktList().add(frukt1);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(fruktkorg1));
+        Mockito.when(fruktkorgDAO.merge(fruktkorg1)).thenReturn(fruktkorg1);
+
+        ImmutableFrukt updateFrukt1 = new ImmutableFruktBuilder()
+                .setAmount(3)
+                .setType("Kiwi")
+                .createImmutableFrukt();
+
+        ImmutableFrukt updateFrukt2 = new ImmutableFruktBuilder()
+                .setAmount(6)
+                .setType("Apelsin")
+                .createImmutableFrukt();
+
+        FruktkorgUpdate fruktkorgUpdate1 = new FruktkorgUpdate();
+        fruktkorgUpdate1.id = 1;
+        fruktkorgUpdate1.fruktList = Arrays.asList(updateFrukt1, updateFrukt2);
+
+        ImmutableFruktkorg updatedFruktkorg = fruktkorgService.updateFruktkorg(fruktkorgUpdate1);
+
+        Assertions.assertEquals(fruktkorg1.getId(), updatedFruktkorg.getId());
+        Assertions.assertEquals(fruktkorg1.getName(), updatedFruktkorg.getName());
+        Assertions.assertEquals(2, updatedFruktkorg.getFruktList().size());
     }
 }

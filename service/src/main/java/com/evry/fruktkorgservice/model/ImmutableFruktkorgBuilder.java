@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.model;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +9,7 @@ public class ImmutableFruktkorgBuilder {
     private long id;
     private String name;
     private List<ImmutableFrukt> fruktList = new ArrayList<>();
-    private Timestamp lastChanged;
+    private Instant lastChanged;
 
     public ImmutableFruktkorgBuilder setId(long id) {
         this.id = id;
@@ -21,7 +21,7 @@ public class ImmutableFruktkorgBuilder {
         return this;
     }
 
-    public ImmutableFruktkorgBuilder setLastChanged(Timestamp lastChanged) {
+    public ImmutableFruktkorgBuilder setLastChanged(Instant lastChanged) {
         this.lastChanged = lastChanged;
         return this;
     }

@@ -3,13 +3,14 @@ package com.evry.fruktkorgrest.model;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
 public class FruktkorgResponse {
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMMM HH:mm", Locale.forLanguageTag("sv-SE"));
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM HH:mm").withLocale(Locale.forLanguageTag("sv-SE")).withZone(ZoneId.systemDefault());
     private long id;
     private String name;
     private List<ImmutableFrukt> fruktList;
@@ -20,7 +21,7 @@ public class FruktkorgResponse {
     }
 
     public FruktkorgResponse(ImmutableFruktkorg immutableFruktkorg) {
-        this.lastChanged = immutableFruktkorg.getLastChanged() != null ? simpleDateFormat.format(immutableFruktkorg.getLastChanged()): null;
+        this.lastChanged = immutableFruktkorg.getLastChanged() != null ? dateTimeFormatter.format(immutableFruktkorg.getLastChanged()): null;
         this.id = immutableFruktkorg.getId();
         this.name = immutableFruktkorg.getName();
         this.fruktList = immutableFruktkorg.getFruktList();
@@ -54,8 +55,8 @@ public class FruktkorgResponse {
         return lastChanged;
     }
 
-    public void setLastChangedFromTimeStamp(Timestamp lastChanged) {
-        this.lastChanged = lastChanged != null ? simpleDateFormat.format(lastChanged): null;
+    public void setLastChangedFromInstant(Instant lastChanged) {
+        this.lastChanged = lastChanged != null ? dateTimeFormatter.format(lastChanged): null;
     }
 
     public void setLastChanged(String lastChanged) {

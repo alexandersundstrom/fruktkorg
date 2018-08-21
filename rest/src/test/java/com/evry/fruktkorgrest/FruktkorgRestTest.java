@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 class FruktkorgRestTest {
@@ -229,7 +229,7 @@ class FruktkorgRestTest {
                 .thenReturn(new ImmutableFruktkorgBuilder()
                         .setId(1)
                         .setName("Korg")
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
+                        .setLastChanged(Instant.now())
                         .createImmutableFruktkorg()
                 );
 
@@ -279,7 +279,7 @@ class FruktkorgRestTest {
                         .setId(fruktkorgId)
                         .setName(fruktkorgName)
                         .addFrukt(returnImmutableFrukt)
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
+                        .setLastChanged(Instant.now())
                         .createImmutableFruktkorg()
                 );
 
@@ -328,7 +328,7 @@ class FruktkorgRestTest {
                         .setId(fruktkorgId)
                         .setName(fruktkorgName)
                         .addFrukt(returnImmutableFrukt)
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
+                        .setLastChanged(Instant.now())
                         .createImmutableFruktkorg()
                 );
 
@@ -362,7 +362,7 @@ class FruktkorgRestTest {
                 .thenReturn(Collections.singletonList(new ImmutableFruktkorgBuilder()
                         .setId(1)
                         .setName("Korg")
-                        .setLastChanged(new Timestamp(System.currentTimeMillis()))
+                        .setLastChanged(Instant.now())
                         .addFrukt(new ImmutableFruktBuilder()
                                 .setId(1)
                                 .setAmount(5)

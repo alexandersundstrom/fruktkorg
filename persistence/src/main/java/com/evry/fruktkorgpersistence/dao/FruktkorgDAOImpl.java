@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.criteria.CriteriaQuery;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     public void persist(Fruktkorg fruktkorg) {
         logger.debug("Persisting Fruktkorg: " + fruktkorg);
         if (!fruktkorg.getFruktList().isEmpty()) {
-            fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+            fruktkorg.setLastChanged(Instant.now());
         }
         EntityManager entityManager = getEntityManager();
 

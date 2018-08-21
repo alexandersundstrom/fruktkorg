@@ -1,11 +1,11 @@
 package com.evry.fruktkorgservice.model;
 
-import com.evry.fruktkorgservice.xml.TimestampAdapter;
+import com.evry.fruktkorgservice.xml.InstantAdapter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @XmlRootElement(name = "fruktkorg")
@@ -17,12 +17,12 @@ public class ImmutableFruktkorg {
     @XmlElement(name = "frukt")
     private List<ImmutableFrukt> fruktList;
     @XmlElement(name = "lastChanged")
-    @XmlJavaTypeAdapter(TimestampAdapter.class)
-    private Timestamp lastChanged;
+    @XmlJavaTypeAdapter(InstantAdapter.class)
+    private Instant lastChanged;
 
     public ImmutableFruktkorg() {}
 
-    ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList, Timestamp lastChanged) {
+    ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList, Instant lastChanged) {
         this.id = id;
         this.name = name;
         this.fruktList = fruktList;
@@ -41,7 +41,7 @@ public class ImmutableFruktkorg {
         return fruktList;
     }
 
-    public Timestamp getLastChanged() {
+    public Instant getLastChanged() {
         return lastChanged;
     }
 

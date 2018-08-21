@@ -8,10 +8,11 @@ import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
+import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             fruktkorg.getFruktList().add(fruktToAdd);
         }
 
-        fruktkorg.setLastChanged(new Timestamp(System.currentTimeMillis()));
+        fruktkorg.setLastChanged(Instant.now());
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
@@ -137,6 +138,32 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     @Override
     public List<ImmutableFruktkorg> listFruktkorgar() {
         return fruktkorgDAO.listFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
+    }
+
+    @Override
+    public ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgUpdate.id);
+
+        if(!optFruktkorg.isPresent()) {
+            throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgUpdate.id, fruktkorgUpdate.id);
+        }
+
+        Fruktkorg fruktkorg = optFruktkorg.get();
+        fruktkorg.getFruktList().clear();
+
+        for(ImmutableFrukt immutableFrukt : fruktkorgUpdate.fruktList) {
+            Frukt frukt = new Frukt();
+            frukt.setType(immutableFrukt.getType());
+            frukt.setAmount(immutableFrukt.getAmount());
+            frukt.setFruktkorg(fruktkorg);
+
+            fruktkorg.getFruktList().add(frukt);
+        }
+
+        fruktkorg.setLastChanged(Instant.now());
+        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+
+        return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {

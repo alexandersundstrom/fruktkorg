@@ -3,9 +3,7 @@ package com.evry.fruktkorgservice;
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableReport;
+import com.evry.fruktkorgservice.model.*;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.ReportService;
 import com.evry.fruktkorgservice.service.ReportServiceImpl;
@@ -195,6 +193,31 @@ class ReportServiceTest {
 
             return null;
         }).when(reportDAO).persist(Mockito.any(Report.class));
+
+        Mockito.when(fruktkorgService.listFruktkorgar()).thenReturn(Arrays.asList(
+                new ImmutableFruktkorgBuilder()
+                    .setId(1)
+                    .setName("Korg 1")
+                    .setLastChanged(Instant.now().minus(4, ChronoUnit.DAYS))
+                    .addFrukt(new ImmutableFruktBuilder()
+                        .setId(1)
+                        .setType("Banan")
+                        .setAmount(4)
+                        .setFruktkorgId(1)
+                        .createImmutableFrukt()
+                    ).createImmutableFruktkorg(),
+                new ImmutableFruktkorgBuilder()
+                        .setId(2)
+                        .setName("Korg 2")
+                        .setLastChanged(Instant.now().minus(6, ChronoUnit.DAYS))
+                        .addFrukt(new ImmutableFruktBuilder()
+                                .setId(2)
+                                .setType("Äpple")
+                                .setAmount(2)
+                                .setFruktkorgId(2)
+                                .createImmutableFrukt()
+                        ).createImmutableFruktkorg()
+        ));
 
 
         ImmutableReport immutableReport = reportService.createReport(reportFile.getAbsolutePath());

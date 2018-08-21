@@ -1,25 +1,17 @@
 <?xml version="1.0"?>
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:element name="fruktkorgar">
+    <xs:element name="fruktkorgar">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="fruktkorg" type="fruktkorg" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
-	</xs:element>
+    </xs:element>
 
     <xs:complexType name="fruktkorg">
         <xs:sequence>
             <xs:element name="id" type="xs:decimal" />
-            <xs:element name="name" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="unbounded" name="frukt" type="frukt" />
-            <xs:element name="lastChanged">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="epochMilli" type="xs:decimal" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

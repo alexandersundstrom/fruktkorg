@@ -5,6 +5,7 @@ import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface FruktkorgService {
     ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException;
     List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType);
     List<ImmutableFruktkorg> listFruktkorgar();
+    ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException;
 }

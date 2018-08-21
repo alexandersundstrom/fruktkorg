@@ -6,7 +6,6 @@ import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.model.*;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collections;
 
@@ -62,7 +61,7 @@ class ModelUtilsTest {
         fruktkorg.setName("Korg");
         fruktkorg.setId(1);
         fruktkorg.setFruktList(Collections.singletonList(frukt));
-        Timestamp updated = new Timestamp(System.currentTimeMillis());
+        Instant updated = Instant.now();
         fruktkorg.setLastChanged(updated);
 
         frukt.setFruktkorg(fruktkorg);
@@ -83,7 +82,7 @@ class ModelUtilsTest {
 
     @Test
     void convertImmutableFruktkorg() {
-        Timestamp updated = new Timestamp(System.currentTimeMillis());
+        Instant updated = Instant.now();
         ImmutableFruktkorg immutableFruktkorg = new ImmutableFruktkorgBuilder()
                 .setName("Korg")
                 .setId(1)
