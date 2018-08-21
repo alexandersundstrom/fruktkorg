@@ -17,6 +17,7 @@ import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.time.Instant;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<ImmutableReport> listReports(int limit, int offset) {
-        return reportDAO.listReports(limit,offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportDAO.listReports(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     @Override
@@ -52,8 +53,8 @@ public class ReportServiceImpl implements ReportService {
                 });
 
         if (!report.isRead()) {
-           report.setRead(true);
-           report = reportDAO.merge(report);
+            report.setRead(true);
+            report = reportDAO.merge(report);
         }
 
         return ModelUtils.convertReport(report);
@@ -113,7 +114,7 @@ public class ReportServiceImpl implements ReportService {
             return null;
         }
 
-        if(!reportFile.exists()) {
+        if (!reportFile.exists()) {
             return null;
         }
 
@@ -205,12 +206,34 @@ public class ReportServiceImpl implements ReportService {
 
         Fruktkorgar fruktkorgar = null;
         try {
-            fruktkorgar = (Fruktkorgar)unmarshaller.unmarshal(new File(report.getLocation()));
+            fruktkorgar = (Fruktkorgar) unmarshaller.unmarshal(new File(report.getLocation()));
         } catch (JAXBException e) {
             logger.error("Error unmachalling", e);
             return Collections.emptyList();
         }
 
         return fruktkorgar.fruktkorgList;
+    }
+
+    @Override
+    public void readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) throws Exception {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+        try {
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
+            JAXBContext jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
+            unmarshaller.setSchema(schema);
+            unmarshaller.setEventHandler(eventHandler);
+
+            Fruktkorgar fruktkorgar = (Fruktkorgar) unmarshaller.unmarshal(new ByteArrayInputStream(bytes));
+            //Do some logic on fruktkorgar to persist
+
+
+        } catch (Exception e) {
+            logger.error("Error when creating Fruktkorgar from XML", e);
+            throw e;
+        }
     }
 }
