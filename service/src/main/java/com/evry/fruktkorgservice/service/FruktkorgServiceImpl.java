@@ -9,9 +9,20 @@ import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
+import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
+import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,8 +151,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         return fruktkorgDAO.listFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
     }
 
-    @Override
-    public ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
+    private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgUpdate.id);
 
         if(!optFruktkorg.isPresent()) {
@@ -164,6 +174,63 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+
+        try {
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-update.xsd")));
+        } catch (SAXException e) {
+            logger.error("Error getting update xml schema", e);
+            return null;
+        }
+
+        JAXBContext jaxbContext;
+        try {
+            jaxbContext = JAXBContext.newInstance(FruktkorgarUpdate.class);
+        } catch (JAXBException e) {
+            logger.error("Error creating context", e);
+            return null;
+        }
+
+        Unmarshaller unmarshaller;
+        try {
+            unmarshaller = jaxbContext.createUnmarshaller();
+        } catch (JAXBException e) {
+            logger.error("Error creating unmashaller", e);
+            return null;
+        }
+
+        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
+        unmarshaller.setSchema(schema);
+        try {
+            unmarshaller.setEventHandler(eventHandler);
+        } catch (JAXBException e) {
+            logger.error("Error setting event handler", e);
+            return null;
+        }
+
+        FruktkorgarUpdate fruktkorgarUpdate;
+        try {
+            fruktkorgarUpdate = (FruktkorgarUpdate) unmarshaller.unmarshal(inputStream);
+        } catch (JAXBException e) {
+            logger.error("Error unmarshaling", e);
+            return null;
+        }
+
+        List<ImmutableFruktkorg> updatedFruktkorgar = new ArrayList<>();
+        for(FruktkorgUpdate fruktkorgUpdate : fruktkorgarUpdate.fruktkorgList) {
+            try {
+                updatedFruktkorgar.add(updateFruktkorg(fruktkorgUpdate));
+            } catch (FruktkorgMissingException e) {
+                // do something
+            }
+        }
+
+        return updatedFruktkorgar;
     }
 
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {

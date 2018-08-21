@@ -2,14 +2,11 @@ package com.evry.fruktkorgservice.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
-import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
 import com.evry.fruktkorgservice.utils.ModelUtils;
-import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
-import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,7 +17,6 @@ import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.time.Instant;
 import java.util.Collections;
@@ -216,59 +212,5 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return fruktkorgar.fruktkorgList;
-    }
-
-    @Override
-    public void readFromByteArrayAndUpdateFruktkorgar(byte[] bytes) {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema;
-
-        try {
-            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-update.xsd")));
-        } catch (SAXException e) {
-            logger.error("Error getting update xml schema", e);
-            return;
-        }
-
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(FruktkorgarUpdate.class);
-        } catch (JAXBException e) {
-            logger.error("Error creating context", e);
-            return;
-        }
-
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = jaxbContext.createUnmarshaller();
-        } catch (JAXBException e) {
-            logger.error("Error creating unmashaller", e);
-            return;
-        }
-
-        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
-        unmarshaller.setSchema(schema);
-        try {
-            unmarshaller.setEventHandler(eventHandler);
-        } catch (JAXBException e) {
-            logger.error("Error setting event handler", e);
-            return;
-        }
-
-        FruktkorgarUpdate fruktkorgarUpdate;
-        try {
-            fruktkorgarUpdate = (FruktkorgarUpdate) unmarshaller.unmarshal(new ByteArrayInputStream(bytes));
-        } catch (JAXBException e) {
-            logger.error("Error unmarshaling", e);
-            return;
-        }
-
-        for(FruktkorgUpdate fruktkorgUpdate : fruktkorgarUpdate.fruktkorgList) {
-            try {
-                fruktkorgService.updateFruktkorg(fruktkorgUpdate);
-            } catch (FruktkorgMissingException e) {
-                // do something
-            }
-        }
     }
 }

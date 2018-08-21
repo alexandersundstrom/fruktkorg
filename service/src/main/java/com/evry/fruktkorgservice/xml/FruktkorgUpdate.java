@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
+@XmlRootElement(name = "fruktkorg")
 public class FruktkorgUpdate {
     @XmlElement(name = "id")
     public long id;

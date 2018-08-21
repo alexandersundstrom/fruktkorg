@@ -14,5 +14,4 @@ public interface ReportService {
     void removeReport(long reportId) throws ReportMissingException;
     void removeReadReports();
     List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException;
-    void readFromByteArrayAndUpdateFruktkorgar(byte[] bytes);
 }

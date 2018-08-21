@@ -12,11 +12,13 @@ import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.FruktkorgServiceImpl;
 import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
+import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayInputStream;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +29,22 @@ class FruktkorgServiceTest {
 
     private FruktkorgDAO fruktkorgDAO;
     private FruktkorgService fruktkorgService;
+
+    private static final String updateFruktkorgarXML = "" +
+            "<?xml version=\"1.0\"?>" +
+            "<fruktkorgar>" +
+            "   <fruktkorg>" +
+            "       <id>1</id>" +
+            "       <frukt>" +
+            "           <type>Kiwi</type>" +
+            "           <amount>3</amount>" +
+            "       </frukt>" +
+            "       <frukt>" +
+            "           <type>Apelsin</type>" +
+            "           <amount>6</amount>" +
+            "       </frukt>" +
+            "   </fruktkorg>" +
+            "</fruktkorgar>";
 
     @BeforeEach
     void init() {
@@ -304,7 +322,7 @@ class FruktkorgServiceTest {
     }
 
     @Test
-    void updateFruktkorg() throws FruktkorgMissingException {
+    void updateFruktkorgar() {
         Fruktkorg fruktkorg1 = new Fruktkorg();
         fruktkorg1.setId(1);
         fruktkorg1.setName("Korg 1");
@@ -328,14 +346,18 @@ class FruktkorgServiceTest {
                 .setType("Apelsin")
                 .createImmutableFrukt();
 
+        FruktkorgarUpdate fruktkorgarUpdate = new FruktkorgarUpdate();
+
         FruktkorgUpdate fruktkorgUpdate1 = new FruktkorgUpdate();
         fruktkorgUpdate1.id = 1;
         fruktkorgUpdate1.fruktList = Arrays.asList(updateFrukt1, updateFrukt2);
 
-        ImmutableFruktkorg updatedFruktkorg = fruktkorgService.updateFruktkorg(fruktkorgUpdate1);
+        fruktkorgarUpdate.fruktkorgList = Collections.singletonList(fruktkorgUpdate1);
 
-        Assertions.assertEquals(fruktkorg1.getId(), updatedFruktkorg.getId());
-        Assertions.assertEquals(fruktkorg1.getName(), updatedFruktkorg.getName());
-        Assertions.assertEquals(2, updatedFruktkorg.getFruktList().size());
+        List<ImmutableFruktkorg> updatedFruktkorgar = fruktkorgService.updateFruktkorgar(new ByteArrayInputStream(updateFruktkorgarXML.getBytes()));
+
+        Assertions.assertEquals(fruktkorg1.getId(), updatedFruktkorgar.get(0).getId());
+        Assertions.assertEquals(fruktkorg1.getName(), updatedFruktkorgar.get(0).getName());
+        Assertions.assertEquals(2, updatedFruktkorgar.get(0).getFruktList().size());
     }
 }
