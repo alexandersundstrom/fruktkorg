@@ -17,12 +17,16 @@ public class FruktkorgReportJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        logger.info("Creating Fruktkorg Report");
+        logger.info("Removing read reports");
+        reportService.removeReadReports();
 
+        logger.info("Creating Fruktkorg Report...");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         File reportFile = new File("fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
 
         reportService.createReport(reportFile.getAbsolutePath());
+
+        logger.info("Fruktkorg Report Created");
     }
 
     public void setReportService(ReportService reportService) {

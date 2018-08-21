@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -247,5 +248,43 @@ class ReportServiceTest {
 
         Assertions.assertEquals("Äpple", immutableApple.getType());
         Assertions.assertEquals(4, immutableApple.getAmount());
+    }
+
+    @Test
+    void removeReport() throws IOException, ReportMissingException {
+        File reportFile = File.createTempFile("test-report-", ".xml");
+        reportFile.deleteOnExit();
+        Files.write(Paths.get(reportFile.getAbsolutePath()), TEST_XML.getBytes());
+
+        Report report = new Report();
+        report.setId(1);
+        report.setRead(true);
+        report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
+        report.setLocation(reportFile.getAbsolutePath());
+
+        Mockito.when(reportDAO.findReportById(1)).thenReturn(Optional.of(report));
+
+        reportService.removeReport(report.getId());
+
+        Assertions.assertFalse(reportFile.exists());
+    }
+
+    @Test
+    void removeReadReports() throws IOException {
+        File reportFile = File.createTempFile("test-report-", ".xml");
+        reportFile.deleteOnExit();
+        Files.write(Paths.get(reportFile.getAbsolutePath()), TEST_XML.getBytes());
+
+        Report report = new Report();
+        report.setId(1);
+        report.setRead(true);
+        report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
+        report.setLocation(reportFile.getAbsolutePath());
+
+        Mockito.when(reportDAO.getReadReports()).thenReturn(Collections.singletonList(report));
+
+        reportService.removeReadReports();
+
+        Assertions.assertFalse(reportFile.exists());
     }
 }

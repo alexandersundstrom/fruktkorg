@@ -128,6 +128,40 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public void removeReport(long reportId) throws ReportMissingException {
+        Report report = reportDAO.findReportById(reportId)
+                .orElseThrow(() -> {
+                    logger.warn("Unable to find report with id: " + reportId);
+                    return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
+                });
+
+        File reportFile = new File(report.getLocation());
+        if(reportFile.exists()) {
+            reportFile.delete();
+        }
+
+        reportDAO.remove(report);
+    }
+
+    @Override
+    public void removeReadReports() {
+        List<Report> readReports = reportDAO.getReadReports();
+
+        if(readReports.isEmpty()) {
+            return;
+        }
+
+        for(Report report : readReports) {
+            File reportFile = new File(report.getLocation());
+            if(reportFile.exists()) {
+                reportFile.delete();
+            }
+        }
+
+        reportDAO.removeReadReports();
+    }
+
+    @Override
     public List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException {
         Report report = reportDAO.findReportById(reportId)
                 .orElseThrow(() -> {

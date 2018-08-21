@@ -11,6 +11,7 @@ public interface ReportService {
     List<ImmutableReport> listReports(int limit, int offset);
     ImmutableReport getAndMarkReport(long id) throws ReportMissingException;
     ImmutableReport createReport(String path);
-
+    void removeReport(long reportId) throws ReportMissingException;
+    void removeReadReports();
     List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException;
 }

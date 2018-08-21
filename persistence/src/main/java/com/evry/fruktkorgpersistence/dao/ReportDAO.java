@@ -15,4 +15,7 @@ public interface ReportDAO {
     List<Report> listReports(int limit, int offset);
     Optional<Report> findReportById(long id);
     void setEntityManagerFactory(EntityManagerFactory entityManagerFactory);
+
+    void removeReadReports();
+    List<Report> getReadReports();
 }

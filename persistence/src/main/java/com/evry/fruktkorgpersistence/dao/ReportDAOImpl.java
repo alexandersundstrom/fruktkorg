@@ -81,4 +81,20 @@ public class ReportDAOImpl implements ReportDAO {
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
+
+    @Override
+    public void removeReadReports() {
+        getEntityManager().getTransaction().begin();
+        getEntityManager()
+                .createNativeQuery("DELETE FROM report WHERE read")
+                .executeUpdate();
+        getEntityManager().getTransaction().commit();
+    }
+
+    @Override
+    public List<Report> getReadReports() {
+        return getEntityManager()
+                .createNativeQuery("SELECT * FROM report WHERE read", Report.class)
+                .getResultList();
+    }
 }
