@@ -112,7 +112,6 @@ public class ReportServiceImpl implements ReportService {
         File reportFile = new File(path);
         try {
             marshaller.marshal(fruktkorgar, reportFile);
-            marshaller.marshal(fruktkorgar, System.out);
         } catch (JAXBException e) {
             logger.error("Error marshalling fruktkorgar", e);
             return null;
