@@ -161,6 +161,8 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         Fruktkorg fruktkorg = optFruktkorg.get();
         fruktkorg.getFruktList().clear();
 
+        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+
         for(ImmutableFrukt immutableFrukt : fruktkorgUpdate.fruktList) {
             Frukt frukt = new Frukt();
             frukt.setType(immutableFrukt.getType());
