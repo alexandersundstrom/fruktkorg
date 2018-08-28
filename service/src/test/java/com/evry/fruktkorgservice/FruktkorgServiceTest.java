@@ -31,7 +31,7 @@ class FruktkorgServiceTest {
     private FruktkorgService fruktkorgService;
 
     private static final String updateFruktkorgarXML = "" +
-            "<?xml version=\"1.0\"?>" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<fruktkorgar>" +
             "   <fruktkorg>" +
             "       <id>1</id>" +
