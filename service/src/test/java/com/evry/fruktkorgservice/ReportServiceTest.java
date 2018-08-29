@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -47,7 +48,7 @@ class ReportServiceTest {
             "            <amount>9</amount>\n" +
             "        </frukt>\n" +
             "        <lastChanged>\n" +
-            "            <nanos>505014000</nanos>\n" +
+            "            <epochMilli>505014000</epochMilli>\n" +
             "        </lastChanged>\n" +
             "    </fruktkorg>\n" +
             "    <fruktkorg>\n" +
@@ -62,7 +63,7 @@ class ReportServiceTest {
             "            <amount>4</amount>\n" +
             "        </frukt>\n" +
             "        <lastChanged>\n" +
-            "            <nanos>249953000</nanos>\n" +
+            "            <epochMilli>249953000</epochMilli>\n" +
             "        </lastChanged>\n" +
             "    </fruktkorg>\n" +
             "</fruktkorgar>";
@@ -72,6 +73,7 @@ class ReportServiceTest {
         fruktkorgService = Mockito.mock(FruktkorgService.class);
         reportDAO = Mockito.mock(ReportDAO.class);
         reportService = new ReportServiceImpl(reportDAO, fruktkorgService);
+        System.setProperty("file.encoding", "UTF-8");
     }
 
     @Test
@@ -232,7 +234,7 @@ class ReportServiceTest {
     void getFruktkorgarFromReport() throws ReportMissingException, IOException {
         File reportFile = File.createTempFile("test-report-", ".xml");
         reportFile.deleteOnExit();
-        Files.write(Paths.get(reportFile.getAbsolutePath()), TEST_XML.getBytes());
+        Files.write(Paths.get(reportFile.getAbsolutePath()), TEST_XML.getBytes(Charset.forName("UTF-8")));
 
         Report report = new Report();
         report.setRead(true);
