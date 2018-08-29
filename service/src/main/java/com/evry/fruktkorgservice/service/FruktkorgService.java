@@ -17,5 +17,19 @@ public interface FruktkorgService {
     ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException;
     List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType);
     List<ImmutableFruktkorg> listFruktkorgar();
+
+    /**
+     * This method does only update existing fruktkorgar. Uses fruktkorg-update.xsd to unmarshal.
+     * @param inputStream
+     * @return
+     */
     List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream);
+
+    /**
+     * This method can both create and edit fruktkorgar. After method call, database will be according to umarshalled
+     * fruktkorgar.
+     * @param inputStream
+     * @return
+     */
+    List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream);
 }

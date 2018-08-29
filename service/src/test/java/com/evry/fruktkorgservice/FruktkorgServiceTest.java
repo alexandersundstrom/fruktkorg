@@ -1,5 +1,6 @@
 package com.evry.fruktkorgservice;
 
+import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
@@ -28,6 +29,7 @@ import java.util.Optional;
 class FruktkorgServiceTest {
 
     private FruktkorgDAO fruktkorgDAO;
+    private FruktDAO fruktDAO;
     private FruktkorgService fruktkorgService;
 
     private static final String updateFruktkorgarXML = "" +
@@ -46,17 +48,52 @@ class FruktkorgServiceTest {
             "   </fruktkorg>" +
             "</fruktkorgar>";
 
+    private static final String restoreExistingFruktkorgXML = "" +
+            "<?xml version=\"1.0\"?>" +
+            "<fruktkorgar>" +
+            "   <fruktkorg>" +
+            "       <id>1</id>" +
+            "       <name>Köket</name>" +
+            "       <frukt>" +
+            "           <id>1</id>" +
+            "           <type>Kiwi</type>" +
+            "           <amount>10</amount>" +
+            "       </frukt>" +
+            "       <frukt>" +
+            "           <type>Apelsin</type>" +
+            "           <amount>10</amount>" +
+            "       </frukt>" +
+            "   </fruktkorg>" +
+            "</fruktkorgar>";
+
+    private static final String restoreNewFruktkorgXML = "" +
+            "<?xml version=\"1.0\"?>" +
+            "<fruktkorgar>" +
+            "   <fruktkorg>" +
+            "       <name>Köket</name>" +
+            "       <frukt>" +
+            "           <type>Kiwi</type>" +
+            "           <amount>10</amount>" +
+            "       </frukt>" +
+            "       <frukt>" +
+            "           <type>Apelsin</type>" +
+            "           <amount>10</amount>" +
+            "       </frukt>" +
+            "   </fruktkorg>" +
+            "</fruktkorgar>";
+
     @BeforeEach
     void init() {
         fruktkorgDAO = Mockito.mock(FruktkorgDAO.class);
-        fruktkorgService = new FruktkorgServiceImpl(fruktkorgDAO);
+        fruktDAO = Mockito.mock(FruktDAO.class);
+        fruktkorgService = new FruktkorgServiceImpl(fruktkorgDAO, fruktDAO);
     }
 
     @Test
     void createFruktkorg() {
         Mockito.doAnswer(invocationOnMock -> {
             Object[] arguments = invocationOnMock.getArguments();
-            Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
+            Fruktkorg fruktkorg = (Fruktkorg) arguments[0];
             fruktkorg.setId(1);
             fruktkorg.setName("Korg");
 
@@ -69,8 +106,8 @@ class FruktkorgServiceTest {
 
         ImmutableFruktkorg persistedFruktkorg = fruktkorgService.createFruktkorg(immutableFruktkorg);
 
-        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
+        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg");
         Assertions.assertNull(persistedFruktkorg.getLastChanged(), "Last Changed should only be set when Frukts are added");
     }
 
@@ -78,7 +115,7 @@ class FruktkorgServiceTest {
     void createFruktkorgWithFrukt() {
         Mockito.doAnswer(invocationOnMock -> {
             Object[] arguments = invocationOnMock.getArguments();
-            Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
+            Fruktkorg fruktkorg = (Fruktkorg) arguments[0];
             fruktkorg.setId(1);
             fruktkorg.setLastChanged(Instant.now());
             fruktkorg.setName("Korg");
@@ -106,9 +143,9 @@ class FruktkorgServiceTest {
 
         ImmutableFruktkorg persistedFruktkorg = fruktkorgService.createFruktkorg(immutableFruktkorg);
 
-        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Should be one Frukt in Fruktkorg" );
+        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Should be one Frukt in Fruktkorg");
         Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set when at least 1 Frukt is provided");
     }
 
@@ -116,7 +153,7 @@ class FruktkorgServiceTest {
     void addFruktToFruktkorg() throws FruktkorgMissingException {
         Mockito.doAnswer(invocationOnMock -> {
             Object[] arguments = invocationOnMock.getArguments();
-            Fruktkorg fruktkorg = (Fruktkorg)arguments[0];
+            Fruktkorg fruktkorg = (Fruktkorg) arguments[0];
             fruktkorg.setId(1);
             fruktkorg.setName("Korg");
             fruktkorg.setLastChanged(Instant.now());
@@ -136,9 +173,9 @@ class FruktkorgServiceTest {
 
         ImmutableFruktkorg persistedFruktkorg = fruktkorgService.createFruktkorg(immutableFruktkorg);
 
-        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(0, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 0" );
+        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(0, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 0");
 
         ImmutableFrukt fruktToAdd = new ImmutableFruktBuilder()
                 .setType("banan")
@@ -148,9 +185,9 @@ class FruktkorgServiceTest {
 
         persistedFruktkorg = fruktkorgService.addFruktToFruktkorg(persistedFruktkorg.getId(), fruktToAdd);
 
-        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
+        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1");
         Assertions.assertNotNull(persistedFruktkorg.getLastChanged(), "Last Change should be set when at least 1 Frukt is provided");
     }
 
@@ -180,15 +217,15 @@ class FruktkorgServiceTest {
         Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         ImmutableFruktkorg persistedFruktkorg = fruktkorgService.addFruktToFruktkorg(1, new ImmutableFruktBuilder()
-            .setType("banan")
-            .setAmount(2)
-            .setFruktkorgId(1)
-            .createImmutableFrukt());
+                .setType("banan")
+                .setAmount(2)
+                .setFruktkorgId(1)
+                .createImmutableFrukt());
 
-        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
-        Assertions.assertEquals(7, persistedFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 7" );
+        Assertions.assertEquals(1, persistedFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", persistedFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(1, persistedFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1");
+        Assertions.assertEquals(7, persistedFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 7");
     }
 
     @Test
@@ -205,10 +242,10 @@ class FruktkorgServiceTest {
 
         ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 3);
 
-        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
-        Assertions.assertEquals(2, immutableFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 2" );
+        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1");
+        Assertions.assertEquals(2, immutableFruktkorg.getFruktList().get(0).getAmount(), "Bananas in fruktkorg should be 2");
     }
 
     @Test
@@ -225,9 +262,9 @@ class FruktkorgServiceTest {
 
         ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
 
-        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one" );
-        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg" );
-        Assertions.assertEquals(0, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1" );
+        Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be set to one");
+        Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be Korg");
+        Assertions.assertEquals(0, immutableFruktkorg.getFruktList().size(), "Frukt in fruktkorg should be 1");
     }
 
     @Test
@@ -359,5 +396,75 @@ class FruktkorgServiceTest {
         Assertions.assertEquals(fruktkorg1.getId(), updatedFruktkorgar.get(0).getId());
         Assertions.assertEquals(fruktkorg1.getName(), updatedFruktkorgar.get(0).getName());
         Assertions.assertEquals(2, updatedFruktkorgar.get(0).getFruktList().size());
+    }
+
+    @Test
+    void restorePersistedFruktkorg() {
+        Fruktkorg persistedKitchenfruktkorg = new Fruktkorg();
+        persistedKitchenfruktkorg.setId(1);
+        persistedKitchenfruktkorg.setName("Köket");
+        persistedKitchenfruktkorg.setLastChanged(Instant.now());
+
+        Frukt persistedKiwi = new Frukt("Banan", 10, persistedKitchenfruktkorg);
+        persistedKiwi.setId(1);
+
+        persistedKitchenfruktkorg.getFruktList().add(persistedKiwi);
+
+        Fruktkorg kitchenUpdatedFromXML = new Fruktkorg();
+        kitchenUpdatedFromXML.setName("Köket");
+        kitchenUpdatedFromXML.setId(1);
+
+        Frukt kiwiUpdated = new Frukt("Kiwi", 10, kitchenUpdatedFromXML);
+        kiwiUpdated.setId(1);
+
+        Frukt apelsinUpdated = new Frukt("Apelsin", 10, kitchenUpdatedFromXML);
+        apelsinUpdated.setId(2);
+
+        kitchenUpdatedFromXML.getFruktList().add(kiwiUpdated);
+        kitchenUpdatedFromXML.getFruktList().add(apelsinUpdated);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
+        Mockito.when(fruktDAO.findFruktById(1)).thenReturn(Optional.of(persistedKiwi));
+        Mockito.when(fruktkorgDAO.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
+
+        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes()));
+
+        Assertions.assertEquals(1, restoredFruktkorgar.size(), "Should only be one Fruktkorg");
+        Assertions.assertEquals(2, restoredFruktkorgar.get(0).getFruktList().size(), "Should only be two Frukter");
+        Assertions.assertEquals("Köket", restoredFruktkorgar.get(0).getName());
+
+    }
+
+    @Test
+    void restoreNewFruktkorg() {
+        Fruktkorg kitchenUpdatedFromXML = new Fruktkorg();
+        kitchenUpdatedFromXML.setName("Köket");
+        kitchenUpdatedFromXML.setId(1);
+
+        Frukt kiwiUpdated = new Frukt("Kiwi", 10, kitchenUpdatedFromXML);
+        kiwiUpdated.setId(1);
+
+        Frukt apelsinUpdated = new Frukt("Apelsin", 10, kitchenUpdatedFromXML);
+        apelsinUpdated.setId(2);
+
+        kitchenUpdatedFromXML.getFruktList().add(kiwiUpdated);
+        kitchenUpdatedFromXML.getFruktList().add(apelsinUpdated);
+
+        Mockito.doAnswer(invocationOnMock -> {
+            Object[] arguments = invocationOnMock.getArguments();
+            Fruktkorg fruktkorg = (Fruktkorg) arguments[0];
+            fruktkorg.setId(1);
+            fruktkorg.setName("Köket");
+
+            return null;
+        }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
+
+        Mockito.when(fruktkorgDAO.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
+
+        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreNewFruktkorgXML.getBytes()));
+
+        Assertions.assertEquals(1, restoredFruktkorgar.size(), "Should only be one Fruktkorg");
+        Assertions.assertEquals(2, restoredFruktkorgar.get(0).getFruktList().size(), "Should only be two Frukter");
+
     }
 }

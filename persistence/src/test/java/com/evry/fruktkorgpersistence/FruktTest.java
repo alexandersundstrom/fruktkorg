@@ -47,6 +47,32 @@ class FruktTest {
     }
 
     @Test
+    void saveAndReadFruktWithId() {
+        Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
+        fruktkorgDAO.persist(fruktkorg);
+
+        Frukt frukt = new Frukt("Äpple", 3, fruktkorg);
+
+        fruktDAO.persist(frukt);
+        fruktkorgDAO.refresh(fruktkorg);
+
+        Assertions.assertTrue(fruktDAO.findFruktById(frukt.getId()).isPresent(), "Frukt should be found by id");
+    }
+
+    @Test
+    void readFruktWereIdIsNotPresent() {
+        Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
+        fruktkorgDAO.persist(fruktkorg);
+
+        Frukt frukt = new Frukt("Äpple", 3, fruktkorg);
+
+        fruktDAO.persist(frukt);
+        fruktkorgDAO.refresh(fruktkorg);
+
+        Assertions.assertFalse(fruktDAO.findFruktById(2).isPresent(), "Frukt should not be found by");
+    }
+
+    @Test
     void saveReadAndEditFrukt() {
         Fruktkorg fruktkorg = new Fruktkorg("Test Korg");
         fruktkorgDAO.persist(fruktkorg);

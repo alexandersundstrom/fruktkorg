@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
+import java.util.Optional;
 
 public class FruktDAOImpl implements FruktDAO {
     @PersistenceUnit
@@ -65,6 +66,11 @@ public class FruktDAOImpl implements FruktDAO {
     @Override
     public void refresh(Frukt frukt) {
         getEntityManager().refresh(frukt);
+    }
+
+    @Override
+    public Optional<Frukt> findFruktById(long fruktId) {
+        return Optional.ofNullable(getEntityManager().find(Frukt.class, fruktId));
     }
 
     @Override

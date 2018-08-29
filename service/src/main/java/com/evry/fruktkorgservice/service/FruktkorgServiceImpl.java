@@ -1,5 +1,6 @@
 package com.evry.fruktkorgservice.service;
 
+import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
@@ -8,9 +9,7 @@ import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
-import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
-import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
-import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
+import com.evry.fruktkorgservice.xml.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -31,10 +30,14 @@ import java.util.stream.Collectors;
 
 public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
+    private FruktDAO fruktDAO;
     private static final Logger logger = LogManager.getLogger(FruktkorgServiceImpl.class);
+    private static final String RESTORE_XSD = "fruktkorg-restore.xsd";
+    private static final String UPDATE_XSD = "fruktkorg-update.xsd";
 
-    public FruktkorgServiceImpl(FruktkorgDAO fruktkorgDAO) {
+    public FruktkorgServiceImpl(FruktkorgDAO fruktkorgDAO, FruktDAO fruktDAO) {
         this.fruktkorgDAO = fruktkorgDAO;
+        this.fruktDAO = fruktDAO;
     }
 
     @Override
@@ -154,7 +157,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgUpdate.id);
 
-        if(!optFruktkorg.isPresent()) {
+        if (!optFruktkorg.isPresent()) {
             throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgUpdate.id, fruktkorgUpdate.id);
         }
 
@@ -163,7 +166,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
-        for(ImmutableFrukt immutableFrukt : fruktkorgUpdate.fruktList) {
+        for (ImmutableFrukt immutableFrukt : fruktkorgUpdate.fruktList) {
             Frukt frukt = new Frukt();
             frukt.setType(immutableFrukt.getType());
             frukt.setAmount(immutableFrukt.getAmount());
@@ -178,21 +181,27 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
-    @Override
-    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) {
+    private Unmarshaller getMarshaller(String schemaXSD) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
 
         try {
-            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-update.xsd")));
+            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(schemaXSD)));
         } catch (SAXException e) {
             logger.error("Error getting update xml schema", e);
             return null;
         }
 
-        JAXBContext jaxbContext;
+        JAXBContext jaxbContext = null;
         try {
-            jaxbContext = JAXBContext.newInstance(FruktkorgarUpdate.class);
+            switch (schemaXSD) {
+                case UPDATE_XSD:
+                    jaxbContext = JAXBContext.newInstance(FruktkorgarUpdate.class);
+                    break;
+                case RESTORE_XSD:
+                    jaxbContext = JAXBContext.newInstance(FruktkorgarRestore.class);
+                    break;
+            }
         } catch (JAXBException e) {
             logger.error("Error creating context", e);
             return null;
@@ -214,6 +223,13 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             logger.error("Error setting event handler", e);
             return null;
         }
+        return unmarshaller;
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) {
+
+        Unmarshaller unmarshaller = getMarshaller(UPDATE_XSD);
 
         FruktkorgarUpdate fruktkorgarUpdate;
         try {
@@ -222,9 +238,8 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             logger.error("Error unmarshaling", e);
             return null;
         }
-
         List<ImmutableFruktkorg> updatedFruktkorgar = new ArrayList<>();
-        for(FruktkorgUpdate fruktkorgUpdate : fruktkorgarUpdate.fruktkorgList) {
+        for (FruktkorgUpdate fruktkorgUpdate : fruktkorgarUpdate.fruktkorgList) {
             try {
                 updatedFruktkorgar.add(updateFruktkorg(fruktkorgUpdate));
             } catch (FruktkorgMissingException e) {
@@ -235,13 +250,84 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         return updatedFruktkorgar;
     }
 
+    private ImmutableFruktkorg restoreFruktkorg(FruktkorgRestore fruktkorgRestore) throws FruktkorgMissingException, FruktMissingException {
+        Fruktkorg fruktkorg;
+        if (fruktkorgRestore.id == 0L) {
+            fruktkorg = new Fruktkorg();
+            fruktkorg.setName(fruktkorgRestore.name);
+            fruktkorg.setLastChanged(Instant.now());
+            fruktkorgDAO.persist(fruktkorg);
+
+        } else {
+            Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgRestore.id);
+
+            if (!optFruktkorg.isPresent()) {
+                throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgRestore.id, fruktkorgRestore.id);
+            }
+
+            fruktkorg = optFruktkorg.get();
+            fruktkorg.getFruktList().clear();
+        }
+
+        for (ImmutableFrukt immutableFrukt : fruktkorgRestore.fruktList) {
+            if (immutableFrukt.getId() != 0L) {
+                Optional<Frukt> optFrukt = fruktDAO.findFruktById(immutableFrukt.getId());
+                if (!optFrukt.isPresent()) {
+                    throw new FruktMissingException("Unable to to find Frukt with id " + immutableFrukt.getId(), immutableFrukt.getType());
+                }
+            }
+
+            Frukt frukt = new Frukt();
+            frukt.setType(immutableFrukt.getType());
+            frukt.setAmount(immutableFrukt.getAmount());
+            frukt.setId(immutableFrukt.getId());
+            frukt.setFruktkorg(fruktkorg);
+
+            fruktkorg.getFruktList().add(frukt);
+        }
+
+        fruktkorg.setLastChanged(Instant.now());
+        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+
+        return ModelUtils.convertFruktkorg(fruktkorg);
+    }
+
+    @Override
+    public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) {
+        Unmarshaller unmarshaller = getMarshaller(RESTORE_XSD);
+
+        FruktkorgarRestore fruktkorgarRestore;
+        try {
+            fruktkorgarRestore = (FruktkorgarRestore) unmarshaller.unmarshal(inputStream);
+        } catch (JAXBException e) {
+            logger.error("Error unmarshaling", e);
+            return null;
+        }
+
+        Instant before = Instant.now();
+        List<ImmutableFruktkorg> restoredFruktkorgar = new ArrayList<>();
+        for (FruktkorgRestore fruktkorg : fruktkorgarRestore.fruktkorgList) {
+            try {
+                restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
+            } catch (FruktkorgMissingException e) {
+                logger.warn("Fruktkorg with provided id was missing when restoring", e);
+            } catch (FruktMissingException e) {
+                logger.warn("Frukt with provided id was missing when restoring", e);
+            }
+        }
+
+        fruktkorgDAO.removeAllBefore(before);
+        return restoredFruktkorgar;
+    }
+
+
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         validateId(fruktkorgId);
 
         Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
 
         return optFruktkorg
-                .orElseThrow(() ->  {
+                .orElseThrow(() -> {
                     logger.warn("Unable to find fruktkorg with id: " + fruktkorgId);
                     return new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgId, fruktkorgId);
                 });

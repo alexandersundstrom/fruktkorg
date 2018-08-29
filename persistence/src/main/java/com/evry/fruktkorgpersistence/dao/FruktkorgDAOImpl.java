@@ -67,6 +67,18 @@ public class FruktkorgDAOImpl implements FruktkorgDAO {
     }
 
     @Override
+    public void removeAllBefore(Instant before) {
+        logger.info("Removing Fruktkorgar with date before " + before.toString());
+        EntityManager entityManager = getEntityManager();
+
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("DELETE FROM fruktkorg WHERE last_changed < :before")
+                .setParameter("before", before)
+                .executeUpdate();
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
     public Fruktkorg merge(Fruktkorg fruktkorg) {
         logger.debug("Merging Fruktkorg: " + fruktkorg);
         EntityManager entityManager = getEntityManager();

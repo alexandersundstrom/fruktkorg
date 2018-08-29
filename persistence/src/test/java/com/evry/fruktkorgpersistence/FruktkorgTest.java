@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 public class FruktkorgTest {
@@ -40,8 +40,8 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
         Assertions.assertEquals(1, fruktkorg.getId(), "Id of fruktkorg should be 1");
         Assertions.assertNull(fruktkorg.getLastChanged(), "Last Changed should only be set when Frukts are added");
         Assertions.assertEquals(fruktkorg.getId(), fruktkorgar.get(0).getId(), "Id of fruktkorg should be 1");
@@ -59,8 +59,8 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
         Assertions.assertNotNull(fruktkorg.getLastChanged(), "Last Changed should be the set by default");
     }
 
@@ -73,13 +73,50 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
 
         fruktkorgDAO.remove(fruktkorg.getId());
 
         fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 0, fruktkorgar.size(), "Should return 0 fruktkorgar after remove");
+        Assertions.assertEquals(0, fruktkorgar.size(), "Should return 0 fruktkorgar after remove");
+    }
+
+    @Test
+    public void removeByDateBefore() {
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setName("Test 1");
+        fruktkorg.setLastChanged(Instant.now());
+        fruktkorgDAO.persist(fruktkorg);
+
+        Instant oneObjectCreated = Instant.now();
+
+        Fruktkorg fruktkorg2 = new Fruktkorg();
+        fruktkorg2.setName("Test 2");
+        fruktkorg2.setLastChanged(Instant.now());
+        fruktkorgDAO.persist(fruktkorg2);
+
+        List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
+        Assertions.assertEquals(2, fruktkorgar.size(), "Should return 2 fruktkorgar before deletion");
+        fruktkorgDAO.removeAllBefore(oneObjectCreated);
+        fruktkorgar = fruktkorgDAO.listFruktkorgar();
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg after deletion");
+    }
+
+    @Test
+    public void removeByDateBeforeWhenDateIsTheSame() {
+        Fruktkorg fruktkorg = new Fruktkorg();
+        fruktkorg.setName("Test 1");
+        Instant now = Instant.now();
+
+        fruktkorg.setLastChanged(now);
+        fruktkorgDAO.persist(fruktkorg);
+
+        List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg before deletion");
+        fruktkorgDAO.removeAllBefore(now);
+        fruktkorgar = fruktkorgDAO.listFruktkorgar();
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg after deletion");
     }
 
     @Test
@@ -91,15 +128,15 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( "Test korg", fruktkorgar.get(0).getName(), "Should return the correct name");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals("Test korg", fruktkorgar.get(0).getName(), "Should return the correct name");
         fruktkorg.setName("Super duper korg");
 
         fruktkorg = fruktkorgDAO.merge(fruktkorg);
 
         fruktkorgar = fruktkorgDAO.listFruktkorgar();
-        Assertions.assertEquals( "Super duper korg", fruktkorg.getName(), "Should return the correct name after merge");
-        Assertions.assertEquals( "Super duper korg", fruktkorgar.get(0).getName(), "Should return the correct name after merge");
+        Assertions.assertEquals("Super duper korg", fruktkorg.getName(), "Should return the correct name after merge");
+        Assertions.assertEquals("Super duper korg", fruktkorgar.get(0).getName(), "Should return the correct name after merge");
         Assertions.assertNull(fruktkorgar.get(0).getLastChanged(), "Last Changed should only be set when Frukts are added");
     }
 
@@ -115,17 +152,17 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
         fruktkorg.getFruktList().remove(superBanan);
 
         fruktkorgDAO.merge(fruktkorg);
         fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( 0, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 0 frukt");
-        Assertions.assertEquals( 0, fruktDAO.listFrukt().size(), "All frukt should have been removed");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(0, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 0 frukt");
+        Assertions.assertEquals(0, fruktDAO.listFrukt().size(), "All frukt should have been removed");
     }
 
     @Test
@@ -140,8 +177,8 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
         List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt("Super Banan");
 
@@ -164,8 +201,8 @@ public class FruktkorgTest {
 
         List<Fruktkorg> fruktkorgar = fruktkorgDAO.listFruktkorgar();
 
-        Assertions.assertEquals( 1, fruktkorgar.size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals( 1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
         List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt("Vanlig Banan");
 

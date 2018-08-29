@@ -30,6 +30,7 @@
 
     <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.service.FruktkorgServiceImpl">
         <constructor-arg ref="fruktkorgDAO"/>
+        <constructor-arg ref="fruktDAO"/>
     </bean>
 
     <bean id = "fruktkorgDAO" class="com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl" />

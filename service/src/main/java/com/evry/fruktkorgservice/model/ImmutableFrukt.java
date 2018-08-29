@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "frukt")
 public class ImmutableFrukt {
+    @XmlElement(name = "id")
     private long id;
     @XmlElement(name = "type")
     private String type;
