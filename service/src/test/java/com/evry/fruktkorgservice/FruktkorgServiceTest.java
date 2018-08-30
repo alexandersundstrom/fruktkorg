@@ -359,7 +359,7 @@ class FruktkorgServiceTest {
     }
 
     @Test
-    void updateFruktkorgar() {
+    void updateFruktkorgar() throws Exception {
         Fruktkorg fruktkorg1 = new Fruktkorg();
         fruktkorg1.setId(1);
         fruktkorg1.setName("Korg 1");
@@ -399,7 +399,7 @@ class FruktkorgServiceTest {
     }
 
     @Test
-    void restorePersistedFruktkorg() {
+    void restorePersistedFruktkorg() throws Exception {
         Fruktkorg persistedKitchenfruktkorg = new Fruktkorg();
         persistedKitchenfruktkorg.setId(1);
         persistedKitchenfruktkorg.setName("Köket");
@@ -436,7 +436,7 @@ class FruktkorgServiceTest {
     }
 
     @Test
-    void restoreNewFruktkorg() {
+    void restoreNewFruktkorg() throws Exception {
         Fruktkorg kitchenUpdatedFromXML = new Fruktkorg();
         kitchenUpdatedFromXML.setName("Köket");
         kitchenUpdatedFromXML.setId(1);

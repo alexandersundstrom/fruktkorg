@@ -227,7 +227,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) {
+    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException {
 
         Unmarshaller unmarshaller = getMarshaller(UPDATE_XSD);
 
@@ -243,7 +243,8 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             try {
                 updatedFruktkorgar.add(updateFruktkorg(fruktkorgUpdate));
             } catch (FruktkorgMissingException e) {
-                // do something
+                logger.warn("Caught the following exception", e);
+                throw e;
             }
         }
 

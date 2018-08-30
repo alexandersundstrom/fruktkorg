@@ -23,7 +23,7 @@ public interface FruktkorgService {
      * @param inputStream
      * @return
      */
-    List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream);
+    List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException;
 
     /**
      * This method can both create and edit fruktkorgar. After method call, database will be according to umarshalled
