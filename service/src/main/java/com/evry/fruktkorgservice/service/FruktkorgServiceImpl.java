@@ -262,7 +262,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgRestore.id);
 
             if (!optFruktkorg.isPresent()) {
-                throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgRestore.id, fruktkorgRestore.id);
+                throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + fruktkorgRestore.id, fruktkorgRestore.id);
             }
             fruktkorg = optFruktkorg.get();
             fruktkorg.setName(fruktkorgRestore.name);
@@ -273,7 +273,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             if (immutableFrukt.getId() != 0L) {
                 Optional<Frukt> optFrukt = fruktDAO.findFruktById(immutableFrukt.getId());
                 if (!optFrukt.isPresent()) {
-                    throw new FruktMissingException("Unable to to find Frukt with id " + immutableFrukt.getId(), immutableFrukt.getType());
+                    throw new FruktMissingException("Kunde inte hitta frukt med id " + immutableFrukt.getId(), immutableFrukt.getType());
                 }
             }
 
@@ -293,7 +293,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) {
+    public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException {
         Unmarshaller unmarshaller = getMarshaller(RESTORE_XSD);
 
         FruktkorgarRestore fruktkorgarRestore;
@@ -310,9 +310,11 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             try {
                 restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
             } catch (FruktkorgMissingException e) {
-                logger.warn("Fruktkorg with provided id was missing when restoring", e);
+                logger.warn("Caught the following exception", e);
+                throw e;
             } catch (FruktMissingException e) {
-                logger.warn("Frukt with provided id was missing when restoring", e);
+                logger.warn("Caught the following exception", e);
+                throw e;
             }
         }
 

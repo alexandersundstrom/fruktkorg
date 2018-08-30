@@ -31,5 +31,5 @@ public interface FruktkorgService {
      * @param inputStream
      * @return
      */
-    List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream);
+    List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException;
 }
