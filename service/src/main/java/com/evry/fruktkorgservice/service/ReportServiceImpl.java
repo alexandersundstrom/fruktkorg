@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -136,7 +137,7 @@ public class ReportServiceImpl implements ReportService {
                 });
 
         File reportFile = new File(report.getLocation());
-        if(reportFile.exists()) {
+        if (reportFile.exists()) {
             reportFile.delete();
         }
 
@@ -147,13 +148,13 @@ public class ReportServiceImpl implements ReportService {
     public void removeReadReports() {
         List<Report> readReports = reportDAO.getReadReports();
 
-        if(readReports.isEmpty()) {
+        if (readReports.isEmpty()) {
             return;
         }
 
-        for(Report report : readReports) {
+        for (Report report : readReports) {
             File reportFile = new File(report.getLocation());
-            if(reportFile.exists()) {
+            if (reportFile.exists()) {
                 reportFile.delete();
             }
         }
@@ -212,5 +213,15 @@ public class ReportServiceImpl implements ReportService {
         }
 
         return fruktkorgar.fruktkorgList;
+    }
+
+    @Override
+    public InputStream getUpdateXSD() {
+        return getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd");
+    }
+
+    @Override
+    public InputStream getRestoreXSD() {
+        return getClass().getClassLoader().getResourceAsStream("fruktkorg-update.xsd");
     }
 }

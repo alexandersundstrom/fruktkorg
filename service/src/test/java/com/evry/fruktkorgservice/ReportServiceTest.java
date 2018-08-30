@@ -187,7 +187,7 @@ class ReportServiceTest {
 
         Mockito.doAnswer(invocationOnMock -> {
             Object[] arguments = invocationOnMock.getArguments();
-            Report report = (Report)arguments[0];
+            Report report = (Report) arguments[0];
             report.setId(1);
             report.setLocation(reportFile.getAbsolutePath());
             report.setCreated(now);
@@ -198,16 +198,16 @@ class ReportServiceTest {
 
         Mockito.when(fruktkorgService.listFruktkorgar()).thenReturn(Arrays.asList(
                 new ImmutableFruktkorgBuilder()
-                    .setId(1)
-                    .setName("Korg 1")
-                    .setLastChanged(Instant.now().minus(4, ChronoUnit.DAYS))
-                    .addFrukt(new ImmutableFruktBuilder()
                         .setId(1)
-                        .setType("Banan")
-                        .setAmount(4)
-                        .setFruktkorgId(1)
-                        .createImmutableFrukt()
-                    ).createImmutableFruktkorg(),
+                        .setName("Korg 1")
+                        .setLastChanged(Instant.now().minus(4, ChronoUnit.DAYS))
+                        .addFrukt(new ImmutableFruktBuilder()
+                                .setId(1)
+                                .setType("Banan")
+                                .setAmount(4)
+                                .setFruktkorgId(1)
+                                .createImmutableFrukt()
+                        ).createImmutableFruktkorg(),
                 new ImmutableFruktkorgBuilder()
                         .setId(2)
                         .setName("Korg 2")

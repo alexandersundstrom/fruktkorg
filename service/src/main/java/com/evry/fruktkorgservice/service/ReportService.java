@@ -4,6 +4,7 @@ import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface ReportService {
@@ -14,4 +15,6 @@ public interface ReportService {
     void removeReport(long reportId) throws ReportMissingException;
     void removeReadReports();
     List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException;
+    InputStream getUpdateXSD();
+    InputStream getRestoreXSD();
 }
