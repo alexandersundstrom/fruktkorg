@@ -227,7 +227,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException {
+    public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, JAXBException {
 
         Unmarshaller unmarshaller = getMarshaller(UPDATE_XSD);
 
@@ -236,7 +236,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             fruktkorgarUpdate = (FruktkorgarUpdate) unmarshaller.unmarshal(inputStream);
         } catch (JAXBException e) {
             logger.error("Error unmarshaling", e);
-            return null;
+           throw e;
         }
         validateFruktkorgar(fruktkorgarUpdate);
         List<ImmutableFruktkorg> updatedFruktkorgar = new ArrayList<>();
@@ -295,7 +295,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     }
 
     @Override
-    public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException {
+    public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException {
         Unmarshaller unmarshaller = getMarshaller(RESTORE_XSD);
 
         FruktkorgarRestore fruktkorgarRestore;
@@ -303,7 +303,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             fruktkorgarRestore = (FruktkorgarRestore) unmarshaller.unmarshal(inputStream);
         } catch (JAXBException e) {
             logger.error("Error unmarshaling", e);
-            return null;
+            throw e;
         }
 
         validateFruktkorgar(fruktkorgarRestore);
@@ -322,7 +322,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             if (fruktkorg.id != 0L) {
                 validateFruktkorg(fruktkorg.id);
             } else {
-                throw new FruktkorgMissingException("Fruktkorgs id måste vara satt." , fruktkorg.id);
+                throw new FruktkorgMissingException("Fruktkorgs id måste vara satt.", fruktkorg.id);
             }
         }
     }

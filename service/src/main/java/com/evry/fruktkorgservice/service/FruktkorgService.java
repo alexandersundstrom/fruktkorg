@@ -6,6 +6,7 @@ import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 
+import javax.xml.bind.JAXBException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface FruktkorgService {
      * @param inputStream
      * @return
      */
-    List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException;
+    List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, JAXBException;
 
     /**
      * This method can both create and edit fruktkorgar. After method call, database will be according to umarshalled
@@ -31,5 +32,5 @@ public interface FruktkorgService {
      * @param inputStream
      * @return
      */
-    List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException;
+    List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException;
 }

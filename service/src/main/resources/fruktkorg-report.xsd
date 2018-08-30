@@ -25,6 +25,7 @@
 
     <xs:complexType name="frukt">
         <xs:sequence>
+            <xs:element name="id" type="xs:decimal" minOccurs="0"  />
             <xs:element name="type" type="xs:string" />
             <xs:element name="amount" type="xs:decimal" />
         </xs:sequence>

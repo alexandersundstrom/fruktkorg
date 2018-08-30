@@ -2,6 +2,7 @@ package com.evry.fruktkorgservice.xml;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
@@ -22,6 +23,9 @@ public class ReportValidationEventHandler implements ValidationEventHandler {
         logger.info("    OBJECT:  " + event.getLocator().getObject());
         logger.info("    NODE:  " + event.getLocator().getNode());
         logger.info("    URL:  " + event.getLocator().getURL());
+        if (event.getLinkedException() instanceof SAXParseException) {
+            return false;
+        }
         return true;
     }
 }
