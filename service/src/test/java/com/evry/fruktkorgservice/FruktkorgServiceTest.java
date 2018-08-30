@@ -467,4 +467,37 @@ class FruktkorgServiceTest {
         Assertions.assertEquals(2, restoredFruktkorgar.get(0).getFruktList().size(), "Should only be two Frukter");
 
     }
+
+    @Test
+    void restoreWithFruktkorgIdNotFound() {
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.updateFruktkorgar(new ByteArrayInputStream(updateFruktkorgarXML.getBytes())));
+
+    }
+
+    @Test
+    void updateWithFruktkorgIdNotFound() {
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
+
+    }
+
+
+    @Test
+    void restoreWithFruktIdNotFound() {
+        Fruktkorg persistedKitchenfruktkorg = new Fruktkorg();
+        persistedKitchenfruktkorg.setId(1);
+        persistedKitchenfruktkorg.setName("Köket");
+        persistedKitchenfruktkorg.setLastChanged(Instant.now());
+
+        Frukt persistedKiwi = new Frukt("Banan", 10, persistedKitchenfruktkorg);
+        persistedKiwi.setId(1);
+
+        persistedKitchenfruktkorg.getFruktList().add(persistedKiwi);
+
+        Mockito.when(fruktkorgDAO.findFruktkorgById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
+        Mockito.when(fruktDAO.findFruktById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(FruktMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
+
+    }
 }

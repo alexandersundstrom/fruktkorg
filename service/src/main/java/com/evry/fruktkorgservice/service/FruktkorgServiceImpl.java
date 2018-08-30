@@ -238,6 +238,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             logger.error("Error unmarshaling", e);
             return null;
         }
+        validateFruktkorgar(fruktkorgarUpdate);
         List<ImmutableFruktkorg> updatedFruktkorgar = new ArrayList<>();
         for (FruktkorgUpdate fruktkorgUpdate : fruktkorgarUpdate.fruktkorgList) {
             try {
@@ -305,24 +306,54 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             return null;
         }
 
+        validateFruktkorgar(fruktkorgarRestore);
         Instant before = Instant.now();
         List<ImmutableFruktkorg> restoredFruktkorgar = new ArrayList<>();
         for (FruktkorgRestore fruktkorg : fruktkorgarRestore.fruktkorgList) {
-            try {
-                restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
-            } catch (FruktkorgMissingException e) {
-                logger.warn("Caught the following exception", e);
-                throw e;
-            } catch (FruktMissingException e) {
-                logger.warn("Caught the following exception", e);
-                throw e;
-            }
+            restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
         }
 
         fruktkorgDAO.removeAllBefore(before);
         return restoredFruktkorgar;
     }
 
+    public void validateFruktkorgar(FruktkorgarUpdate fruktkorgarUpdate) throws FruktkorgMissingException {
+        for (FruktkorgUpdate fruktkorg : fruktkorgarUpdate.fruktkorgList) {
+            if (fruktkorg.id != 0L) {
+                validateFruktkorg(fruktkorg.id);
+            }
+        }
+    }
+
+    public void validateFruktkorgar(FruktkorgarRestore fruktkorgarRestore) throws FruktkorgMissingException, FruktMissingException {
+        for (FruktkorgRestore fruktkorg : fruktkorgarRestore.fruktkorgList) {
+            if (fruktkorg.id != 0L) {
+                validateFruktkorg(fruktkorg.id);
+            }
+
+            for (ImmutableFrukt frukt : fruktkorg.fruktList) {
+                if (frukt.getId() != 0L) {
+                    validateFrukt(frukt);
+                }
+            }
+        }
+    }
+
+    private void validateFruktkorg(long id) throws FruktkorgMissingException {
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(id);
+
+        if (!optFruktkorg.isPresent()) {
+            throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + id, id);
+        }
+    }
+
+    public void validateFrukt(ImmutableFrukt frukt) throws FruktMissingException {
+        Optional<Frukt> optFrukt = fruktDAO.findFruktById(frukt.getId());
+
+        if (!optFrukt.isPresent()) {
+            throw new FruktMissingException("Kunde inte hitta frukt med id " + frukt.getId(), frukt.getType());
+        }
+    }
 
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         validateId(fruktkorgId);
