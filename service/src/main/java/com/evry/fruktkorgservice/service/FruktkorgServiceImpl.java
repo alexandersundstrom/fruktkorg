@@ -321,6 +321,8 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         for (FruktkorgUpdate fruktkorg : fruktkorgarUpdate.fruktkorgList) {
             if (fruktkorg.id != 0L) {
                 validateFruktkorg(fruktkorg.id);
+            } else {
+                throw new FruktkorgMissingException("Fruktkorgs id måste vara satt." , fruktkorg.id);
             }
         }
     }
