@@ -264,8 +264,8 @@ public class FruktkorgServiceImpl implements FruktkorgService {
             if (!optFruktkorg.isPresent()) {
                 throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgRestore.id, fruktkorgRestore.id);
             }
-
             fruktkorg = optFruktkorg.get();
+            fruktkorg.setName(fruktkorgRestore.name);
             fruktkorg.getFruktList().clear();
         }
 
