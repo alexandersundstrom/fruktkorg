@@ -14,11 +14,13 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.InputStream;
 
 public class XMLUtils {
 
     public static final String RESTORE_XSD = "fruktkorg-restore.xsd";
     public static final String UPDATE_XSD = "fruktkorg-update.xsd";
+    public static final String REPORT_XSD = "fruktkorg-report.xsd";
     private static final Logger logger = LogManager.getLogger(XMLUtils.class);
 
     public static Unmarshaller getMarshaller(String schemaXSD) {
@@ -64,5 +66,17 @@ public class XMLUtils {
             return null;
         }
         return unmarshaller;
+    }
+
+    public static InputStream getReportXSD() {
+        return XMLUtils.class.getClassLoader().getResourceAsStream(REPORT_XSD);
+    }
+
+    public static InputStream getUpdateXSD() {
+        return XMLUtils.class.getClassLoader().getResourceAsStream(UPDATE_XSD);
+    }
+
+    public static InputStream getRestoreXSD() {
+        return XMLUtils.class.getClassLoader().getResourceAsStream(RESTORE_XSD);
     }
 }

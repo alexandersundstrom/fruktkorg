@@ -6,6 +6,7 @@ import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
 import com.evry.fruktkorgservice.utils.ModelUtils;
+import com.evry.fruktkorgservice.utils.XMLUtils;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
 import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
@@ -65,7 +66,7 @@ public class ReportServiceImpl implements ReportService {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
-            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
+            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
         } catch (SAXException e) {
             logger.error("Error creating schema", e);
             return null;
@@ -173,7 +174,7 @@ public class ReportServiceImpl implements ReportService {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
-            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd")));
+            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
         } catch (SAXException e) {
             logger.error("Error creating schema", e);
             return Collections.emptyList();
@@ -217,11 +218,11 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public InputStream getUpdateXSD() {
-        return getClass().getClassLoader().getResourceAsStream("fruktkorg-report.xsd");
+        return XMLUtils.getUpdateXSD();
     }
 
     @Override
     public InputStream getRestoreXSD() {
-        return getClass().getClassLoader().getResourceAsStream("fruktkorg-update.xsd");
+        return XMLUtils.getRestoreXSD();
     }
 }
