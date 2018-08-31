@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class ReportService {
         return reportDAO.listReports(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
-    public ImmutableReport getAndMarkReport(long id) throws ReportMissingException {
+    public InputStream getAndMarkReport(long id) throws ReportMissingException, FileNotFoundException {
         Report report = reportDAO.findReportById(id)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + id);
@@ -55,7 +56,7 @@ public class ReportService {
             report = reportDAO.merge(report);
         }
 
-        return ModelUtils.convertReport(report);
+        return XMLUtils.getReport(report);
     }
 
     public ImmutableReport createReport(String path) {
