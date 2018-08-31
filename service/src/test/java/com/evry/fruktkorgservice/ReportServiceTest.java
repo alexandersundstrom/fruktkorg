@@ -6,7 +6,6 @@ import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.model.*;
 import com.evry.fruktkorgservice.service.FruktkorgService;
 import com.evry.fruktkorgservice.service.ReportService;
-import com.evry.fruktkorgservice.service.ReportServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +74,7 @@ class ReportServiceTest {
     void init() {
         fruktkorgService = Mockito.mock(FruktkorgService.class);
         reportDAO = Mockito.mock(ReportDAO.class);
-        reportService = new ReportServiceImpl(reportDAO, fruktkorgService);
+        reportService = new ReportService(reportDAO, fruktkorgService);
         System.setProperty("file.encoding", "UTF-8");
     }
 

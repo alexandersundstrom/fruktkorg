@@ -18,33 +18,33 @@
         <constructor-arg ref="fruktService" />
     </bean>
 
-    <bean id = "fruktService" class = "com.evry.fruktkorgservice.service.FruktServiceImpl">
+    <bean id = "fruktService" class = "com.evry.fruktkorgservice.service.FruktService">
         <constructor-arg ref="fruktDAO"/>
     </bean>
 
-    <bean id = "fruktDAO" class="com.evry.fruktkorgpersistence.dao.FruktDAOImpl" />
+    <bean id = "fruktDAO" class="com.evry.fruktkorgpersistence.dao.FruktDAO" />
 
     <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.service.FruktkorgServiceImpl">
+    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.service.FruktkorgService">
         <constructor-arg ref="fruktkorgDAO"/>
         <constructor-arg ref="fruktDAO"/>
     </bean>
 
-    <bean id = "fruktkorgDAO" class="com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl" />
+    <bean id = "fruktkorgDAO" class="com.evry.fruktkorgpersistence.dao.FruktkorgDAO" />
 
     <bean id = "reportController" class = "com.evry.fruktkorgrest.controller.ReportController">
         <constructor-arg ref="reportService" />
     </bean>
 
-    <bean id = "reportService" class = "com.evry.fruktkorgservice.service.ReportServiceImpl">
+    <bean id = "reportService" class = "com.evry.fruktkorgservice.service.ReportService">
         <constructor-arg ref="reportDAO" />
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "reportDAO" class="com.evry.fruktkorgpersistence.dao.ReportDAOImpl" />
+    <bean id = "reportDAO" class="com.evry.fruktkorgpersistence.dao.ReportDAO" />
 
     <bean id="myEmf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="prodPU"/>

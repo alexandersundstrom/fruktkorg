@@ -1,7 +1,6 @@
 package com.evry.fruktkorgpersistence;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
-import com.evry.fruktkorgpersistence.dao.ReportDAOImpl;
 import com.evry.fruktkorgpersistence.model.Report;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ class ReportTest {
     void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
-        reportDAO = new ReportDAOImpl();
+        reportDAO = new ReportDAO();
         reportDAO.setEntityManagerFactory(entityManagerFactory);
     }
 
