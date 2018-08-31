@@ -9,18 +9,16 @@ import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
-import com.evry.fruktkorgservice.xml.*;
+import com.evry.fruktkorgservice.utils.XMLUtils;
+import com.evry.fruktkorgservice.xml.FruktkorgRestore;
+import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
+import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
+import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,8 +30,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
     private FruktkorgDAO fruktkorgDAO;
     private FruktDAO fruktDAO;
     private static final Logger logger = LogManager.getLogger(FruktkorgServiceImpl.class);
-    private static final String RESTORE_XSD = "fruktkorg-restore.xsd";
-    private static final String UPDATE_XSD = "fruktkorg-update.xsd";
+
 
     public FruktkorgServiceImpl(FruktkorgDAO fruktkorgDAO, FruktDAO fruktDAO) {
         this.fruktkorgDAO = fruktkorgDAO;
@@ -181,55 +178,10 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
-    private Unmarshaller getMarshaller(String schemaXSD) {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema;
-
-        try {
-            schema = schemaFactory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream(schemaXSD)));
-        } catch (SAXException e) {
-            logger.error("Error getting update xml schema", e);
-            return null;
-        }
-
-        JAXBContext jaxbContext = null;
-        try {
-            switch (schemaXSD) {
-                case UPDATE_XSD:
-                    jaxbContext = JAXBContext.newInstance(FruktkorgarUpdate.class);
-                    break;
-                case RESTORE_XSD:
-                    jaxbContext = JAXBContext.newInstance(FruktkorgarRestore.class);
-                    break;
-            }
-        } catch (JAXBException e) {
-            logger.error("Error creating context", e);
-            return null;
-        }
-
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = jaxbContext.createUnmarshaller();
-        } catch (JAXBException e) {
-            logger.error("Error creating unmashaller", e);
-            return null;
-        }
-
-        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
-        unmarshaller.setSchema(schema);
-        try {
-            unmarshaller.setEventHandler(eventHandler);
-        } catch (JAXBException e) {
-            logger.error("Error setting event handler", e);
-            return null;
-        }
-        return unmarshaller;
-    }
-
     @Override
     public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, JAXBException {
 
-        Unmarshaller unmarshaller = getMarshaller(UPDATE_XSD);
+        Unmarshaller unmarshaller = XMLUtils.getMarshaller(XMLUtils.UPDATE_XSD);
 
         FruktkorgarUpdate fruktkorgarUpdate;
         try {
@@ -296,7 +248,7 @@ public class FruktkorgServiceImpl implements FruktkorgService {
 
     @Override
     public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException {
-        Unmarshaller unmarshaller = getMarshaller(RESTORE_XSD);
+        Unmarshaller unmarshaller = XMLUtils.getMarshaller(XMLUtils.RESTORE_XSD);
 
         FruktkorgarRestore fruktkorgarRestore;
         try {
@@ -307,13 +259,13 @@ public class FruktkorgServiceImpl implements FruktkorgService {
         }
 
         validateFruktkorgar(fruktkorgarRestore);
-        Instant before = Instant.now();
+        Instant restorationPoint = Instant.now();
         List<ImmutableFruktkorg> restoredFruktkorgar = new ArrayList<>();
         for (FruktkorgRestore fruktkorg : fruktkorgarRestore.fruktkorgList) {
             restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
         }
 
-        fruktkorgDAO.removeAllBefore(before);
+        fruktkorgDAO.removeAllBefore(restorationPoint);
         return restoredFruktkorgar;
     }
 
