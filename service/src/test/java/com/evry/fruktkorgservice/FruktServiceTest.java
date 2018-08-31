@@ -2,7 +2,6 @@ package com.evry.fruktkorgservice;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import com.evry.fruktkorgservice.service.FruktService;
-import com.evry.fruktkorgservice.service.FruktServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class FruktServiceTest {
     @BeforeEach
     void init() {
         fruktDAO = Mockito.mock(FruktDAO.class);
-        fruktService = new FruktServiceImpl(fruktDAO);
+        fruktService = new FruktService(fruktDAO);
     }
 
     @Test

@@ -13,7 +13,6 @@ import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.service.FruktkorgService;
-import com.evry.fruktkorgservice.service.FruktkorgServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -41,7 +40,7 @@ class FruktkorgRestTest {
     static void init() throws Exception {
         client = new OkHttpClient.Builder().build();
 
-        fruktkorgService = Mockito.mock(FruktkorgServiceImpl.class);
+        fruktkorgService = Mockito.mock(FruktkorgService.class);
         FruktkorgController fruktkorgController = new FruktkorgController(fruktkorgService);
         Servlet servlet = new FruktkorgServlet(fruktkorgController, Mockito.mock(FruktController.class), Mockito.mock(ReportController.class));
 

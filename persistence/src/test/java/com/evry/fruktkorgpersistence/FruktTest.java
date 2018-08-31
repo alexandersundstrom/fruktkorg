@@ -1,9 +1,7 @@
 package com.evry.fruktkorgpersistence;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
-import com.evry.fruktkorgpersistence.dao.FruktDAOImpl;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
-import com.evry.fruktkorgpersistence.dao.FruktkorgDAOImpl;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import org.junit.jupiter.api.Assertions;
@@ -17,17 +15,17 @@ import java.util.List;
 
 class FruktTest {
 
-    private static FruktkorgDAO fruktkorgDAO; 
+    private static FruktkorgDAO fruktkorgDAO;
     private static FruktDAO fruktDAO;
 
     @BeforeEach
     void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
-        fruktkorgDAO = new FruktkorgDAOImpl();
+        fruktkorgDAO = new FruktkorgDAO();
         fruktkorgDAO.setEntityManagerFactory(entityManagerFactory);
         
-        fruktDAO = new FruktDAOImpl();
+        fruktDAO = new FruktDAO();
         fruktDAO.setEntityManagerFactory(entityManagerFactory);
     }
 

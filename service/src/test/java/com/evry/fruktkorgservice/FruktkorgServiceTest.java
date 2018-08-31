@@ -11,7 +11,6 @@ import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.service.FruktkorgService;
-import com.evry.fruktkorgservice.service.FruktkorgServiceImpl;
 import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import org.junit.jupiter.api.Assertions;
@@ -86,7 +85,7 @@ class FruktkorgServiceTest {
     void init() {
         fruktkorgDAO = Mockito.mock(FruktkorgDAO.class);
         fruktDAO = Mockito.mock(FruktDAO.class);
-        fruktkorgService = new FruktkorgServiceImpl(fruktkorgDAO, fruktDAO);
+        fruktkorgService = new FruktkorgService(fruktkorgDAO, fruktDAO);
     }
 
     @Test

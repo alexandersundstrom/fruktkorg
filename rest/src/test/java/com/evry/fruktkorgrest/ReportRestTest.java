@@ -8,7 +8,6 @@ import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
 import com.evry.fruktkorgservice.model.ImmutableReport;
 import com.evry.fruktkorgservice.model.ImmutableReportBuilder;
 import com.evry.fruktkorgservice.service.ReportService;
-import com.evry.fruktkorgservice.service.ReportServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -44,7 +43,7 @@ class ReportRestTest {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new Jdk8Module()).registerModule(new JavaTimeModule());
 
-        reportService = Mockito.mock(ReportServiceImpl.class);
+        reportService = Mockito.mock(ReportService.class);
         ReportController reportController = new ReportController(reportService);
         Servlet servlet = new FruktkorgServlet(Mockito.mock(FruktkorgController.class), Mockito.mock(FruktController.class), reportController);
 
