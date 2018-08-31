@@ -1,5 +1,6 @@
 package com.evry.fruktkorgservice.utils;
 
+import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
 import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
@@ -14,6 +15,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class XMLUtils {
@@ -78,5 +82,9 @@ public class XMLUtils {
 
     public static InputStream getRestoreXSD() {
         return XMLUtils.class.getClassLoader().getResourceAsStream(RESTORE_XSD);
+    }
+
+    public static InputStream getReport(Report report) throws FileNotFoundException {
+        return new FileInputStream(new File(report.getLocation()));
     }
 }

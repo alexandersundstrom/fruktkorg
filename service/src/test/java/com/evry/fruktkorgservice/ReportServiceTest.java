@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -149,24 +152,24 @@ class ReportServiceTest {
     }
 
     @Test
-    void getAndMarkReport() throws ReportMissingException {
+    void getAndMarkReport() throws ReportMissingException, IOException {
         Instant created = Instant.now().minus(4, ChronoUnit.DAYS);
+
+        File tempFile = File.createTempFile("test", ".xml");
+        tempFile.deleteOnExit();
 
         Report report = new Report();
         report.setId(1);
         report.setCreated(created);
-        report.setLocation("fake/location/test/report.xml");
+        report.setLocation(tempFile.getAbsolutePath());
         report.setRead(false);
 
         Mockito.when(reportDAO.findReportById(1)).thenReturn(Optional.of(report));
         Mockito.when(reportDAO.merge(Mockito.any(Report.class))).thenReturn(report);
 
-        ImmutableReport immutableReport = reportService.getAndMarkReport(1);
+        InputStream immutableReport = reportService.getAndMarkReport(1);
 
-        Assertions.assertEquals(1, immutableReport.getId());
-        Assertions.assertEquals("fake/location/test/report.xml", immutableReport.getLocation());
-        Assertions.assertTrue(immutableReport.isRead());
-        Assertions.assertEquals(created, immutableReport.getCreated());
+        immutableReport.close();
     }
 
     @Test
