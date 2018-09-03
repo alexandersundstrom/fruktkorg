@@ -22,7 +22,7 @@
         <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
 
-    <bean id = "fruktRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate" />
+    <bean id = "fruktRepositoryHibernate" class="com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate" />
 
     <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />
@@ -33,7 +33,7 @@
         <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
 
-    <bean id = "fruktkorgRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate" />
+    <bean id = "fruktkorgRepositoryHibernate" class="com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate" />
 
     <bean id = "reportController" class = "com.evry.fruktkorgrest.controller.ReportController">
         <constructor-arg ref="reportService" />
@@ -44,7 +44,7 @@
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "reportRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.ReportRepositoryHibernate" />
+    <bean id = "reportRepositoryHibernate" class="com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate" />
 
     <bean id="myEmf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="prodPU"/>

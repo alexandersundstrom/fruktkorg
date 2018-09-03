@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgpersistence.dao.ReportRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.domain.model.*;

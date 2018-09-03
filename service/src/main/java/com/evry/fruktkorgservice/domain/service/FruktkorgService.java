@@ -1,7 +1,7 @@
 package com.evry.fruktkorgservice.domain.service;
 
-import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
-import com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;

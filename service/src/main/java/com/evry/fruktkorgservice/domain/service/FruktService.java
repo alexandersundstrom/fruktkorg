@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.domain.service;
 
-import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

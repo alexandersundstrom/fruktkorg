@@ -1,4 +1,4 @@
-package com.evry.fruktkorgpersistence.dao;
+package com.evry.fruktkorgpersistence.hibernate;
 
 
 import com.evry.fruktkorgpersistence.model.Fruktkorg;

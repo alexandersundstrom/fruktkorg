@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import com.evry.fruktkorgservice.domain.service.FruktService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.evry.fruktkorgpersistence;
 
-import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
-import com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import org.junit.jupiter.api.Assertions;
