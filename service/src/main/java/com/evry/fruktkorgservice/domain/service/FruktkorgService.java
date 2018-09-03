@@ -52,7 +52,7 @@ public class FruktkorgService {
         fruktkorgRepository.remove(findFruktkorgById(fruktkorgId));
     }
 
-    public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) throws FruktkorgMissingException {
+    public ImmutableFruktkorg addAllFrukterToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) throws FruktkorgMissingException {
         logger.debug("Got request to add Frukt to Fruktorg with id " + fruktkorgId + ": " + immutableFrukt);
         Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgId);
 
@@ -202,6 +202,7 @@ public class FruktkorgService {
             fruktkorg = new Fruktkorg();
             fruktkorg.setName(fruktkorgRestore.name);
             fruktkorg.setLastChanged(Instant.now());
+            addAllFrukterToFruktkorg(fruktkorgRestore, fruktkorg);
             fruktkorgRepository.persist(fruktkorg);
 
         } else {
@@ -213,8 +214,15 @@ public class FruktkorgService {
             fruktkorg = optFruktkorg.get();
             fruktkorg.setName(fruktkorgRestore.name);
             fruktkorg.getFruktList().clear();
+            addAllFrukterToFruktkorg(fruktkorgRestore, fruktkorg);
+            fruktkorg.setLastChanged(Instant.now());
+            fruktkorg = fruktkorgRepository.merge(fruktkorg);
         }
 
+        return ModelUtils.convertFruktkorg(fruktkorg);
+    }
+
+    private void addAllFrukterToFruktkorg(FruktkorgRestore fruktkorgRestore, Fruktkorg fruktkorg) throws FruktMissingException {
         for (ImmutableFrukt immutableFrukt : fruktkorgRestore.fruktList) {
             if (immutableFrukt.getId() != 0L) {
                 Optional<Frukt> optFrukt = fruktRepository.findById(immutableFrukt.getId());
@@ -231,11 +239,6 @@ public class FruktkorgService {
 
             fruktkorg.getFruktList().add(frukt);
         }
-
-        fruktkorg.setLastChanged(Instant.now());
-        fruktkorg = fruktkorgRepository.merge(fruktkorg);
-
-        return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
     public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException {

@@ -273,7 +273,7 @@ class FruktkorgRestTest {
                 .setId(fruktId)
                 .createImmutableFrukt();
 
-        Mockito.when(fruktkorgService.addFruktToFruktkorg(Mockito.anyLong(), Mockito.any(ImmutableFrukt.class)))
+        Mockito.when(fruktkorgService.addAllFrukterToFruktkorg(Mockito.anyLong(), Mockito.any(ImmutableFrukt.class)))
                 .thenReturn(new ImmutableFruktkorgBuilder()
                         .setId(fruktkorgId)
                         .setName(fruktkorgName)

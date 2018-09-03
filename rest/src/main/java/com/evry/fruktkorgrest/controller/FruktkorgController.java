@@ -113,7 +113,7 @@ public class FruktkorgController {
         }
 
         try {
-            ImmutableFruktkorg immutableFruktkorg = fruktkorgService.addFruktToFruktkorg(immutableFrukt.getId(), immutableFrukt);
+            ImmutableFruktkorg immutableFruktkorg = fruktkorgService.addAllFrukterToFruktkorg(immutableFrukt.getId(), immutableFrukt);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().print(objectMapper.writeValueAsString(new FruktkorgDTO(immutableFruktkorg)));
         } catch (FruktkorgMissingException e) {
