@@ -29,11 +29,6 @@ public class ImmutableFruktkorgBuilder {
         return this;
     }
 
-    public ImmutableFruktkorgBuilder setFruktList(List<ImmutableFrukt> fruktList) {
-        this.fruktList = fruktList;
-        return this;
-    }
-
     public ImmutableFruktkorgBuilder addFrukt(ImmutableFrukt frukt) {
         this.fruktList.add(frukt);
         return this;
