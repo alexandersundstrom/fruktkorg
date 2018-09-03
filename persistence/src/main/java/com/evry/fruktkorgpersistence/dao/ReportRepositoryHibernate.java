@@ -12,13 +12,13 @@ import javax.persistence.PersistenceUnit;
 import java.util.List;
 import java.util.Optional;
 
-public class ReportDAO implements ReportRepository {
+public class ReportRepositoryHibernate implements ReportRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     private EntityManager entityManager;
 
-    private static final Logger logger = LogManager.getLogger(FruktkorgDAO.class);
+    private static final Logger logger = LogManager.getLogger(FruktkorgRepositoryHibernate.class);
 
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

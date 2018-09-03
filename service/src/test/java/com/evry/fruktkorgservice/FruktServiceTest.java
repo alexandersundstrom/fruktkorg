@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgpersistence.dao.FruktDAO;
+import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
 import com.evry.fruktkorgservice.domain.service.FruktService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,18 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 
 class FruktServiceTest {
-    private FruktDAO fruktDAO;
+    private FruktRepositoryHibernate fruktRepository;
     private FruktService fruktService;
 
     @BeforeEach
     void init() {
-        fruktDAO = Mockito.mock(FruktDAO.class);
-        fruktService = new FruktService(fruktDAO);
+        fruktRepository = Mockito.mock(FruktRepositoryHibernate.class);
+        fruktService = new FruktService(fruktRepository);
     }
 
     @Test
     void getUniqueFruktTypes() {
-        Mockito.when(fruktDAO.findAllUniqueFruktTypes()).thenReturn(Arrays.asList("Banan", "Äpple"));
+        Mockito.when(fruktRepository.findAllUniqueFruktTypes()).thenReturn(Arrays.asList("Banan", "Äpple"));
 
         List<String> uniqueFruktTypes = fruktService.getUniqueFruktTypes();
 

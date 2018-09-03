@@ -19,32 +19,32 @@
     </bean>
 
     <bean id = "fruktService" class = "com.evry.fruktkorgservice.domain.service.FruktService">
-        <constructor-arg ref="fruktDAO"/>
+        <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
 
-    <bean id = "fruktDAO" class="com.evry.fruktkorgpersistence.dao.FruktDAO" />
+    <bean id = "fruktRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate" />
 
     <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
     <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.domain.service.FruktkorgService">
-        <constructor-arg ref="fruktkorgDAO"/>
-        <constructor-arg ref="fruktDAO"/>
+        <constructor-arg ref="fruktkorgRepositoryHibernate"/>
+        <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
 
-    <bean id = "fruktkorgDAO" class="com.evry.fruktkorgpersistence.dao.FruktkorgDAO" />
+    <bean id = "fruktkorgRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate" />
 
     <bean id = "reportController" class = "com.evry.fruktkorgrest.controller.ReportController">
         <constructor-arg ref="reportService" />
     </bean>
 
     <bean id = "reportService" class = "com.evry.fruktkorgservice.domain.service.ReportService">
-        <constructor-arg ref="reportDAO" />
+        <constructor-arg ref="reportRepositoryHibernate" />
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "reportDAO" class="com.evry.fruktkorgpersistence.dao.ReportDAO" />
+    <bean id = "reportRepositoryHibernate" class="com.evry.fruktkorgpersistence.dao.ReportRepositoryHibernate" />
 
     <bean id="myEmf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="prodPU"/>

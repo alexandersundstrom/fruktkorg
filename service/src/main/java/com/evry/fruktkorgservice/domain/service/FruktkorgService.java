@@ -1,7 +1,7 @@
 package com.evry.fruktkorgservice.domain.service;
 
-import com.evry.fruktkorgpersistence.dao.FruktDAO;
-import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
+import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
@@ -27,14 +27,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FruktkorgService {
-    private FruktkorgDAO fruktkorgDAO;
-    private FruktDAO fruktDAO;
+    private FruktkorgRepositoryHibernate fruktkorgRepository;
+    private FruktRepositoryHibernate fruktRepository;
     private static final Logger logger = LogManager.getLogger(FruktkorgService.class);
 
 
-    public FruktkorgService(FruktkorgDAO fruktkorgDAO, FruktDAO fruktDAO) {
-        this.fruktkorgDAO = fruktkorgDAO;
-        this.fruktDAO = fruktDAO;
+    public FruktkorgService(FruktkorgRepositoryHibernate fruktkorgRepositoryHibernate, FruktRepositoryHibernate fruktRepositoryHibernate) {
+        this.fruktkorgRepository = fruktkorgRepositoryHibernate;
+        this.fruktRepository = fruktRepositoryHibernate;
     }
 
     public ImmutableFruktkorg createFruktkorg(ImmutableFruktkorg immutableFruktkorg) {
@@ -42,19 +42,19 @@ public class FruktkorgService {
         logger.debug("Got request to create a Fruktkorg: " + immutableFruktkorg);
         Fruktkorg fruktkorg = ModelUtils.convertImmutableFruktkorg(immutableFruktkorg);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepository.persist(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
     public void deleteFruktkorg(long fruktkorgId) throws FruktkorgMissingException, IllegalArgumentException {
         logger.info("Got request to delete a fruktkorg with id " + fruktkorgId);
-        fruktkorgDAO.remove(findFruktkorgById(fruktkorgId));
+        fruktkorgRepository.remove(findFruktkorgById(fruktkorgId));
     }
 
     public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) throws FruktkorgMissingException {
         logger.debug("Got request to add Frukt to Fruktorg with id " + fruktkorgId + ": " + immutableFrukt);
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgId);
 
         if (!optFruktkorg.isPresent()) {
             logger.warn("Fruktkorg with id: " + fruktkorgId + " not found");
@@ -80,14 +80,14 @@ public class FruktkorgService {
         }
 
         fruktkorg.setLastChanged(Instant.now());
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
 
     public ImmutableFruktkorg removeFruktFromFruktkorg(long fruktkorgId, String fruktType, int amount) throws FruktkorgMissingException, FruktMissingException {
         logger.info("Got request to remove " + amount + " Frukt(er) of type " + fruktType + " from Fruktkorg");
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgId);
 
         if (!optFruktkorg.isPresent()) {
             logger.warn("Fruktkorg with id: " + fruktkorgId + " not found");
@@ -117,7 +117,7 @@ public class FruktkorgService {
             throw new FruktMissingException("Frukt with type: " + fruktType + " could not be found in fruktkorg with id: " + fruktkorgId, fruktType);
         }
 
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
@@ -129,7 +129,7 @@ public class FruktkorgService {
 
     public List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType) {
         logger.debug("Searching for Fruktkorgar containing Frukt of type " + fruktType);
-        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findAllByFruktType(fruktType);
+        List<Fruktkorg> fruktkorgList = fruktkorgRepository.findAllByFruktType(fruktType);
 
         List<ImmutableFruktkorg> immutableFruktkorgList = new ArrayList<>();
 
@@ -141,11 +141,11 @@ public class FruktkorgService {
     }
 
     public List<ImmutableFruktkorg> listFruktkorgar() {
-        return fruktkorgDAO.findAll().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
+        return fruktkorgRepository.findAll().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
     }
 
     private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgUpdate.id);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgUpdate.id);
 
         if (!optFruktkorg.isPresent()) {
             throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgUpdate.id, fruktkorgUpdate.id);
@@ -154,7 +154,7 @@ public class FruktkorgService {
         Fruktkorg fruktkorg = optFruktkorg.get();
         fruktkorg.getFruktList().clear();
 
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
         for (ImmutableFrukt immutableFrukt : fruktkorgUpdate.fruktList) {
             Frukt frukt = new Frukt();
@@ -166,7 +166,7 @@ public class FruktkorgService {
         }
 
         fruktkorg.setLastChanged(Instant.now());
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
@@ -202,10 +202,10 @@ public class FruktkorgService {
             fruktkorg = new Fruktkorg();
             fruktkorg.setName(fruktkorgRestore.name);
             fruktkorg.setLastChanged(Instant.now());
-            fruktkorgDAO.persist(fruktkorg);
+            fruktkorgRepository.persist(fruktkorg);
 
         } else {
-            Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgRestore.id);
+            Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgRestore.id);
 
             if (!optFruktkorg.isPresent()) {
                 throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + fruktkorgRestore.id, fruktkorgRestore.id);
@@ -217,7 +217,7 @@ public class FruktkorgService {
 
         for (ImmutableFrukt immutableFrukt : fruktkorgRestore.fruktList) {
             if (immutableFrukt.getId() != 0L) {
-                Optional<Frukt> optFrukt = fruktDAO.findById(immutableFrukt.getId());
+                Optional<Frukt> optFrukt = fruktRepository.findById(immutableFrukt.getId());
                 if (!optFrukt.isPresent()) {
                     throw new FruktMissingException("Kunde inte hitta frukt med id " + immutableFrukt.getId(), immutableFrukt.getType());
                 }
@@ -233,7 +233,7 @@ public class FruktkorgService {
         }
 
         fruktkorg.setLastChanged(Instant.now());
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
         return ModelUtils.convertFruktkorg(fruktkorg);
     }
@@ -256,7 +256,7 @@ public class FruktkorgService {
             restoredFruktkorgar.add(restoreFruktkorg(fruktkorg));
         }
 
-        fruktkorgDAO.removeAllBefore(restorationPoint);
+        fruktkorgRepository.removeAllBefore(restorationPoint);
         return restoredFruktkorgar;
     }
 
@@ -285,7 +285,7 @@ public class FruktkorgService {
     }
 
     private void validateFruktkorg(long id) throws FruktkorgMissingException {
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(id);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(id);
 
         if (!optFruktkorg.isPresent()) {
             throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + id, id);
@@ -293,7 +293,7 @@ public class FruktkorgService {
     }
 
     public void validateFrukt(ImmutableFrukt frukt) throws FruktMissingException {
-        Optional<Frukt> optFrukt = fruktDAO.findById(frukt.getId());
+        Optional<Frukt> optFrukt = fruktRepository.findById(frukt.getId());
 
         if (!optFrukt.isPresent()) {
             throw new FruktMissingException("Kunde inte hitta frukt med id " + frukt.getId(), frukt.getType());
@@ -303,7 +303,7 @@ public class FruktkorgService {
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         validateId(fruktkorgId);
 
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgRepository.findById(fruktkorgId);
 
         return optFruktkorg
                 .orElseThrow(() -> {

@@ -12,13 +12,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
-public class FruktDAO implements FruktRepository {
+public class FruktRepositoryHibernate implements FruktRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     private EntityManager entityManager;
 
-    private static final Logger logger = LogManager.getLogger(FruktDAO.class);
+    private static final Logger logger = LogManager.getLogger(FruktRepositoryHibernate.class);
 
     private EntityManager getEntityManager() {
         if (entityManager == null) {

@@ -1,7 +1,7 @@
 package com.evry.fruktkorgpersistence;
 
-import com.evry.fruktkorgpersistence.dao.FruktDAO;
-import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
+import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import org.junit.jupiter.api.Assertions;
@@ -14,18 +14,18 @@ import java.time.Instant;
 import java.util.List;
 
 public class FruktkorgTest {
-    private static FruktkorgDAO fruktkorgDAO;
-    private static FruktDAO fruktDAO;
+    private static FruktkorgRepositoryHibernate fruktkorgRepositoryHibernate;
+    private static FruktRepositoryHibernate fruktRepositoryHibernate;
 
     @BeforeEach
     public void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
-        fruktkorgDAO = new FruktkorgDAO();
-        fruktkorgDAO.setEntityManagerFactory(entityManagerFactory);
+        fruktkorgRepositoryHibernate = new FruktkorgRepositoryHibernate();
+        fruktkorgRepositoryHibernate.setEntityManagerFactory(entityManagerFactory);
 
-        fruktDAO = new FruktDAO();
-        fruktDAO.setEntityManagerFactory(entityManagerFactory);
+        fruktRepositoryHibernate = new FruktRepositoryHibernate();
+        fruktRepositoryHibernate.setEntityManagerFactory(entityManagerFactory);
     }
 
     @Test
@@ -34,9 +34,9 @@ public class FruktkorgTest {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setName(NAME);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(NAME, fruktkorgar.get(0).getName(), "Name should be " + NAME);
@@ -53,9 +53,9 @@ public class FruktkorgTest {
         Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
         fruktkorg.getFruktList().add(superBanan);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
@@ -67,15 +67,15 @@ public class FruktkorgTest {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setName("Test korg");
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
 
-        fruktkorgDAO.remove(fruktkorg.getId());
+        fruktkorgRepositoryHibernate.remove(fruktkorg.getId());
 
-        fruktkorgar = fruktkorgDAO.findAll();
+        fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(0, fruktkorgar.size(), "Should return 0 fruktkorgar after remove");
     }
@@ -85,19 +85,19 @@ public class FruktkorgTest {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setName("Test 1");
         fruktkorg.setLastChanged(Instant.now());
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
         Instant oneObjectCreated = Instant.now();
 
         Fruktkorg fruktkorg2 = new Fruktkorg();
         fruktkorg2.setName("Test 2");
         fruktkorg2.setLastChanged(Instant.now());
-        fruktkorgDAO.persist(fruktkorg2);
+        fruktkorgRepositoryHibernate.persist(fruktkorg2);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
         Assertions.assertEquals(2, fruktkorgar.size(), "Should return 2 fruktkorgar before deletion");
-        fruktkorgDAO.removeAllBefore(oneObjectCreated);
-        fruktkorgar = fruktkorgDAO.findAll();
+        fruktkorgRepositoryHibernate.removeAllBefore(oneObjectCreated);
+        fruktkorgar = fruktkorgRepositoryHibernate.findAll();
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg after deletion");
     }
 
@@ -108,12 +108,12 @@ public class FruktkorgTest {
         Instant now = Instant.now();
 
         fruktkorg.setLastChanged(now);
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg before deletion");
-        fruktkorgDAO.removeAllBefore(now);
-        fruktkorgar = fruktkorgDAO.findAll();
+        fruktkorgRepositoryHibernate.removeAllBefore(now);
+        fruktkorgar = fruktkorgRepositoryHibernate.findAll();
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg after deletion");
     }
 
@@ -122,17 +122,17 @@ public class FruktkorgTest {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setName("Test korg");
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals("Test korg", fruktkorgar.get(0).getName(), "Should return the correct name");
         fruktkorg.setName("Super duper korg");
 
-        fruktkorg = fruktkorgDAO.merge(fruktkorg);
+        fruktkorg = fruktkorgRepositoryHibernate.merge(fruktkorg);
 
-        fruktkorgar = fruktkorgDAO.findAll();
+        fruktkorgar = fruktkorgRepositoryHibernate.findAll();
         Assertions.assertEquals("Super duper korg", fruktkorg.getName(), "Should return the correct name after merge");
         Assertions.assertEquals("Super duper korg", fruktkorgar.get(0).getName(), "Should return the correct name after merge");
         Assertions.assertNull(fruktkorgar.get(0).getLastChanged(), "Last Changed should only be set when Frukts are added");
@@ -146,21 +146,21 @@ public class FruktkorgTest {
         Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
         fruktkorg.getFruktList().add(superBanan);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
         fruktkorg.getFruktList().remove(superBanan);
 
-        fruktkorgDAO.merge(fruktkorg);
-        fruktkorgar = fruktkorgDAO.findAll();
+        fruktkorgRepositoryHibernate.merge(fruktkorg);
+        fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(0, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 0 frukt");
-        Assertions.assertEquals(0, fruktDAO.findAll().size(), "All frukt should have been removed");
+        Assertions.assertEquals(0, fruktRepositoryHibernate.findAll().size(), "All frukt should have been removed");
     }
 
     @Test
@@ -171,14 +171,14 @@ public class FruktkorgTest {
         Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
         fruktkorg.getFruktList().add(superBanan);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
-        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findAllByFruktType("Super Banan");
+        List<Fruktkorg> fruktkorgList = fruktkorgRepositoryHibernate.findAllByFruktType("Super Banan");
 
         Assertions.assertEquals(1, fruktkorgList.size());
         Fruktkorg searchFruktkorg = fruktkorgList.get(0);
@@ -195,14 +195,14 @@ public class FruktkorgTest {
         Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
         fruktkorg.getFruktList().add(superBanan);
 
-        fruktkorgDAO.persist(fruktkorg);
+        fruktkorgRepositoryHibernate.persist(fruktkorg);
 
-        List<Fruktkorg> fruktkorgar = fruktkorgDAO.findAll();
+        List<Fruktkorg> fruktkorgar = fruktkorgRepositoryHibernate.findAll();
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
 
-        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findAllByFruktType("Vanlig Banan");
+        List<Fruktkorg> fruktkorgList = fruktkorgRepositoryHibernate.findAllByFruktType("Vanlig Banan");
 
         Assertions.assertEquals(0, fruktkorgList.size());
     }

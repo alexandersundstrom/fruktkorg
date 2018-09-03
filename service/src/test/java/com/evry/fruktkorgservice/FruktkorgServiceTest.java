@@ -1,7 +1,7 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgpersistence.dao.FruktDAO;
-import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
+import com.evry.fruktkorgpersistence.dao.FruktRepositoryHibernate;
+import com.evry.fruktkorgpersistence.dao.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
@@ -27,8 +27,8 @@ import java.util.Optional;
 
 class FruktkorgServiceTest {
 
-    private FruktkorgDAO fruktkorgDAO;
-    private FruktDAO fruktDAO;
+    private FruktkorgRepositoryHibernate fruktkorgRepository;
+    private FruktRepositoryHibernate fruktRepository;
     private FruktkorgService fruktkorgService;
 
     private static final String updateFruktkorgarXML = "" +
@@ -83,9 +83,9 @@ class FruktkorgServiceTest {
 
     @BeforeEach
     void init() {
-        fruktkorgDAO = Mockito.mock(FruktkorgDAO.class);
-        fruktDAO = Mockito.mock(FruktDAO.class);
-        fruktkorgService = new FruktkorgService(fruktkorgDAO, fruktDAO);
+        fruktkorgRepository = Mockito.mock(FruktkorgRepositoryHibernate.class);
+        fruktRepository = Mockito.mock(FruktRepositoryHibernate.class);
+        fruktkorgService = new FruktkorgService(fruktkorgRepository, fruktRepository);
     }
 
     @Test
@@ -97,7 +97,7 @@ class FruktkorgServiceTest {
             fruktkorg.setName("Korg");
 
             return null;
-        }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
+        }).when(fruktkorgRepository).persist(Mockito.any(Fruktkorg.class));
 
         ImmutableFruktkorg immutableFruktkorg = new ImmutableFruktkorgBuilder()
                 .setName("Korg")
@@ -129,7 +129,7 @@ class FruktkorgServiceTest {
             fruktkorg.getFruktList().add(frukt);
             return null;
 
-        }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
+        }).when(fruktkorgRepository).persist(Mockito.any(Fruktkorg.class));
 
         ImmutableFrukt immutableFrukt = new ImmutableFruktBuilder().setType("Banan")
                 .setAmount(5)
@@ -158,13 +158,13 @@ class FruktkorgServiceTest {
             fruktkorg.setLastChanged(Instant.now());
 
             return null;
-        }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
+        }).when(fruktkorgRepository).persist(Mockito.any(Fruktkorg.class));
 
         Fruktkorg returnFruktkorg = new Fruktkorg();
         returnFruktkorg.setName("Korg");
         returnFruktkorg.setId(1);
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(returnFruktkorg));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         ImmutableFruktkorg immutableFruktkorg = new ImmutableFruktkorgBuilder()
                 .setName("Korg")
@@ -192,7 +192,7 @@ class FruktkorgServiceTest {
 
     @Test
     void addFruktToMissingFruktkorg() {
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.empty());
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
 
         ImmutableFrukt fruktToAdd = new ImmutableFruktBuilder()
                 .setType("banan")
@@ -212,8 +212,8 @@ class FruktkorgServiceTest {
         Frukt returnFrukt = new Frukt("banan", 5, returnFruktkorg);
         returnFrukt.setId(1);
         returnFruktkorg.getFruktList().add(returnFrukt);
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(returnFruktkorg));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         ImmutableFruktkorg persistedFruktkorg = fruktkorgService.addFruktToFruktkorg(1, new ImmutableFruktBuilder()
                 .setType("banan")
@@ -236,8 +236,8 @@ class FruktkorgServiceTest {
         Frukt returnFrukt = new Frukt("banan", 5, returnFruktkorg);
         returnFrukt.setId(1);
         returnFruktkorg.getFruktList().add(returnFrukt);
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(returnFruktkorg));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 3);
 
@@ -256,8 +256,8 @@ class FruktkorgServiceTest {
         Frukt returnFrukt = new Frukt("banan", 5, returnFruktkorg);
         returnFrukt.setId(1);
         returnFruktkorg.getFruktList().add(returnFrukt);
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(returnFruktkorg));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         ImmutableFruktkorg immutableFruktkorg = fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5);
 
@@ -272,15 +272,15 @@ class FruktkorgServiceTest {
         returnFruktkorg.setName("Korg");
         returnFruktkorg.setId(1);
 
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(returnFruktkorg));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(returnFruktkorg));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any(Fruktkorg.class))).thenReturn(returnFruktkorg);
 
         Assertions.assertThrows(FruktMissingException.class, () -> fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5));
     }
 
     @Test
     void removeFruktFromMissingFruktkorg() {
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.empty());
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.removeFruktFromFruktkorg(1, "banan", 5));
     }
@@ -298,7 +298,7 @@ class FruktkorgServiceTest {
         frukt.setFruktkorg(fruktkorg);
         fruktkorg.getFruktList().add(frukt);
 
-        Mockito.when(fruktkorgDAO.findAllByFruktType("Super Banan"))
+        Mockito.when(fruktkorgRepository.findAllByFruktType("Super Banan"))
                 .thenReturn(Collections.singletonList(fruktkorg));
 
         List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.searchFruktkorgByFrukt("Super Banan");
@@ -324,7 +324,7 @@ class FruktkorgServiceTest {
         frukt.setFruktkorg(fruktkorg);
         fruktkorg.getFruktList().add(frukt);
 
-        Mockito.when(fruktkorgDAO.findAllByFruktType("Super Banan"))
+        Mockito.when(fruktkorgRepository.findAllByFruktType("Super Banan"))
                 .thenReturn(Collections.singletonList(fruktkorg));
 
         List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.searchFruktkorgByFrukt("Vanlig Banan");
@@ -346,7 +346,7 @@ class FruktkorgServiceTest {
         fruktkorg3.setId(3);
         fruktkorg3.setName("Korg 3");
 
-        Mockito.when(fruktkorgDAO.findAll())
+        Mockito.when(fruktkorgRepository.findAll())
                 .thenReturn(Arrays.asList(fruktkorg1, fruktkorg2, fruktkorg3));
 
         List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.listFruktkorgar();
@@ -369,8 +369,8 @@ class FruktkorgServiceTest {
 
         fruktkorg1.getFruktList().add(frukt1);
 
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(fruktkorg1));
-        Mockito.when(fruktkorgDAO.merge(fruktkorg1)).thenReturn(fruktkorg1);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(fruktkorg1));
+        Mockito.when(fruktkorgRepository.merge(fruktkorg1)).thenReturn(fruktkorg1);
 
         ImmutableFrukt updateFrukt1 = new ImmutableFruktBuilder()
                 .setAmount(3)
@@ -422,9 +422,9 @@ class FruktkorgServiceTest {
         kitchenUpdatedFromXML.getFruktList().add(kiwiUpdated);
         kitchenUpdatedFromXML.getFruktList().add(apelsinUpdated);
 
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
-        Mockito.when(fruktDAO.findById(1)).thenReturn(Optional.of(persistedKiwi));
-        Mockito.when(fruktkorgDAO.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
+        Mockito.when(fruktRepository.findById(1)).thenReturn(Optional.of(persistedKiwi));
+        Mockito.when(fruktkorgRepository.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
 
         List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes()));
 
@@ -456,9 +456,9 @@ class FruktkorgServiceTest {
             fruktkorg.setName("Köket");
 
             return null;
-        }).when(fruktkorgDAO).persist(Mockito.any(Fruktkorg.class));
+        }).when(fruktkorgRepository).persist(Mockito.any(Fruktkorg.class));
 
-        Mockito.when(fruktkorgDAO.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
+        Mockito.when(fruktkorgRepository.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
 
         List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreNewFruktkorgXML.getBytes()));
 
@@ -469,14 +469,14 @@ class FruktkorgServiceTest {
 
     @Test
     void restoreWithFruktkorgIdNotFound() {
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.empty());
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
         Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.updateFruktkorgar(new ByteArrayInputStream(updateFruktkorgarXML.getBytes())));
 
     }
 
     @Test
     void updateWithFruktkorgIdNotFound() {
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.empty());
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
         Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
 
     }
@@ -494,8 +494,8 @@ class FruktkorgServiceTest {
 
         persistedKitchenfruktkorg.getFruktList().add(persistedKiwi);
 
-        Mockito.when(fruktkorgDAO.findById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
-        Mockito.when(fruktDAO.findById(1)).thenReturn(Optional.empty());
+        Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
+        Mockito.when(fruktRepository.findById(1)).thenReturn(Optional.empty());
         Assertions.assertThrows(FruktMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
 
     }

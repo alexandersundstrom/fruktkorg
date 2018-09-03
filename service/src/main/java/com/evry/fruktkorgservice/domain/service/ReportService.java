@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.domain.service;
 
-import com.evry.fruktkorgpersistence.dao.ReportDAO;
+import com.evry.fruktkorgpersistence.dao.ReportRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableReport;
@@ -8,16 +8,10 @@ import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.evry.fruktkorgservice.utils.XMLUtils;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
-import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.bind.*;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -27,25 +21,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReportService {
-    private ReportDAO reportDAO;
+    private ReportRepositoryHibernate reportRepository;
     private FruktkorgService fruktkorgService;
     private static Logger logger = LogManager.getLogger(ReportService.class);
 
-    public ReportService(ReportDAO reportDAO, FruktkorgService fruktkorgService) {
-        this.reportDAO = reportDAO;
+    public ReportService(ReportRepositoryHibernate reportRepositoryHibernate, FruktkorgService fruktkorgService) {
+        this.reportRepository = reportRepositoryHibernate;
         this.fruktkorgService = fruktkorgService;
     }
 
     public List<ImmutableReport> listReports() {
-        return reportDAO.findAll().stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportRepository.findAll().stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     public List<ImmutableReport> listReports(int limit, int offset) {
-        return reportDAO.findAllByLimitAndOffset(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportRepository.findAllByLimitAndOffset(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     public InputStream getAndMarkReport(long id) throws ReportMissingException, FileNotFoundException {
-        Report report = reportDAO.findById(id)
+        Report report = reportRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + id);
                     return new ReportMissingException("Unable to find report with id: " + id, id);
@@ -53,7 +47,7 @@ public class ReportService {
 
         if (!report.isRead()) {
             report.setRead(true);
-            report = reportDAO.merge(report);
+            report = reportRepository.merge(report);
         }
 
         return XMLUtils.getReport(report);
@@ -82,13 +76,13 @@ public class ReportService {
         report.setCreated(Instant.now());
         report.setLocation(path);
 
-        reportDAO.persist(report);
+        reportRepository.persist(report);
 
         return ModelUtils.convertReport(report);
     }
 
     public void removeReport(long reportId) throws ReportMissingException {
-        Report report = reportDAO.findById(reportId)
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + reportId);
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
@@ -99,11 +93,11 @@ public class ReportService {
             reportFile.delete();
         }
 
-        reportDAO.remove(report);
+        reportRepository.remove(report);
     }
 
     public void removeReadReports() {
-        List<Report> readReports = reportDAO.getAllByRead();
+        List<Report> readReports = reportRepository.getAllByRead();
 
         if (readReports.isEmpty()) {
             return;
@@ -116,11 +110,11 @@ public class ReportService {
             }
         }
 
-        reportDAO.removeByRead();
+        reportRepository.removeByRead();
     }
 
     public List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException {
-        Report report = reportDAO.findById(reportId)
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + reportId);
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);

@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgpersistence.dao.ReportDAO;
+import com.evry.fruktkorgpersistence.dao.ReportRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.domain.model.*;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 class ReportServiceTest {
-    private ReportDAO reportDAO;
+    private ReportRepositoryHibernate reportRepository;
     private FruktkorgService fruktkorgService;
     private ReportService reportService;
 
@@ -73,8 +73,8 @@ class ReportServiceTest {
     @BeforeEach
     void init() {
         fruktkorgService = Mockito.mock(FruktkorgService.class);
-        reportDAO = Mockito.mock(ReportDAO.class);
-        reportService = new ReportService(reportDAO, fruktkorgService);
+        reportRepository = Mockito.mock(ReportRepositoryHibernate.class);
+        reportService = new ReportService(reportRepository, fruktkorgService);
         System.setProperty("file.encoding", "UTF-8");
     }
 
@@ -95,7 +95,7 @@ class ReportServiceTest {
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(false);
 
-        Mockito.when(reportDAO.findAll()).thenReturn(Arrays.asList(report1, report2));
+        Mockito.when(reportRepository.findAll()).thenReturn(Arrays.asList(report1, report2));
 
         List<ImmutableReport> immutableReports = reportService.listReports();
 
@@ -131,7 +131,7 @@ class ReportServiceTest {
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(false);
 
-        Mockito.when(reportDAO.findAllByLimitAndOffset(2, 0)).thenReturn(Arrays.asList(report1, report2));
+        Mockito.when(reportRepository.findAllByLimitAndOffset(2, 0)).thenReturn(Arrays.asList(report1, report2));
 
         List<ImmutableReport> immutableReports = reportService.listReports(2, 0);
 
@@ -163,8 +163,8 @@ class ReportServiceTest {
         report.setLocation(tempFile.getAbsolutePath());
         report.setRead(false);
 
-        Mockito.when(reportDAO.findById(1)).thenReturn(Optional.of(report));
-        Mockito.when(reportDAO.merge(Mockito.any(Report.class))).thenReturn(report);
+        Mockito.when(reportRepository.findById(1)).thenReturn(Optional.of(report));
+        Mockito.when(reportRepository.merge(Mockito.any(Report.class))).thenReturn(report);
 
         InputStream immutableReport = reportService.getAndMarkReport(1);
 
@@ -173,7 +173,7 @@ class ReportServiceTest {
 
     @Test
     void getMissingReportById() {
-        Mockito.when(reportDAO.findById(2)).thenReturn(Optional.empty());
+        Mockito.when(reportRepository.findById(2)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(ReportMissingException.class, () -> reportService.getAndMarkReport(2));
     }
@@ -194,7 +194,7 @@ class ReportServiceTest {
             report.setRead(false);
 
             return null;
-        }).when(reportDAO).persist(Mockito.any(Report.class));
+        }).when(reportRepository).persist(Mockito.any(Report.class));
 
         Mockito.when(fruktkorgService.listFruktkorgar()).thenReturn(Arrays.asList(
                 new ImmutableFruktkorgBuilder()
@@ -241,7 +241,7 @@ class ReportServiceTest {
         report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
         report.setLocation(reportFile.getAbsolutePath());
 
-        Mockito.when(reportDAO.findById(1)).thenReturn(Optional.of(report));
+        Mockito.when(reportRepository.findById(1)).thenReturn(Optional.of(report));
 
         List<ImmutableFruktkorg> immutableFruktkorgList = reportService.getFruktkorgarFromReport(1);
 
@@ -287,7 +287,7 @@ class ReportServiceTest {
         report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
         report.setLocation(reportFile.getAbsolutePath());
 
-        Mockito.when(reportDAO.findById(1)).thenReturn(Optional.of(report));
+        Mockito.when(reportRepository.findById(1)).thenReturn(Optional.of(report));
 
         reportService.removeReport(report.getId());
 
@@ -306,7 +306,7 @@ class ReportServiceTest {
         report.setCreated(Instant.now().minus(4, ChronoUnit.DAYS));
         report.setLocation(reportFile.getAbsolutePath());
 
-        Mockito.when(reportDAO.getAllByRead()).thenReturn(Collections.singletonList(report));
+        Mockito.when(reportRepository.getAllByRead()).thenReturn(Collections.singletonList(report));
 
         reportService.removeReadReports();
 

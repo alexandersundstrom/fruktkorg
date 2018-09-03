@@ -14,14 +14,14 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public class FruktkorgDAO implements FruktkorgRepository {
+public class FruktkorgRepositoryHibernate implements FruktkorgRepository {
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     private EntityManager entityManager;
 
-    private static final Logger logger = LogManager.getLogger(FruktkorgDAO.class);
+    private static final Logger logger = LogManager.getLogger(FruktkorgRepositoryHibernate.class);
 
     private EntityManager getEntityManager() {
         if (entityManager == null) {
