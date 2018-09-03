@@ -12,14 +12,14 @@ import java.time.Instant;
 import java.util.List;
 
 class ReportTest {
-    private static ReportRepositoryHibernate reportRepositoryHibernate;
+    private static ReportRepositoryHibernate reportRepository;
 
     @BeforeEach
     void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("test");
 
-        reportRepositoryHibernate = new ReportRepositoryHibernate();
-        reportRepositoryHibernate.setEntityManagerFactory(entityManagerFactory);
+        reportRepository = new ReportRepositoryHibernate();
+        reportRepository.setEntityManagerFactory(entityManagerFactory);
     }
 
     @Test
@@ -29,9 +29,9 @@ class ReportTest {
         report.setLocation("fake/location/test/report.xml");
         report.setRead(false);
 
-        reportRepositoryHibernate.persist(report);
+        reportRepository.persist(report);
 
-        report = reportRepositoryHibernate.findById(1).orElse(null);
+        report = reportRepository.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
         Assertions.assertEquals(1, report.getId());
@@ -47,15 +47,15 @@ class ReportTest {
         report.setLocation("fake/location/test/report.xml");
         report.setRead(false);
 
-        reportRepositoryHibernate.persist(report);
+        reportRepository.persist(report);
 
-        report = reportRepositoryHibernate.findById(1).orElse(null);
+        report = reportRepository.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
 
         report.setRead(true);
 
-        report = reportRepositoryHibernate.merge(report);
+        report = reportRepository.merge(report);
 
         Assertions.assertTrue(report.isRead());
         Assertions.assertNotNull(report.getCreated());
@@ -69,15 +69,15 @@ class ReportTest {
         report.setLocation("fake/location/test/report.xml");
         report.setRead(false);
 
-        reportRepositoryHibernate.persist(report);
+        reportRepository.persist(report);
 
-        report = reportRepositoryHibernate.findById(1).orElse(null);
+        report = reportRepository.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
 
-        reportRepositoryHibernate.remove(report);
+        reportRepository.remove(report);
 
-        Assertions.assertFalse(reportRepositoryHibernate.findById(1).isPresent());
+        Assertions.assertFalse(reportRepository.findById(1).isPresent());
     }
 
     @Test
@@ -87,23 +87,23 @@ class ReportTest {
         report1.setLocation("fake/location/test/report1.xml");
         report1.setRead(false);
 
-        reportRepositoryHibernate.persist(report1);
+        reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(false);
 
-        reportRepositoryHibernate.persist(report2);
+        reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
         report3.setLocation("fake/location/test/report2.xml");
         report3.setRead(false);
 
-        reportRepositoryHibernate.persist(report3);
+        reportRepository.persist(report3);
 
-        List<Report> reportList = reportRepositoryHibernate.findAll();
+        List<Report> reportList = reportRepository.findAll();
 
         Assertions.assertEquals(3, reportList.size());
         Assertions.assertEquals(report1, reportList.get(0));
@@ -118,23 +118,23 @@ class ReportTest {
         report1.setLocation("fake/location/test/report1.xml");
         report1.setRead(false);
 
-        reportRepositoryHibernate.persist(report1);
+        reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(false);
 
-        reportRepositoryHibernate.persist(report2);
+        reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
         report3.setLocation("fake/location/test/report2.xml");
         report3.setRead(false);
 
-        reportRepositoryHibernate.persist(report3);
+        reportRepository.persist(report3);
 
-        Report report = reportRepositoryHibernate.findById(2).orElse(null);
+        Report report = reportRepository.findById(2).orElse(null);
 
         Assertions.assertNotNull(report);
         Assertions.assertEquals(2, report.getId());
@@ -150,31 +150,31 @@ class ReportTest {
         report1.setLocation("fake/location/test/report1.xml");
         report1.setRead(false);
 
-        reportRepositoryHibernate.persist(report1);
+        reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(false);
 
-        reportRepositoryHibernate.persist(report2);
+        reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
         report3.setLocation("fake/location/test/report2.xml");
         report3.setRead(false);
 
-        reportRepositoryHibernate.persist(report3);
+        reportRepository.persist(report3);
 
-        List<Report> reportList = reportRepositoryHibernate.findAllByLimitAndOffset(1, 0);
+        List<Report> reportList = reportRepository.findAllByLimitAndOffset(1, 0);
         Assertions.assertEquals(1, reportList.size());
         Assertions.assertEquals(report1, reportList.get(0));
 
-        reportList = reportRepositoryHibernate.findAllByLimitAndOffset(1, 1);
+        reportList = reportRepository.findAllByLimitAndOffset(1, 1);
         Assertions.assertEquals(1, reportList.size());
         Assertions.assertEquals(report2, reportList.get(0));
 
-        reportList = reportRepositoryHibernate.findAllByLimitAndOffset(3, 0);
+        reportList = reportRepository.findAllByLimitAndOffset(3, 0);
         Assertions.assertEquals(3, reportList.size());
     }
 
@@ -185,25 +185,25 @@ class ReportTest {
         report1.setLocation("fake/location/test/report1.xml");
         report1.setRead(false);
 
-        reportRepositoryHibernate.persist(report1);
+        reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(true);
 
-        reportRepositoryHibernate.persist(report2);
+        reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
         report3.setLocation("fake/location/test/report3.xml");
         report3.setRead(false);
 
-        reportRepositoryHibernate.persist(report3);
+        reportRepository.persist(report3);
 
-        reportRepositoryHibernate.removeByRead();
+        reportRepository.removeByRead();
 
-        List<Report> reportList = reportRepositoryHibernate.findAll();
+        List<Report> reportList = reportRepository.findAll();
 
         Assertions.assertEquals(2, reportList.size());
     }
@@ -215,23 +215,23 @@ class ReportTest {
         report1.setLocation("fake/location/test/report1.xml");
         report1.setRead(false);
 
-        reportRepositoryHibernate.persist(report1);
+        reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
         report2.setLocation("fake/location/test/report2.xml");
         report2.setRead(true);
 
-        reportRepositoryHibernate.persist(report2);
+        reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
         report3.setLocation("fake/location/test/report3.xml");
         report3.setRead(false);
 
-        reportRepositoryHibernate.persist(report3);
+        reportRepository.persist(report3);
 
-        List<Report> readReports = reportRepositoryHibernate.getAllByRead();
+        List<Report> readReports = reportRepository.getAllByRead();
 
         Assertions.assertEquals(1, readReports.size());
     }
