@@ -173,7 +173,7 @@ public class FruktkorgService {
 
     public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, JAXBException {
 
-        Unmarshaller unmarshaller = XMLUtils.getMarshaller(XMLUtils.UPDATE_XSD);
+        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.UPDATE_XSD);
 
         FruktkorgarUpdate fruktkorgarUpdate;
         try {
@@ -239,7 +239,7 @@ public class FruktkorgService {
     }
 
     public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException {
-        Unmarshaller unmarshaller = XMLUtils.getMarshaller(XMLUtils.RESTORE_XSD);
+        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.RESTORE_XSD);
 
         FruktkorgarRestore fruktkorgarRestore;
         try {

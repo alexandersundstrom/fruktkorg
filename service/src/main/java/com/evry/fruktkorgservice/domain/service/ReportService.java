@@ -60,46 +60,7 @@ public class ReportService {
     }
 
     public ImmutableReport createReport(String path) {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema;
-        try {
-            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
-        } catch (SAXException e) {
-            logger.error("Error creating schema", e);
-            return null;
-        }
-
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
-        } catch (JAXBException e) {
-            logger.error("Error creating JAXB context", e);
-            return null;
-        }
-
-        Marshaller marshaller;
-        try {
-            marshaller = jaxbContext.createMarshaller();
-        } catch (JAXBException e) {
-            logger.error("Error creating Marshaller", e);
-            return null;
-        }
-
-        try {
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        } catch (PropertyException e) {
-            logger.error("Error setting formatted output property", e);
-            return null;
-        }
-
-        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
-        marshaller.setSchema(schema);
-        try {
-            marshaller.setEventHandler(eventHandler);
-        } catch (JAXBException e) {
-            logger.error("Error setting event handler", e);
-            return null;
-        }
+        Marshaller marshaller = XMLUtils.getFruktkorgarMarshaller();
 
         Fruktkorgar fruktkorgar = new Fruktkorgar();
         fruktkorgar.fruktkorgList = fruktkorgService.listFruktkorgar();
@@ -165,39 +126,7 @@ public class ReportService {
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
                 });
 
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema;
-        try {
-            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
-        } catch (SAXException e) {
-            logger.error("Error creating schema", e);
-            return Collections.emptyList();
-        }
-
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
-        } catch (JAXBException e) {
-            logger.error("Error creating JAXB context", e);
-            return Collections.emptyList();
-        }
-
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = jaxbContext.createUnmarshaller();
-        } catch (JAXBException e) {
-            logger.error("Error creating Marshaller", e);
-            return Collections.emptyList();
-        }
-
-        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
-        unmarshaller.setSchema(schema);
-        try {
-            unmarshaller.setEventHandler(eventHandler);
-        } catch (JAXBException e) {
-            logger.error("Error setting event handler", e);
-            return Collections.emptyList();
-        }
+       Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.REPORT_XSD);
 
         Fruktkorgar fruktkorgar;
         try {

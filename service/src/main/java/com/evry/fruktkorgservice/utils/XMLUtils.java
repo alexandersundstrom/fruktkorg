@@ -1,6 +1,7 @@
 package com.evry.fruktkorgservice.utils;
 
 import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorgservice.xml.Fruktkorgar;
 import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
 import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
@@ -9,9 +10,7 @@ import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -27,7 +26,51 @@ public class XMLUtils {
     public static final String REPORT_XSD = "fruktkorg-report.xsd";
     private static final Logger logger = LogManager.getLogger(XMLUtils.class);
 
-    public static Unmarshaller getMarshaller(String schemaXSD) {
+    public static Marshaller getFruktkorgarMarshaller() {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+        try {
+            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
+        } catch (SAXException e) {
+            logger.error("Error creating schema", e);
+            return null;
+        }
+
+        JAXBContext jaxbContext;
+        try {
+            jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
+        } catch (JAXBException e) {
+            logger.error("Error creating JAXB context", e);
+            return null;
+        }
+
+        Marshaller marshaller;
+        try {
+            marshaller = jaxbContext.createMarshaller();
+        } catch (JAXBException e) {
+            logger.error("Error creating Marshaller", e);
+            return null;
+        }
+
+        try {
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        } catch (PropertyException e) {
+            logger.error("Error setting formatted output property", e);
+            return null;
+        }
+
+        ReportValidationEventHandler eventHandler = new ReportValidationEventHandler();
+        marshaller.setSchema(schema);
+        try {
+            marshaller.setEventHandler(eventHandler);
+        } catch (JAXBException e) {
+            logger.error("Error setting event handler", e);
+            return null;
+        }
+        return marshaller;
+    }
+
+    public static Unmarshaller getUnmarshaller(String schemaXSD) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
 
@@ -46,6 +89,9 @@ public class XMLUtils {
                     break;
                 case RESTORE_XSD:
                     jaxbContext = JAXBContext.newInstance(FruktkorgarRestore.class);
+                    break;
+                case REPORT_XSD:
+                    jaxbContext = JAXBContext.newInstance(Fruktkorgar.class);
                     break;
             }
         } catch (JAXBException e) {
