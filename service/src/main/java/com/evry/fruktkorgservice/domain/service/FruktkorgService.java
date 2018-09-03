@@ -141,7 +141,7 @@ public class FruktkorgService {
     }
 
     public List<ImmutableFruktkorg> listFruktkorgar() {
-        return fruktkorgDAO.findAllFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
+        return fruktkorgDAO.findAll().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
     }
 
     private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {

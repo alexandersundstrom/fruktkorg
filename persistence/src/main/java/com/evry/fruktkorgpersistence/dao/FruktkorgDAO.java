@@ -95,7 +95,7 @@ public class FruktkorgDAO implements FruktkorgRepository {
     }
 
     @Override
-    public List<Fruktkorg> findAllFruktkorgar() {
+    public List<Fruktkorg> findAll() {
         logger.debug("Fetching all Fruktkorgar");
         EntityManager entityManager = getEntityManager();
 

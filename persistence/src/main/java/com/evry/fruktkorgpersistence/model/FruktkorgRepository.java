@@ -18,7 +18,7 @@ public interface FruktkorgRepository {
 
     void refresh(Fruktkorg fruktkorg);
 
-    List<Fruktkorg> findAllFruktkorgar();
+    List<Fruktkorg> findAll();
 
     List<Fruktkorg> findAllByFruktType(String fruktType);
 

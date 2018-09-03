@@ -346,7 +346,7 @@ class FruktkorgServiceTest {
         fruktkorg3.setId(3);
         fruktkorg3.setName("Korg 3");
 
-        Mockito.when(fruktkorgDAO.findAllFruktkorgar())
+        Mockito.when(fruktkorgDAO.findAll())
                 .thenReturn(Arrays.asList(fruktkorg1, fruktkorg2, fruktkorg3));
 
         List<ImmutableFruktkorg> fruktkorgList = fruktkorgService.listFruktkorgar();

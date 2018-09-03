@@ -31,7 +31,7 @@ class ReportTest {
 
         reportDAO.persist(report);
 
-        report = reportDAO.findReportById(1).orElse(null);
+        report = reportDAO.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
         Assertions.assertEquals(1, report.getId());
@@ -49,7 +49,7 @@ class ReportTest {
 
         reportDAO.persist(report);
 
-        report = reportDAO.findReportById(1).orElse(null);
+        report = reportDAO.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
 
@@ -71,13 +71,13 @@ class ReportTest {
 
         reportDAO.persist(report);
 
-        report = reportDAO.findReportById(1).orElse(null);
+        report = reportDAO.findById(1).orElse(null);
 
         Assertions.assertNotNull(report);
 
         reportDAO.remove(report);
 
-        Assertions.assertFalse(reportDAO.findReportById(1).isPresent());
+        Assertions.assertFalse(reportDAO.findById(1).isPresent());
     }
 
     @Test
@@ -103,7 +103,7 @@ class ReportTest {
 
         reportDAO.persist(report3);
 
-        List<Report> reportList = reportDAO.listReports();
+        List<Report> reportList = reportDAO.findAll();
 
         Assertions.assertEquals(3, reportList.size());
         Assertions.assertEquals(report1, reportList.get(0));
@@ -134,7 +134,7 @@ class ReportTest {
 
         reportDAO.persist(report3);
 
-        Report report = reportDAO.findReportById(2).orElse(null);
+        Report report = reportDAO.findById(2).orElse(null);
 
         Assertions.assertNotNull(report);
         Assertions.assertEquals(2, report.getId());
@@ -166,15 +166,15 @@ class ReportTest {
 
         reportDAO.persist(report3);
 
-        List<Report> reportList = reportDAO.listReports(1,0);
+        List<Report> reportList = reportDAO.findAllByLimitAndOffset(1, 0);
         Assertions.assertEquals(1, reportList.size());
         Assertions.assertEquals(report1, reportList.get(0));
 
-        reportList = reportDAO.listReports(1,1);
+        reportList = reportDAO.findAllByLimitAndOffset(1, 1);
         Assertions.assertEquals(1, reportList.size());
         Assertions.assertEquals(report2, reportList.get(0));
 
-        reportList = reportDAO.listReports(3,0);
+        reportList = reportDAO.findAllByLimitAndOffset(3, 0);
         Assertions.assertEquals(3, reportList.size());
     }
 
@@ -201,9 +201,9 @@ class ReportTest {
 
         reportDAO.persist(report3);
 
-        reportDAO.removeReadReports();
+        reportDAO.removeByRead();
 
-        List<Report> reportList = reportDAO.listReports();
+        List<Report> reportList = reportDAO.findAll();
 
         Assertions.assertEquals(2, reportList.size());
     }
@@ -231,7 +231,7 @@ class ReportTest {
 
         reportDAO.persist(report3);
 
-        List<Report> readReports = reportDAO.getReadReports();
+        List<Report> readReports = reportDAO.getAllByRead();
 
         Assertions.assertEquals(1, readReports.size());
     }

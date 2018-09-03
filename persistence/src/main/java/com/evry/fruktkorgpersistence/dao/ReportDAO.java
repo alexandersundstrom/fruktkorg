@@ -1,6 +1,7 @@
 package com.evry.fruktkorgpersistence.dao;
 
 import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorgpersistence.model.ReportRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -11,13 +12,18 @@ import javax.persistence.PersistenceUnit;
 import java.util.List;
 import java.util.Optional;
 
-public class ReportDAO {
+public class ReportDAO implements ReportRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     private EntityManager entityManager;
 
     private static final Logger logger = LogManager.getLogger(FruktkorgDAO.class);
+
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
     private EntityManager getEntityManager() {
         if (entityManager == null) {
@@ -27,12 +33,14 @@ public class ReportDAO {
         return entityManager;
     }
 
+    @Override
     public void persist(Report report) {
         getEntityManager().getTransaction().begin();
         getEntityManager().persist(report);
         getEntityManager().getTransaction().commit();
     }
 
+    @Override
     public Report merge(Report report) {
         getEntityManager().getTransaction().begin();
         Report mergedReport = getEntityManager().merge(report);
@@ -40,19 +48,22 @@ public class ReportDAO {
         return mergedReport;
     }
 
+    @Override
     public void remove(Report report) {
         getEntityManager().getTransaction().begin();
         getEntityManager().remove(report);
         getEntityManager().getTransaction().commit();
     }
 
-    public List<Report> listReports() {
+    @Override
+    public List<Report> findAll() {
         return getEntityManager()
                 .createNativeQuery("SELECT * FROM report", Report.class)
                 .getResultList();
     }
 
-    public List<Report> listReports(int limit, int offset) {
+    @Override
+    public List<Report> findAllByLimitAndOffset(int limit, int offset) {
         return getEntityManager()
                 .createNativeQuery("SELECT * FROM report", Report.class)
                 .setFirstResult(offset)
@@ -60,22 +71,20 @@ public class ReportDAO {
                 .getResultList();
     }
 
-    public Optional<Report> findReportById(long id) {
+    @Override
+    public Optional<Report> findById(long id) {
         try {
             return Optional.ofNullable((Report) getEntityManager()
                     .createNativeQuery("SELECT * FROM report WHERE report_id = ?1", Report.class)
                     .setParameter(1, id)
                     .getSingleResult());
-        } catch(NoResultException e) {
+        } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
-    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-    }
-
-    public void removeReadReports() {
+    @Override
+    public void removeByRead() {
         getEntityManager().getTransaction().begin();
         getEntityManager()
                 .createNativeQuery("DELETE FROM report WHERE read")
@@ -83,7 +92,8 @@ public class ReportDAO {
         getEntityManager().getTransaction().commit();
     }
 
-    public List<Report> getReadReports() {
+    @Override
+    public List<Report> getAllByRead() {
         return getEntityManager()
                 .createNativeQuery("SELECT * FROM report WHERE read", Report.class)
                 .getResultList();

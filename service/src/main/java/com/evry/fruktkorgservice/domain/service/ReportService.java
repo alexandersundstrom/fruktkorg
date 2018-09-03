@@ -2,9 +2,9 @@ package com.evry.fruktkorgservice.domain.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
-import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableReport;
+import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.evry.fruktkorgservice.utils.XMLUtils;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
@@ -37,15 +37,15 @@ public class ReportService {
     }
 
     public List<ImmutableReport> listReports() {
-        return reportDAO.listReports().stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportDAO.findAll().stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     public List<ImmutableReport> listReports(int limit, int offset) {
-        return reportDAO.listReports(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportDAO.findAllByLimitAndOffset(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
     }
 
     public InputStream getAndMarkReport(long id) throws ReportMissingException, FileNotFoundException {
-        Report report = reportDAO.findReportById(id)
+        Report report = reportDAO.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + id);
                     return new ReportMissingException("Unable to find report with id: " + id, id);
@@ -127,7 +127,7 @@ public class ReportService {
     }
 
     public void removeReport(long reportId) throws ReportMissingException {
-        Report report = reportDAO.findReportById(reportId)
+        Report report = reportDAO.findById(reportId)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + reportId);
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
@@ -142,7 +142,7 @@ public class ReportService {
     }
 
     public void removeReadReports() {
-        List<Report> readReports = reportDAO.getReadReports();
+        List<Report> readReports = reportDAO.getAllByRead();
 
         if (readReports.isEmpty()) {
             return;
@@ -155,11 +155,11 @@ public class ReportService {
             }
         }
 
-        reportDAO.removeReadReports();
+        reportDAO.removeByRead();
     }
 
     public List<ImmutableFruktkorg> getFruktkorgarFromReport(long reportId) throws ReportMissingException {
-        Report report = reportDAO.findReportById(reportId)
+        Report report = reportDAO.findById(reportId)
                 .orElseThrow(() -> {
                     logger.warn("Unable to find report with id: " + reportId);
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
