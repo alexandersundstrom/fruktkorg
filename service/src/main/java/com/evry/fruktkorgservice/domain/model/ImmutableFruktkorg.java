@@ -22,7 +22,7 @@ public class ImmutableFruktkorg {
 
     public ImmutableFruktkorg() {}
 
-    ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList, Instant lastChanged) {
+    public ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList, Instant lastChanged) {
         this.id = id;
         this.name = name;
         this.fruktList = fruktList;

@@ -1,4 +1,6 @@
-package com.evry.fruktkorgservice.domain.model;
+package com.evry.fruktkorgservice.utils.builders;
+
+import com.evry.fruktkorgservice.domain.model.ImmutableReport;
 
 import java.time.Instant;
 

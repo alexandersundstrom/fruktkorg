@@ -6,6 +6,8 @@ import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.domain.model.*;
 import com.evry.fruktkorgservice.domain.service.FruktkorgService;
 import com.evry.fruktkorgservice.domain.service.ReportService;
+import com.evry.fruktkorgservice.utils.builders.ImmutableFruktBuilder;
+import com.evry.fruktkorgservice.utils.builders.ImmutableFruktkorgBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

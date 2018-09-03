@@ -15,7 +15,7 @@ public class ImmutableFrukt {
 
     private ImmutableFrukt() {}
 
-    ImmutableFrukt(long id, String type, int amount, long fruktkorgId) {
+    public ImmutableFrukt(long id, String type, int amount, long fruktkorgId) {
         this.id = id;
         this.type = type;
         this.amount = amount;

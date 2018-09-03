@@ -11,7 +11,7 @@ public class ImmutableReport implements Serializable {
 
     private ImmutableReport() {}
 
-    ImmutableReport(long id, String location, Instant created, boolean read) {
+    public ImmutableReport(long id, String location, Instant created, boolean read) {
         this.id = id;
         this.location = location;
         this.created = created;
