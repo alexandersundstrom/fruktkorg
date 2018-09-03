@@ -5,12 +5,12 @@ import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.utils.builders.ImmutableFruktBuilder;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.utils.builders.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.domain.service.FruktkorgService;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
+import com.evry.fruktkorgservice.utils.builders.ImmutableFruktBuilder;
+import com.evry.fruktkorgservice.utils.builders.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
 import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayInputStream;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,55 +30,10 @@ class FruktkorgServiceTest {
     private FruktRepositoryHibernate fruktRepository;
     private FruktkorgService fruktkorgService;
 
-    private static final String updateFruktkorgarXML = "" +
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<fruktkorgar>" +
-            "   <fruktkorg>" +
-            "       <id>1</id>" +
-            "       <frukt>" +
-            "           <type>Kiwi</type>" +
-            "           <amount>3</amount>" +
-            "       </frukt>" +
-            "       <frukt>" +
-            "           <type>Apelsin</type>" +
-            "           <amount>6</amount>" +
-            "       </frukt>" +
-            "   </fruktkorg>" +
-            "</fruktkorgar>";
+    private static final String UPDATE_XML = "updateFruktkorgar.xml";
+    private static final String RESTORE_EXISTING_XML = "restoreExistingFruktkorg.xml";
+    private static final String RESTORE_NEW_XML = "restoreNewFruktkorg.xml";
 
-    private static final String restoreExistingFruktkorgXML = "" +
-            "<?xml version=\"1.0\"?>" +
-            "<fruktkorgar>" +
-            "   <fruktkorg>" +
-            "       <id>1</id>" +
-            "       <name>Köket</name>" +
-            "       <frukt>" +
-            "           <id>1</id>" +
-            "           <type>Kiwi</type>" +
-            "           <amount>10</amount>" +
-            "       </frukt>" +
-            "       <frukt>" +
-            "           <type>Apelsin</type>" +
-            "           <amount>10</amount>" +
-            "       </frukt>" +
-            "   </fruktkorg>" +
-            "</fruktkorgar>";
-
-    private static final String restoreNewFruktkorgXML = "" +
-            "<?xml version=\"1.0\"?>" +
-            "<fruktkorgar>" +
-            "   <fruktkorg>" +
-            "       <name>Köket</name>" +
-            "       <frukt>" +
-            "           <type>Kiwi</type>" +
-            "           <amount>10</amount>" +
-            "       </frukt>" +
-            "       <frukt>" +
-            "           <type>Apelsin</type>" +
-            "           <amount>10</amount>" +
-            "       </frukt>" +
-            "   </fruktkorg>" +
-            "</fruktkorgar>";
 
     @BeforeEach
     void init() {
@@ -390,7 +344,7 @@ class FruktkorgServiceTest {
 
         fruktkorgarUpdate.fruktkorgList = Collections.singletonList(fruktkorgUpdate1);
 
-        List<ImmutableFruktkorg> updatedFruktkorgar = fruktkorgService.updateFruktkorgar(new ByteArrayInputStream(updateFruktkorgarXML.getBytes()));
+        List<ImmutableFruktkorg> updatedFruktkorgar = fruktkorgService.updateFruktkorgar(getClass().getClassLoader().getResourceAsStream(UPDATE_XML));
 
         Assertions.assertEquals(fruktkorg1.getId(), updatedFruktkorgar.get(0).getId());
         Assertions.assertEquals(fruktkorg1.getName(), updatedFruktkorgar.get(0).getName());
@@ -426,7 +380,7 @@ class FruktkorgServiceTest {
         Mockito.when(fruktRepository.findById(1)).thenReturn(Optional.of(persistedKiwi));
         Mockito.when(fruktkorgRepository.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
 
-        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes()));
+        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(getClass().getClassLoader().getResourceAsStream(RESTORE_EXISTING_XML));
 
         Assertions.assertEquals(1, restoredFruktkorgar.size(), "Should only be one Fruktkorg");
         Assertions.assertEquals(2, restoredFruktkorgar.get(0).getFruktList().size(), "Should only be two Frukter");
@@ -460,8 +414,7 @@ class FruktkorgServiceTest {
 
         Mockito.when(fruktkorgRepository.merge(Mockito.any())).thenReturn(kitchenUpdatedFromXML);
 
-        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreNewFruktkorgXML.getBytes()));
-
+        List<ImmutableFruktkorg> restoredFruktkorgar = fruktkorgService.restoreFruktkorgar(getClass().getClassLoader().getResourceAsStream(RESTORE_NEW_XML));
         Assertions.assertEquals(1, restoredFruktkorgar.size(), "Should only be one Fruktkorg");
         Assertions.assertEquals(2, restoredFruktkorgar.get(0).getFruktList().size(), "Should only be two Frukter");
 
@@ -470,15 +423,14 @@ class FruktkorgServiceTest {
     @Test
     void restoreWithFruktkorgIdNotFound() {
         Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
-        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.updateFruktkorgar(new ByteArrayInputStream(updateFruktkorgarXML.getBytes())));
+        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.updateFruktkorgar(getClass().getClassLoader().getResourceAsStream(UPDATE_XML)));
 
     }
 
     @Test
     void updateWithFruktkorgIdNotFound() {
         Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.empty());
-        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
-
+        Assertions.assertThrows(FruktkorgMissingException.class, () -> fruktkorgService.restoreFruktkorgar(getClass().getClassLoader().getResourceAsStream(RESTORE_EXISTING_XML)));
     }
 
 
@@ -496,7 +448,7 @@ class FruktkorgServiceTest {
 
         Mockito.when(fruktkorgRepository.findById(1)).thenReturn(Optional.of(persistedKitchenfruktkorg));
         Mockito.when(fruktRepository.findById(1)).thenReturn(Optional.empty());
-        Assertions.assertThrows(FruktMissingException.class, () -> fruktkorgService.restoreFruktkorgar(new ByteArrayInputStream(restoreExistingFruktkorgXML.getBytes())));
+        Assertions.assertThrows(FruktMissingException.class, () -> fruktkorgService.restoreFruktkorgar(getClass().getClassLoader().getResourceAsStream(RESTORE_EXISTING_XML)));
 
     }
 }

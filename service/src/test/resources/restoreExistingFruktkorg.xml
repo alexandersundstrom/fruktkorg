@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<fruktkorgar>
+    <fruktkorg>
+        <id>1</id>
+        <name>Köket</name>
+        <frukt>
+            <id>1</id>
+            <type>Kiwi</type>
+            <amount>10</amount>
+        </frukt>
+        <frukt>
+            <type>Apelsin</type>
+            <amount>10</amount>
+        </frukt>
+    </fruktkorg>
+</fruktkorgar>
