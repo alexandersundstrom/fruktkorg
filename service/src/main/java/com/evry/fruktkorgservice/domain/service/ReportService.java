@@ -1,10 +1,10 @@
-package com.evry.fruktkorgservice.service;
+package com.evry.fruktkorgservice.domain.service;
 
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableReport;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.domain.model.ImmutableReport;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.evry.fruktkorgservice.utils.XMLUtils;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
@@ -199,7 +199,7 @@ public class ReportService {
             return Collections.emptyList();
         }
 
-        Fruktkorgar fruktkorgar = null;
+        Fruktkorgar fruktkorgar;
         try {
             fruktkorgar = (Fruktkorgar) unmarshaller.unmarshal(new File(report.getLocation()));
         } catch (JAXBException e) {

@@ -1,7 +1,7 @@
 package com.evry.fruktkorgrest.controller;
 
 import com.evry.fruktkorgrest.utils.NumberUtils;
-import com.evry.fruktkorgservice.service.ReportService;
+import com.evry.fruktkorgservice.domain.service.ReportService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;

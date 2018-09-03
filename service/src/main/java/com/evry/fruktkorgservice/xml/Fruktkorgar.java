@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.xml;
 
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

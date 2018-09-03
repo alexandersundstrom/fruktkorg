@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.model;
+package com.evry.fruktkorgservice.domain.model;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

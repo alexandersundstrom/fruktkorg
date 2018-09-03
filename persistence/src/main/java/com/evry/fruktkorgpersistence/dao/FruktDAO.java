@@ -1,6 +1,7 @@
 package com.evry.fruktkorgpersistence.dao;
 
 import com.evry.fruktkorgpersistence.model.Frukt;
+import com.evry.fruktkorgpersistence.model.FruktRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -11,7 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
-public class FruktDAO {
+public class FruktDAO implements FruktRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
@@ -31,6 +32,7 @@ public class FruktDAO {
         this.entityManagerFactory = entityManagerFactory;
     }
 
+    @Override
     public void persist(Frukt frukt) {
         logger.debug("Persisting Frukt: " + frukt);
         EntityManager entityManager = getEntityManager();
@@ -40,15 +42,7 @@ public class FruktDAO {
         entityManager.getTransaction().commit();
     }
 
-    public void remove(long fruktId) {
-        logger.info("Removing frukt with id: " + fruktId);
-        EntityManager entityManager = getEntityManager();
-
-        entityManager.getTransaction().begin();
-        entityManager.remove(fruktId);
-        entityManager.getTransaction().commit();
-    }
-
+    @Override
     public Frukt merge(Frukt frukt) {
         logger.debug("Merging Frukt: " + frukt);
         EntityManager entityManager = getEntityManager();
@@ -59,15 +53,13 @@ public class FruktDAO {
         return mergedFrukt;
     }
 
-    public void refresh(Frukt frukt) {
-        getEntityManager().refresh(frukt);
-    }
-
-    public Optional<Frukt> findFruktById(long fruktId) {
+    @Override
+    public Optional<Frukt> findById(long fruktId) {
         return Optional.ofNullable(getEntityManager().find(Frukt.class, fruktId));
     }
 
-    public List<Frukt> listFrukt() {
+    @Override
+    public List<Frukt> findAll() {
         logger.debug("Fetching all Frukt");
         EntityManager entityManager = getEntityManager();
 
@@ -76,7 +68,8 @@ public class FruktDAO {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public List<String> listUniqueFruktTypes() {
+    @Override
+    public List<String> findAllUniqueFruktTypes() {
         logger.debug("Fetching all unique Frukt types");
         EntityManager entityManager = getEntityManager();
 

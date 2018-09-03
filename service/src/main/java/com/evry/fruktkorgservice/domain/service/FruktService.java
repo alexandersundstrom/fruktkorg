@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.service;
+package com.evry.fruktkorgservice.domain.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import org.apache.log4j.LogManager;
@@ -16,6 +16,6 @@ public class FruktService {
 
     public List<String> getUniqueFruktTypes() {
         logger.debug("getting unique Frukt types");
-        return fruktDAO.listUniqueFruktTypes();
+        return fruktDAO.findAllUniqueFruktTypes();
     }
 }

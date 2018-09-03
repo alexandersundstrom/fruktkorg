@@ -3,21 +3,19 @@ package com.evry.fruktkorgservice;
 import com.evry.fruktkorgpersistence.dao.ReportDAO;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
-import com.evry.fruktkorgservice.model.*;
-import com.evry.fruktkorgservice.service.FruktkorgService;
-import com.evry.fruktkorgservice.service.ReportService;
+import com.evry.fruktkorgservice.domain.model.*;
+import com.evry.fruktkorgservice.domain.service.FruktkorgService;
+import com.evry.fruktkorgservice.domain.service.ReportService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -175,9 +173,7 @@ class ReportServiceTest {
     void getMissingReportById() {
         Mockito.when(reportDAO.findReportById(2)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ReportMissingException.class, () -> {
-            reportService.getAndMarkReport(2);
-        });
+        Assertions.assertThrows(ReportMissingException.class, () -> reportService.getAndMarkReport(2));
     }
 
     @Test

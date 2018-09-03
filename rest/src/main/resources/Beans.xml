@@ -18,7 +18,7 @@
         <constructor-arg ref="fruktService" />
     </bean>
 
-    <bean id = "fruktService" class = "com.evry.fruktkorgservice.service.FruktService">
+    <bean id = "fruktService" class = "com.evry.fruktkorgservice.domain.service.FruktService">
         <constructor-arg ref="fruktDAO"/>
     </bean>
 
@@ -28,7 +28,7 @@
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.service.FruktkorgService">
+    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.domain.service.FruktkorgService">
         <constructor-arg ref="fruktkorgDAO"/>
         <constructor-arg ref="fruktDAO"/>
     </bean>
@@ -39,7 +39,7 @@
         <constructor-arg ref="reportService" />
     </bean>
 
-    <bean id = "reportService" class = "com.evry.fruktkorgservice.service.ReportService">
+    <bean id = "reportService" class = "com.evry.fruktkorgservice.domain.service.ReportService">
         <constructor-arg ref="reportDAO" />
         <constructor-arg ref="fruktkorgService" />
     </bean>

@@ -3,16 +3,16 @@ package com.evry.fruktkorgrest;
 import com.evry.fruktkorgrest.controller.FruktController;
 import com.evry.fruktkorgrest.controller.FruktkorgController;
 import com.evry.fruktkorgrest.controller.ReportController;
-import com.evry.fruktkorgrest.model.FruktkorgResponse;
+import com.evry.fruktkorgrest.model.FruktkorgDTO;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorgBuilder;
-import com.evry.fruktkorgservice.service.FruktkorgService;
+import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
+import com.evry.fruktkorgservice.domain.service.FruktkorgService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -88,7 +88,7 @@ class FruktkorgRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        FruktkorgResponse responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgResponse.class);
+        FruktkorgDTO responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgDTO.class);
 
         Assertions.assertEquals(1, responseFruktkorg.getId(), "Id should be the same");
         Assertions.assertEquals("Korg", responseFruktkorg.getName(), "Name should be the same");
@@ -215,7 +215,7 @@ class FruktkorgRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_CREATED, response.code(), "Response should be CREATED");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        FruktkorgResponse responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgResponse.class);
+        FruktkorgDTO responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgDTO.class);
 
         Assertions.assertEquals(1, responseFruktkorg.getId(), "The id of the created Fruktkorg should be the same");
         Assertions.assertEquals(immutableFruktkorg.getName(), responseFruktkorg.getName(), "The name of the Fruktkorg should be the same");
@@ -293,7 +293,7 @@ class FruktkorgRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), " Response should be OK");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        FruktkorgResponse responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgResponse.class);
+        FruktkorgDTO responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgDTO.class);
 
         Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
         Assertions.assertEquals(fruktkorgName, responseFruktkorg.getName(), "Fruktkorg name should be the same");
@@ -342,7 +342,7 @@ class FruktkorgRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        FruktkorgResponse responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgResponse.class);
+        FruktkorgDTO responseFruktkorg = objectMapper.readValue(response.body().string(), FruktkorgDTO.class);
 
         Assertions.assertEquals(fruktkorgId, responseFruktkorg.getId(), "Fruktkorg id should be the same");
         Assertions.assertEquals(fruktkorgName, responseFruktkorg.getName(), "Fruktkorg name should be the same");
@@ -379,11 +379,11 @@ class FruktkorgRestTest {
 
         Assertions.assertEquals(HttpServletResponse.SC_OK, response.code(), "Response should be OK");
         Assertions.assertNotNull(response.body(), "Request body should not be null");
-        List<FruktkorgResponse> immutableFruktkorgList = objectMapper.readValue(response.body().string(), new TypeReference<List<FruktkorgResponse>>() {
+        List<FruktkorgDTO> immutableFruktkorgList = objectMapper.readValue(response.body().string(), new TypeReference<List<FruktkorgDTO>>() {
         });
 
         Assertions.assertEquals(1, immutableFruktkorgList.size(), "Should be 1 Fruktkorg found");
-        FruktkorgResponse immutableFruktkorg = immutableFruktkorgList.get(0);
+        FruktkorgDTO immutableFruktkorg = immutableFruktkorgList.get(0);
         Assertions.assertEquals(1, immutableFruktkorg.getId(), "Id should be the same");
         Assertions.assertEquals("Korg", immutableFruktkorg.getName(), "Name should be the same");
         Assertions.assertEquals(1, immutableFruktkorg.getFruktList().size(), "Amount of Frukt should be the same");

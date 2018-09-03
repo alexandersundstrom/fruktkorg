@@ -24,7 +24,7 @@ class FruktTest {
 
         fruktkorgDAO = new FruktkorgDAO();
         fruktkorgDAO.setEntityManagerFactory(entityManagerFactory);
-        
+
         fruktDAO = new FruktDAO();
         fruktDAO.setEntityManagerFactory(entityManagerFactory);
     }
@@ -39,9 +39,9 @@ class FruktTest {
         fruktDAO.persist(frukt);
         fruktkorgDAO.refresh(fruktkorg);
 
-        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
-        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorgar().size(), "Should return 1 fruktkorg");
-        Assertions.assertEquals(1, fruktkorgDAO.listFruktkorgar().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
+        Assertions.assertEquals(1, fruktDAO.findAll().size(), "Should return 1 frukt");
+        Assertions.assertEquals(1, fruktkorgDAO.findAllFruktkorgar().size(), "Should return 1 fruktkorg");
+        Assertions.assertEquals(1, fruktkorgDAO.findAllFruktkorgar().get(0).getFruktList().size(), "Should be 1 frukt in fruktkorgen");
     }
 
     @Test
@@ -54,7 +54,7 @@ class FruktTest {
         fruktDAO.persist(frukt);
         fruktkorgDAO.refresh(fruktkorg);
 
-        Assertions.assertTrue(fruktDAO.findFruktById(frukt.getId()).isPresent(), "Frukt should be found by id");
+        Assertions.assertTrue(fruktDAO.findById(frukt.getId()).isPresent(), "Frukt should be found by id");
     }
 
     @Test
@@ -67,7 +67,7 @@ class FruktTest {
         fruktDAO.persist(frukt);
         fruktkorgDAO.refresh(fruktkorg);
 
-        Assertions.assertFalse(fruktDAO.findFruktById(2).isPresent(), "Frukt should not be found by");
+        Assertions.assertFalse(fruktDAO.findById(2).isPresent(), "Frukt should not be found by");
     }
 
     @Test
@@ -79,14 +79,14 @@ class FruktTest {
 
         fruktDAO.persist(frukt);
 
-        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
+        Assertions.assertEquals(1, fruktDAO.findAll().size(), "Should return 1 frukt");
 
         frukt.setAmount(2);
 
         fruktDAO.merge(frukt);
 
-        Assertions.assertEquals(1, fruktDAO.listFrukt().size(),"Should return 1 frukt");
-        Assertions.assertEquals(2, fruktDAO.listFrukt().get(0).getAmount(), "Amount of Äpplen should be 2");
+        Assertions.assertEquals(1, fruktDAO.findAll().size(), "Should return 1 frukt");
+        Assertions.assertEquals(2, fruktDAO.findAll().get(0).getAmount(), "Amount of Äpplen should be 2");
     }
 
     @Test
@@ -98,7 +98,7 @@ class FruktTest {
 
         fruktDAO.persist(frukt);
 
-        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
+        Assertions.assertEquals(1, fruktDAO.findAll().size(), "Should return 1 frukt");
 
         Fruktkorg fruktkorg2 = new Fruktkorg("Test Korg 2");
         fruktkorgDAO.persist(fruktkorg2);
@@ -107,8 +107,8 @@ class FruktTest {
 
         fruktDAO.merge(frukt);
 
-        Assertions.assertEquals(1, fruktDAO.listFrukt().size(), "Should return 1 frukt");
-        Assertions.assertEquals(fruktkorg2.getId(), fruktDAO.listFrukt().get(0).getFruktkorg().getId(), "Fruktkorg should have changed");
+        Assertions.assertEquals(1, fruktDAO.findAll().size(), "Should return 1 frukt");
+        Assertions.assertEquals(fruktkorg2.getId(), fruktDAO.findAll().get(0).getFruktkorg().getId(), "Fruktkorg should have changed");
     }
 
     @Test
@@ -128,7 +128,7 @@ class FruktTest {
         Frukt frukt3 = new Frukt("Banan", 3, fruktkorg2);
         fruktDAO.persist(frukt3);
 
-        List<String> fruktTypes = fruktDAO.listUniqueFruktTypes();
+        List<String> fruktTypes = fruktDAO.findAllUniqueFruktTypes();
         Assertions.assertEquals(2, fruktTypes.size());
         Assertions.assertIterableEquals(Arrays.asList("Banan", "Äpple"), fruktTypes);
     }

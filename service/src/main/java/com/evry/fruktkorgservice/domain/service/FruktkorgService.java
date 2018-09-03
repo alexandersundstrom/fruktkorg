@@ -1,13 +1,13 @@
-package com.evry.fruktkorgservice.service;
+package com.evry.fruktkorgservice.domain.service;
 
 import com.evry.fruktkorgpersistence.dao.FruktDAO;
 import com.evry.fruktkorgpersistence.dao.FruktkorgDAO;
 import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
+import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.utils.ModelUtils;
 import com.evry.fruktkorgservice.utils.XMLUtils;
 import com.evry.fruktkorgservice.xml.FruktkorgRestore;
@@ -54,7 +54,7 @@ public class FruktkorgService {
 
     public ImmutableFruktkorg addFruktToFruktkorg(long fruktkorgId, ImmutableFrukt immutableFrukt) throws FruktkorgMissingException {
         logger.debug("Got request to add Frukt to Fruktorg with id " + fruktkorgId + ": " + immutableFrukt);
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
 
         if (!optFruktkorg.isPresent()) {
             logger.warn("Fruktkorg with id: " + fruktkorgId + " not found");
@@ -87,7 +87,7 @@ public class FruktkorgService {
 
     public ImmutableFruktkorg removeFruktFromFruktkorg(long fruktkorgId, String fruktType, int amount) throws FruktkorgMissingException, FruktMissingException {
         logger.info("Got request to remove " + amount + " Frukt(er) of type " + fruktType + " from Fruktkorg");
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
 
         if (!optFruktkorg.isPresent()) {
             logger.warn("Fruktkorg with id: " + fruktkorgId + " not found");
@@ -129,7 +129,7 @@ public class FruktkorgService {
 
     public List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType) {
         logger.debug("Searching for Fruktkorgar containing Frukt of type " + fruktType);
-        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findFruktkorgByFrukt(fruktType);
+        List<Fruktkorg> fruktkorgList = fruktkorgDAO.findAllByFruktType(fruktType);
 
         List<ImmutableFruktkorg> immutableFruktkorgList = new ArrayList<>();
 
@@ -141,11 +141,11 @@ public class FruktkorgService {
     }
 
     public List<ImmutableFruktkorg> listFruktkorgar() {
-        return fruktkorgDAO.listFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
+        return fruktkorgDAO.findAllFruktkorgar().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
     }
 
     private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgUpdate.id);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgUpdate.id);
 
         if (!optFruktkorg.isPresent()) {
             throw new FruktkorgMissingException("Unable to find fruktkorg with id: " + fruktkorgUpdate.id, fruktkorgUpdate.id);
@@ -180,7 +180,7 @@ public class FruktkorgService {
             fruktkorgarUpdate = (FruktkorgarUpdate) unmarshaller.unmarshal(inputStream);
         } catch (JAXBException e) {
             logger.error("Error unmarshaling", e);
-           throw e;
+            throw e;
         }
         validateFruktkorgar(fruktkorgarUpdate);
         List<ImmutableFruktkorg> updatedFruktkorgar = new ArrayList<>();
@@ -205,7 +205,7 @@ public class FruktkorgService {
             fruktkorgDAO.persist(fruktkorg);
 
         } else {
-            Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgRestore.id);
+            Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgRestore.id);
 
             if (!optFruktkorg.isPresent()) {
                 throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + fruktkorgRestore.id, fruktkorgRestore.id);
@@ -217,7 +217,7 @@ public class FruktkorgService {
 
         for (ImmutableFrukt immutableFrukt : fruktkorgRestore.fruktList) {
             if (immutableFrukt.getId() != 0L) {
-                Optional<Frukt> optFrukt = fruktDAO.findFruktById(immutableFrukt.getId());
+                Optional<Frukt> optFrukt = fruktDAO.findById(immutableFrukt.getId());
                 if (!optFrukt.isPresent()) {
                     throw new FruktMissingException("Kunde inte hitta frukt med id " + immutableFrukt.getId(), immutableFrukt.getType());
                 }
@@ -285,7 +285,7 @@ public class FruktkorgService {
     }
 
     private void validateFruktkorg(long id) throws FruktkorgMissingException {
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(id);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(id);
 
         if (!optFruktkorg.isPresent()) {
             throw new FruktkorgMissingException("Kunde inte hitta fruktkorg med id " + id, id);
@@ -293,7 +293,7 @@ public class FruktkorgService {
     }
 
     public void validateFrukt(ImmutableFrukt frukt) throws FruktMissingException {
-        Optional<Frukt> optFrukt = fruktDAO.findFruktById(frukt.getId());
+        Optional<Frukt> optFrukt = fruktDAO.findById(frukt.getId());
 
         if (!optFrukt.isPresent()) {
             throw new FruktMissingException("Kunde inte hitta frukt med id " + frukt.getId(), frukt.getType());
@@ -303,7 +303,7 @@ public class FruktkorgService {
     private Fruktkorg findFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         validateId(fruktkorgId);
 
-        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findFruktkorgById(fruktkorgId);
+        Optional<Fruktkorg> optFruktkorg = fruktkorgDAO.findById(fruktkorgId);
 
         return optFruktkorg
                 .orElseThrow(() -> {

@@ -1,6 +1,6 @@
 package com.evry.fruktkorgrest.controller;
 
-import com.evry.fruktkorgservice.service.FruktService;
+import com.evry.fruktkorgservice.domain.service.FruktService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.LogManager;
