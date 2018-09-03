@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement(name = "fruktkorg")
@@ -25,7 +27,7 @@ public class ImmutableFruktkorg {
     public ImmutableFruktkorg(long id, String name, List<ImmutableFrukt> fruktList, Instant lastChanged) {
         this.id = id;
         this.name = name;
-        this.fruktList = fruktList;
+        this.fruktList = fruktList != null ? Collections.unmodifiableList(fruktList): Collections.unmodifiableList(new ArrayList<>());
         this.lastChanged = lastChanged;
     }
 
