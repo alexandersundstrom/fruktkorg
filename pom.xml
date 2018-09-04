@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>persistence</module>
-        <module>service</module>
-        <module>rest</module>
+        <module>infrastructure</module>
+        <module>application</module>
+        <module>presentation</module>
     </modules>
 
 </project>

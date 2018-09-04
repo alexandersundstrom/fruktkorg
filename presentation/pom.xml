@@ -9,7 +9,7 @@
         <version>0.1.0</version>
     </parent>
 
-	<artifactId>rest</artifactId>
+	<artifactId>presentation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>com.evry</groupId>
-            <artifactId>service</artifactId>
+            <artifactId>application</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
