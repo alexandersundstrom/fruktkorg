@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>com.evry</groupId>
-            <artifactId>fruktkorg-service</artifactId>
+            <artifactId>service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

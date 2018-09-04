@@ -6,7 +6,7 @@ import com.evry.fruktkorgrest.controller.ReportController;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
 import com.evry.fruktkorgservice.domain.model.ImmutableReport;
-import com.evry.fruktkorgservice.utils.builders.ImmutableReportBuilder;
+import com.evry.fruktkorgservice.domain.model.ImmutableReportBuilder;
 import com.evry.fruktkorgservice.domain.service.ReportService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

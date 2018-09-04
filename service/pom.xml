@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>com.evry</groupId>
-            <artifactId>fruktkorg-persistence</artifactId>
+            <artifactId>persistence</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
