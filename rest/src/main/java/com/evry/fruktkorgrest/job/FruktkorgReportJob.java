@@ -21,8 +21,15 @@ public class FruktkorgReportJob extends QuartzJobBean {
         reportService.removeReadReports();
 
         logger.info("Creating Fruktkorg Report...");
+
+        File reportsDirectory = new File("reports");
+        if (!reportsDirectory.exists()) {
+            logger.info("Creating reports directory");
+            reportsDirectory.mkdir();
+        }
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        File reportFile = new File("rest/src/main/resources/reports/fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
+        File reportFile = new File("reports/fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
 
         reportService.createReport(reportFile.getAbsolutePath());
 

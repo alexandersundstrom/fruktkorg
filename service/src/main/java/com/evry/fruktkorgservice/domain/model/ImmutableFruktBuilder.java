@@ -1,6 +1,4 @@
-package com.evry.fruktkorgservice.utils.builders;
-
-import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
+package com.evry.fruktkorgservice.domain.model;
 
 public class ImmutableFruktBuilder {
     private long id;

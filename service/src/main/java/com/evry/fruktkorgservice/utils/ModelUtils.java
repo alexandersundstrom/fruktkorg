@@ -4,9 +4,9 @@ import com.evry.fruktkorgpersistence.model.Frukt;
 import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.domain.model.*;
-import com.evry.fruktkorgservice.utils.builders.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.utils.builders.ImmutableFruktkorgBuilder;
-import com.evry.fruktkorgservice.utils.builders.ImmutableReportBuilder;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
+import com.evry.fruktkorgservice.domain.model.ImmutableReportBuilder;
 
 public class ModelUtils {
     public static ImmutableFrukt convertFrukt(Frukt frukt) {

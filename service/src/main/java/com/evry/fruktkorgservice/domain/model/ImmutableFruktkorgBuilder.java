@@ -1,7 +1,4 @@
-package com.evry.fruktkorgservice.utils.builders;
-
-import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+package com.evry.fruktkorgservice.domain.model;
 
 import java.time.Instant;
 import java.util.ArrayList;
