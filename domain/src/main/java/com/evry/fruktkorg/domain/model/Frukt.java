@@ -1,19 +1,13 @@
 package com.evry.fruktkorg.domain.model;
 
 public class Frukt {
-    //    @Id
-//    @SequenceGenerator(name = "frukt_frukt_id_seq", sequenceName = "frukt_frukt_id_seq", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "frukt_frukt_id_seq")
-//    @Column(name = "frukt_id", updatable = false)
-    private Long id;
+
+    private long id;
 
     private String type;
 
     private int amount;
 
-    //    @OneToOne
-//    @JoinColumn(name = "fruktkorg_id")
-//    @JsonBackReference
     private Fruktkorg fruktkorg;
 
     public Frukt() {

@@ -143,8 +143,8 @@ public class FruktkorgTest {
         Fruktkorg fruktkorg = new Fruktkorg();
         fruktkorg.setName("Test korg");
 
-        Frukt superBanan = new Frukt("Super Banan", 1, fruktkorg);
-        fruktkorg.getFruktList().add(superBanan);
+        Frukt banana = new Frukt("Super Banan", 1, fruktkorg);
+        fruktkorg.getFruktList().add(banana);
 
         fruktkorgRepository.persist(fruktkorg);
 
@@ -152,8 +152,9 @@ public class FruktkorgTest {
 
         Assertions.assertEquals(1, fruktkorgar.size(), "Should return 1 fruktkorg");
         Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().size(), "fruktkorgen should have 1 frukt");
+        Assertions.assertEquals(1, fruktkorgar.get(0).getFruktList().get(0).getId(), "Frukt id should be 1");
 
-        fruktkorg.getFruktList().remove(superBanan);
+        fruktkorg.getFruktList().remove(banana);
 
         fruktkorgRepository.merge(fruktkorg);
         fruktkorgar = fruktkorgRepository.findAll();

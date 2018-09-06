@@ -23,6 +23,7 @@
             <property name="hibernate.format_sql" value="false" />
             <property name="hibernate.transaction.flush_before_completion" value="true" />
             <property name="org.hibernate.flushMode" value="COMMIT"/>
+            <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

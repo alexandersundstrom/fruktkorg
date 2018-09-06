@@ -32,3 +32,6 @@ ALTER TABLE reports RENAME TO report;
 
 --changeset Mio:6
 ALTER TABLE report RENAME COLUMN id TO report_id;
+
+--changeset Alexander:7
+ALTER TABLE frukt ADD list_index int NULL;
