@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PROTECTED_BRANCH="master"
+CURRENT_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ ${PROTECTED_BRANCH} != ${CURRENT_BRANCH} ]; then
+    exit 0
+fi
+
+LOCATION=$(git rev-parse --show-toplevel)
+
+cd $LOCATION && mvn test
+
+if [ $? != 0 ]; then
+    echo "Fix the failing test before pushing to $PROTECTED_BRANCH"
+    exit 1
+fi
+
+exit 0
+
