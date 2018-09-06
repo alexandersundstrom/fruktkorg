@@ -1,7 +1,7 @@
 package com.evry.fruktkorgservice.domain.service;
 
+import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate;
-import com.evry.fruktkorgpersistence.model.Report;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableReport;
 import com.evry.fruktkorgservice.exception.ReportMissingException;
@@ -11,7 +11,9 @@ import com.evry.fruktkorgservice.xml.Fruktkorgar;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -120,7 +122,7 @@ public class ReportService {
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
                 });
 
-       Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.REPORT_XSD);
+        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.REPORT_XSD);
 
         Fruktkorgar fruktkorgar;
         try {

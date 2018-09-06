@@ -1,12 +1,9 @@
 package com.evry.fruktkorgservice.utils;
 
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorg.domain.model.Frukt;
+import com.evry.fruktkorg.domain.model.Fruktkorg;
+import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgservice.domain.model.*;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
-import com.evry.fruktkorgservice.domain.model.ImmutableReportBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -72,14 +69,14 @@ class ModelUtilsTest {
         ImmutableFruktkorg immutableFruktkorg = ModelUtils.convertFruktkorg(fruktkorg);
         assertEquals(immutableFruktkorg.getId(), fruktkorg.getId(), "Id should be the same");
         assertEquals(immutableFruktkorg.getName(), fruktkorg.getName(), "Name should be the same");
-        assertEquals(1, immutableFruktkorg.getFruktList().size(),  "Amount of Frukt should be the same");
+        assertEquals(1, immutableFruktkorg.getFruktList().size(), "Amount of Frukt should be the same");
         assertEquals(updated, immutableFruktkorg.getLastChanged(), "Last Change should be the same");
 
         ImmutableFrukt convertedfrukt = immutableFruktkorg.getFruktList().get(0);
-        assertEquals(frukt.getId(),convertedfrukt.getId(), "Id should be the same");
+        assertEquals(frukt.getId(), convertedfrukt.getId(), "Id should be the same");
         assertEquals(frukt.getType(), convertedfrukt.getType(), "Type should be the same");
-        assertEquals(frukt.getAmount(),convertedfrukt.getAmount(), "Amount of Frukt should be the same");
-        assertEquals(frukt.getFruktkorg().getId(),convertedfrukt.getFruktkorgId(), "Id of Fruktkorg should be the same");
+        assertEquals(frukt.getAmount(), convertedfrukt.getAmount(), "Amount of Frukt should be the same");
+        assertEquals(frukt.getFruktkorg().getId(), convertedfrukt.getFruktkorgId(), "Id of Fruktkorg should be the same");
 
     }
 
@@ -102,7 +99,7 @@ class ModelUtilsTest {
 
         assertEquals(immutableFruktkorg.getId(), fruktkorg.getId(), "Id should be the same");
         assertEquals(immutableFruktkorg.getName(), fruktkorg.getName(), "Name should be the same");
-        assertEquals(1, fruktkorg.getFruktList().size(),  "Amount of Frukt should be the same");
+        assertEquals(1, fruktkorg.getFruktList().size(), "Amount of Frukt should be the same");
         assertEquals(updated, fruktkorg.getLastChanged(), "Last Change should be the same");
         Frukt frukt = fruktkorg.getFruktList().get(0);
         ImmutableFrukt immutableFrukt = immutableFruktkorg.getFruktList().get(0);
@@ -126,7 +123,7 @@ class ModelUtilsTest {
         ImmutableReport immutableReport = ModelUtils.convertReport(report);
         assertEquals(immutableReport.getId(), report.getId(), "Id should be the same");
         assertEquals(immutableReport.getLocation(), report.getLocation(), "Location should be the same");
-        assertEquals(immutableReport.isRead(), report.isRead(),"Read should be the same");
+        assertEquals(immutableReport.isRead(), report.isRead(), "Read should be the same");
         assertEquals(created, immutableReport.getCreated(), "Created should be the same");
     }
 
@@ -144,7 +141,7 @@ class ModelUtilsTest {
 
         assertEquals(immutableReport.getId(), report.getId(), "Id should be the same");
         assertEquals(immutableReport.getLocation(), report.getLocation(), "Location should be the same");
-        assertEquals(immutableReport.getCreated(), report.getCreated() ,"Created should be the same");
+        assertEquals(immutableReport.getCreated(), report.getCreated(), "Created should be the same");
         assertEquals(immutableReport.isRead(), report.isRead(), "Read should be the same");
     }
 }

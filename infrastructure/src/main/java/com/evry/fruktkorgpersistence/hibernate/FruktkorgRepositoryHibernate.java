@@ -1,8 +1,8 @@
 package com.evry.fruktkorgpersistence.hibernate;
 
 
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgpersistence.model.FruktkorgRepository;
+import com.evry.fruktkorg.domain.model.Fruktkorg;
+import com.evry.fruktkorg.domain.model.FruktkorgRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -19,16 +19,10 @@ public class FruktkorgRepositoryHibernate implements FruktkorgRepository {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
-    private EntityManager entityManager;
-
     private static final Logger logger = LogManager.getLogger(FruktkorgRepositoryHibernate.class);
 
     private EntityManager getEntityManager() {
-        if (entityManager == null) {
-            entityManager = entityManagerFactory.createEntityManager();
-        }
-
-        return entityManager;
+        return entityManagerFactory.createEntityManager();
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

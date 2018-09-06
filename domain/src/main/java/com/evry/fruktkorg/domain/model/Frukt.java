@@ -1,30 +1,23 @@
-package com.evry.fruktkorgpersistence.model;
+package com.evry.fruktkorg.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "frukt")
 public class Frukt {
-    @Id
-    @SequenceGenerator(name = "frukt_frukt_id_seq", sequenceName = "frukt_frukt_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "frukt_frukt_id_seq")
-    @Column(name = "frukt_id", updatable = false)
-    private long id;
+    //    @Id
+//    @SequenceGenerator(name = "frukt_frukt_id_seq", sequenceName = "frukt_frukt_id_seq", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "frukt_frukt_id_seq")
+//    @Column(name = "frukt_id", updatable = false)
+    private Long id;
 
-    @Column(name = "type")
     private String type;
 
-    @Column(name = "amount")
     private int amount;
 
-    @OneToOne
-    @JoinColumn(name = "fruktkorg_id")
-    @JsonBackReference
+    //    @OneToOne
+//    @JoinColumn(name = "fruktkorg_id")
+//    @JsonBackReference
     private Fruktkorg fruktkorg;
 
-    public Frukt() {}
+    public Frukt() {
+    }
 
     public Frukt(String type, int amount, Fruktkorg fruktkorg) {
         this.type = type;

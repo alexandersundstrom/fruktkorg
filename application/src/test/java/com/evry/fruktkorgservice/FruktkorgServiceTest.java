@@ -1,16 +1,16 @@
 package com.evry.fruktkorgservice;
 
+import com.evry.fruktkorg.domain.model.Frukt;
+import com.evry.fruktkorg.domain.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
 import com.evry.fruktkorgservice.domain.service.FruktkorgService;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

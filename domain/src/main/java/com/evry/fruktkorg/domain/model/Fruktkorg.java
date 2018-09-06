@@ -1,32 +1,30 @@
-package com.evry.fruktkorgpersistence.model;
+package com.evry.fruktkorg.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "fruktkorg")
+//@Entity
+//@Table(name = "fruktkorg")
 public class Fruktkorg {
-    @Id
-    @SequenceGenerator(name = "fruktkorg_fruktkorg_id_seq", sequenceName = "fruktkorg_fruktkorg_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fruktkorg_fruktkorg_id_seq")
-    @Column(name = "fruktkorg_id", updatable = false)
-    private long id;
+    //    @Id
+//    @SequenceGenerator(name = "fruktkorg_fruktkorg_id_seq", sequenceName = "fruktkorg_fruktkorg_id_seq", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fruktkorg_fruktkorg_id_seq")
+//    @Column(name = "fruktkorg_id", updatable = false)
+    private Long id;
 
-    @Column(name = "name")
+    //    @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    //    @OneToMany(mappedBy = "fruktkorg", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
     private List<Frukt> fruktList = new ArrayList<>();
 
-    @Column(name = "last_changed")
+    //    @Column(name = "last_changed")
     private Instant lastChanged;
 
-    public Fruktkorg() {}
+    public Fruktkorg() {
+    }
 
     public Fruktkorg(String name) {
         this.name = name;

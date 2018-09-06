@@ -1,9 +1,9 @@
 package com.evry.fruktkorgservice.domain.service;
 
+import com.evry.fruktkorg.domain.model.Frukt;
+import com.evry.fruktkorg.domain.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
 import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.exception.FruktMissingException;

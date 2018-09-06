@@ -1,4 +1,4 @@
-package com.evry.fruktkorgpersistence.model;
+package com.evry.fruktkorg.domain.model;
 
 import java.util.List;
 import java.util.Optional;

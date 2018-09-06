@@ -1,7 +1,7 @@
 package com.evry.fruktkorgpersistence.hibernate;
 
-import com.evry.fruktkorgpersistence.model.Report;
-import com.evry.fruktkorgpersistence.model.ReportRepository;
+import com.evry.fruktkorg.domain.model.Report;
+import com.evry.fruktkorg.domain.model.ReportRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

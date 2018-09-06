@@ -1,12 +1,9 @@
 package com.evry.fruktkorgservice.utils;
 
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgpersistence.model.Fruktkorg;
-import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorg.domain.model.Frukt;
+import com.evry.fruktkorg.domain.model.Fruktkorg;
+import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgservice.domain.model.*;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktBuilder;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorgBuilder;
-import com.evry.fruktkorgservice.domain.model.ImmutableReportBuilder;
 
 public class ModelUtils {
     public static ImmutableFrukt convertFrukt(Frukt frukt) {
@@ -32,7 +29,7 @@ public class ModelUtils {
                 .setName(fruktkorg.getName())
                 .setLastChanged(fruktkorg.getLastChanged());
 
-        for(Frukt frukt : fruktkorg.getFruktList()) {
+        for (Frukt frukt : fruktkorg.getFruktList()) {
             immutableFruktkorgBuilder.addFrukt(convertFrukt(frukt));
         }
 
@@ -45,7 +42,7 @@ public class ModelUtils {
         fruktkorg.setName(immutableFruktkorg.getName());
         fruktkorg.setLastChanged(immutableFruktkorg.getLastChanged());
 
-        for(ImmutableFrukt immutableFrukt : immutableFruktkorg.getFruktList()) {
+        for (ImmutableFrukt immutableFrukt : immutableFruktkorg.getFruktList()) {
             Frukt frukt = convertImmutableFrukt(immutableFrukt);
             frukt.setFruktkorg(fruktkorg);
             fruktkorg.getFruktList().add(frukt);

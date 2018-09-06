@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<hibernate-mapping package="com.evry.fruktkorg.domain.model">
+    <class name="Fruktkorg">
+        <id name="id" type="long" column="fruktkorg_id" access="field">
+            <generator class="native">
+                <param name="sequence">fruktkorg_fruktkorg_id_seq</param>
+            </generator>
+        </id>
+        <property name="name" type="string" column="name"/>
+        <list name="fruktList" table="frukt" inverse="true" cascade="all-delete-orphan" lazy="true" fetch="select">
+            <key>
+                <column name="fruktkorg_id" not-null="true"/>
+            </key>
+            <index column="frukt_id"/>
+            <one-to-many class="com.evry.fruktkorg.domain.model.Frukt"/>
+        </list>
+        <property name="lastChanged" type="java.time.Instant" column="last_Changed"/>
+
+    </class>
+    <class name="Frukt">
+        <id name="id" type="long" column="frukt_id" access="field">
+            <generator class="native">
+                <param name="sequence">frukt_frukt_id_seq</param>
+            </generator>
+        </id>
+        <property name="type" type="string" column="type"/>
+        <property name="amount" type="integer" column="amount"/>
+        <many-to-one name="fruktkorg" class="com.evry.fruktkorg.domain.model.Fruktkorg" column="fruktkorg_id"
+                     access="field"/>
+    </class>
+    <class name="Report">
+        <id name="id" type="long" column="report_id" access="field">
+            <generator class="native">
+                <param name="sequence">reports_id_seq</param>
+            </generator>
+        </id>
+        <property name="location" type="string" column="location"/>
+        <property name="created" type="java.time.Instant" column="created"/>
+        <property name="read" type="boolean" column="read"/>
+    </class>
+</hibernate-mapping>

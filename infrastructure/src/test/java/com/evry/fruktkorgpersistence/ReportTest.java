@@ -1,7 +1,7 @@
 package com.evry.fruktkorgpersistence;
 
+import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate;
-import com.evry.fruktkorgpersistence.model.Report;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

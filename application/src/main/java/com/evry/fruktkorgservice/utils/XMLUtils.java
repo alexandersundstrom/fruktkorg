@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.utils;
 
-import com.evry.fruktkorgpersistence.model.Report;
+import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgservice.xml.Fruktkorgar;
 import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
 import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;

@@ -1,7 +1,7 @@
 package com.evry.fruktkorgpersistence.hibernate;
 
-import com.evry.fruktkorgpersistence.model.Frukt;
-import com.evry.fruktkorgpersistence.model.FruktRepository;
+import com.evry.fruktkorg.domain.model.Frukt;
+import com.evry.fruktkorg.domain.model.FruktRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -32,26 +32,6 @@ public class FruktRepositoryHibernate implements FruktRepository {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    @Override
-    public void persist(Frukt frukt) {
-        logger.debug("Persisting Frukt: " + frukt);
-        EntityManager entityManager = getEntityManager();
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(frukt);
-        entityManager.getTransaction().commit();
-    }
-
-    @Override
-    public Frukt merge(Frukt frukt) {
-        logger.debug("Merging Frukt: " + frukt);
-        EntityManager entityManager = getEntityManager();
-
-        entityManager.getTransaction().begin();
-        Frukt mergedFrukt = entityManager.merge(frukt);
-        entityManager.getTransaction().commit();
-        return mergedFrukt;
-    }
 
     @Override
     public Optional<Frukt> findById(long fruktId) {
