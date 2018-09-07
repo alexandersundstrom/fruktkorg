@@ -1,6 +1,6 @@
 package com.evry.fruktkorgrest.job;
 
-import com.evry.fruktkorgservice.domain.service.ReportService;
+import com.evry.fruktkorgservice.ReportService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;

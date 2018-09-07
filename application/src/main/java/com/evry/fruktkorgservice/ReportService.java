@@ -1,13 +1,13 @@
-package com.evry.fruktkorgservice.domain.service;
+package com.evry.fruktkorgservice;
 
 import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.domain.model.ImmutableReport;
-import com.evry.fruktkorgservice.exception.ReportMissingException;
-import com.evry.fruktkorgservice.utils.ModelUtils;
-import com.evry.fruktkorgservice.utils.XMLUtils;
-import com.evry.fruktkorgservice.xml.Fruktkorgar;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.model.ImmutableReport;
+import com.evry.fruktkorg.domain.model.handling.ReportMissingException;
+import com.evry.fruktkorgservice.util.ModelUtil;
+import com.evry.fruktkorgservice.util.XMLUtil;
+import com.evry.fruktkorgservice.model.xml.Fruktkorgar;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -33,11 +33,11 @@ public class ReportService {
     }
 
     public List<ImmutableReport> listReports() {
-        return reportRepository.findAll().stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportRepository.findAll().stream().map(ModelUtil::convertReport).collect(Collectors.toList());
     }
 
     public List<ImmutableReport> listReports(int limit, int offset) {
-        return reportRepository.findAllByLimitAndOffset(limit, offset).stream().map(ModelUtils::convertReport).collect(Collectors.toList());
+        return reportRepository.findAllByLimitAndOffset(limit, offset).stream().map(ModelUtil::convertReport).collect(Collectors.toList());
     }
 
     public InputStream getAndMarkReport(long id) throws ReportMissingException, FileNotFoundException {
@@ -52,11 +52,11 @@ public class ReportService {
             report = reportRepository.merge(report);
         }
 
-        return XMLUtils.getReport(report);
+        return XMLUtil.getReport(report);
     }
 
     public ImmutableReport createReport(String path) {
-        Marshaller marshaller = XMLUtils.getFruktkorgarMarshaller();
+        Marshaller marshaller = XMLUtil.getFruktkorgarMarshaller();
 
         Fruktkorgar fruktkorgar = new Fruktkorgar();
         fruktkorgar.fruktkorgList = fruktkorgService.listFruktkorgar();
@@ -80,7 +80,7 @@ public class ReportService {
 
         reportRepository.persist(report);
 
-        return ModelUtils.convertReport(report);
+        return ModelUtil.convertReport(report);
     }
 
     public void removeReport(long reportId) throws ReportMissingException {
@@ -122,7 +122,7 @@ public class ReportService {
                     return new ReportMissingException("Unable to find report with id: " + reportId, reportId);
                 });
 
-        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.REPORT_XSD);
+        Unmarshaller unmarshaller = XMLUtil.getUnmarshaller(XMLUtil.REPORT_XSD);
 
         Fruktkorgar fruktkorgar;
         try {
@@ -136,10 +136,10 @@ public class ReportService {
     }
 
     public InputStream getUpdateXSD() {
-        return XMLUtils.getUpdateXSD();
+        return XMLUtil.getUpdateXSD();
     }
 
     public InputStream getRestoreXSD() {
-        return XMLUtils.getRestoreXSD();
+        return XMLUtil.getRestoreXSD();
     }
 }

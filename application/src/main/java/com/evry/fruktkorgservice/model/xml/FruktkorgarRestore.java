@@ -1,11 +1,11 @@
-package com.evry.fruktkorgservice.xml;
+package com.evry.fruktkorgservice.model.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "fruktkorgar")
-public class FruktkorgarUpdate {
+public class FruktkorgarRestore {
     @XmlElement(name = "fruktkorg")
-    public List<FruktkorgUpdate> fruktkorgList;
+    public List<FruktkorgRestore> fruktkorgList;
 }

@@ -1,13 +1,11 @@
-package com.evry.fruktkorgservice.xml;
-
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+package com.evry.fruktkorgservice.model.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "fruktkorgar")
-public class Fruktkorgar {
+public class FruktkorgarUpdate {
     @XmlElement(name = "fruktkorg")
-    public List<ImmutableFruktkorg> fruktkorgList;
+    public List<FruktkorgUpdate> fruktkorgList;
 }

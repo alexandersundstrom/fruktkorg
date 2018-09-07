@@ -1,11 +1,11 @@
-package com.evry.fruktkorgservice.utils;
+package com.evry.fruktkorgservice.util;
 
 import com.evry.fruktkorg.domain.model.Frukt;
 import com.evry.fruktkorg.domain.model.Fruktkorg;
 import com.evry.fruktkorg.domain.model.Report;
-import com.evry.fruktkorgservice.domain.model.*;
+import com.evry.fruktkorgservice.model.*;
 
-public class ModelUtils {
+public class ModelUtil {
     public static ImmutableFrukt convertFrukt(Frukt frukt) {
         return new ImmutableFruktBuilder()
                 .setId(frukt.getId())

@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.exception;
+package com.evry.fruktkorg.domain.model.handling;
 
 public class FruktMissingException extends Exception {
     private String fruktType;

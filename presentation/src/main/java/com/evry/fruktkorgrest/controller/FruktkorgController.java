@@ -2,11 +2,11 @@ package com.evry.fruktkorgrest.controller;
 
 import com.evry.fruktkorgrest.model.FruktkorgDTO;
 import com.evry.fruktkorgrest.utils.NumberUtils;
-import com.evry.fruktkorgservice.exception.FruktMissingException;
-import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.domain.service.FruktkorgService;
+import com.evry.fruktkorg.domain.model.handling.FruktMissingException;
+import com.evry.fruktkorg.domain.model.handling.FruktkorgMissingException;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.FruktkorgService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.LogManager;

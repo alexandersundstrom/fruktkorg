@@ -5,7 +5,7 @@ import com.evry.fruktkorgrest.controller.FruktkorgController;
 import com.evry.fruktkorgrest.controller.ReportController;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
-import com.evry.fruktkorgservice.domain.service.FruktService;
+import com.evry.fruktkorgservice.FruktService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;

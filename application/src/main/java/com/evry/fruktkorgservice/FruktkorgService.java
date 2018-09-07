@@ -1,19 +1,19 @@
-package com.evry.fruktkorgservice.domain.service;
+package com.evry.fruktkorgservice;
 
 import com.evry.fruktkorg.domain.model.Frukt;
 import com.evry.fruktkorg.domain.model.Fruktkorg;
 import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate;
-import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
-import com.evry.fruktkorgservice.exception.FruktMissingException;
-import com.evry.fruktkorgservice.exception.FruktkorgMissingException;
-import com.evry.fruktkorgservice.utils.ModelUtils;
-import com.evry.fruktkorgservice.utils.XMLUtils;
-import com.evry.fruktkorgservice.xml.FruktkorgRestore;
-import com.evry.fruktkorgservice.xml.FruktkorgUpdate;
-import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
-import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
+import com.evry.fruktkorg.domain.model.handling.FruktMissingException;
+import com.evry.fruktkorg.domain.model.handling.FruktkorgMissingException;
+import com.evry.fruktkorgservice.util.ModelUtil;
+import com.evry.fruktkorgservice.util.XMLUtil;
+import com.evry.fruktkorgservice.model.xml.FruktkorgRestore;
+import com.evry.fruktkorgservice.model.xml.FruktkorgUpdate;
+import com.evry.fruktkorgservice.model.xml.FruktkorgarRestore;
+import com.evry.fruktkorgservice.model.xml.FruktkorgarUpdate;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -40,11 +40,11 @@ public class FruktkorgService {
     public ImmutableFruktkorg createFruktkorg(ImmutableFruktkorg immutableFruktkorg) {
         // TODO add null id validation
         logger.debug("Got request to create a Fruktkorg: " + immutableFruktkorg);
-        Fruktkorg fruktkorg = ModelUtils.convertImmutableFruktkorg(immutableFruktkorg);
+        Fruktkorg fruktkorg = ModelUtil.convertImmutableFruktkorg(immutableFruktkorg);
 
         fruktkorgRepository.persist(fruktkorg);
 
-        return ModelUtils.convertFruktkorg(fruktkorg);
+        return ModelUtil.convertFruktkorg(fruktkorg);
     }
 
     public void deleteFruktkorg(long fruktkorgId) throws FruktkorgMissingException, IllegalArgumentException {
@@ -63,7 +63,7 @@ public class FruktkorgService {
 
         Fruktkorg fruktkorg = optFruktkorg.get();
 
-        Frukt fruktToAdd = ModelUtils.convertImmutableFrukt(immutableFrukt);
+        Frukt fruktToAdd = ModelUtil.convertImmutableFrukt(immutableFrukt);
         fruktToAdd.setFruktkorg(fruktkorg);
 
         boolean foundFrukt = false;
@@ -82,7 +82,7 @@ public class FruktkorgService {
         fruktkorg.setLastChanged(Instant.now());
         fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
-        return ModelUtils.convertFruktkorg(fruktkorg);
+        return ModelUtil.convertFruktkorg(fruktkorg);
     }
 
     public ImmutableFruktkorg removeFruktFromFruktkorg(long fruktkorgId, String fruktType, int amount) throws FruktkorgMissingException, FruktMissingException {
@@ -119,12 +119,12 @@ public class FruktkorgService {
 
         fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
-        return ModelUtils.convertFruktkorg(fruktkorg);
+        return ModelUtil.convertFruktkorg(fruktkorg);
     }
 
     public ImmutableFruktkorg getFruktkorgById(long fruktkorgId) throws IllegalArgumentException, FruktkorgMissingException {
         logger.debug("Got request to get Fruktkorg by id " + fruktkorgId);
-        return ModelUtils.convertFruktkorg(findFruktkorgById(fruktkorgId));
+        return ModelUtil.convertFruktkorg(findFruktkorgById(fruktkorgId));
     }
 
     public List<ImmutableFruktkorg> searchFruktkorgByFrukt(String fruktType) {
@@ -134,14 +134,14 @@ public class FruktkorgService {
         List<ImmutableFruktkorg> immutableFruktkorgList = new ArrayList<>();
 
         for (Fruktkorg fruktkorg : fruktkorgList) {
-            immutableFruktkorgList.add(ModelUtils.convertFruktkorg(fruktkorg));
+            immutableFruktkorgList.add(ModelUtil.convertFruktkorg(fruktkorg));
         }
 
         return immutableFruktkorgList;
     }
 
     public List<ImmutableFruktkorg> listFruktkorgar() {
-        return fruktkorgRepository.findAll().stream().map(ModelUtils::convertFruktkorg).collect(Collectors.toList());
+        return fruktkorgRepository.findAll().stream().map(ModelUtil::convertFruktkorg).collect(Collectors.toList());
     }
 
     private ImmutableFruktkorg updateFruktkorg(FruktkorgUpdate fruktkorgUpdate) throws FruktkorgMissingException {
@@ -168,12 +168,12 @@ public class FruktkorgService {
         fruktkorg.setLastChanged(Instant.now());
         fruktkorg = fruktkorgRepository.merge(fruktkorg);
 
-        return ModelUtils.convertFruktkorg(fruktkorg);
+        return ModelUtil.convertFruktkorg(fruktkorg);
     }
 
     public List<ImmutableFruktkorg> updateFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, JAXBException {
 
-        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.UPDATE_XSD);
+        Unmarshaller unmarshaller = XMLUtil.getUnmarshaller(XMLUtil.UPDATE_XSD);
 
         FruktkorgarUpdate fruktkorgarUpdate;
         try {
@@ -219,7 +219,7 @@ public class FruktkorgService {
             fruktkorg = fruktkorgRepository.merge(fruktkorg);
         }
 
-        return ModelUtils.convertFruktkorg(fruktkorg);
+        return ModelUtil.convertFruktkorg(fruktkorg);
     }
 
     private void addAllFrukterToFruktkorg(FruktkorgRestore fruktkorgRestore, Fruktkorg fruktkorg) throws FruktMissingException {
@@ -242,7 +242,7 @@ public class FruktkorgService {
     }
 
     public List<ImmutableFruktkorg> restoreFruktkorgar(InputStream inputStream) throws FruktkorgMissingException, FruktMissingException, JAXBException {
-        Unmarshaller unmarshaller = XMLUtils.getUnmarshaller(XMLUtils.RESTORE_XSD);
+        Unmarshaller unmarshaller = XMLUtil.getUnmarshaller(XMLUtil.RESTORE_XSD);
 
         FruktkorgarRestore fruktkorgarRestore;
         try {

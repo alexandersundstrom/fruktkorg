@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.xml;
+package com.evry.fruktkorgservice.model.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.Instant;

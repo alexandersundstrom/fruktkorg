@@ -18,7 +18,7 @@
         <constructor-arg ref="fruktService" />
     </bean>
 
-    <bean id = "fruktService" class = "com.evry.fruktkorgservice.domain.service.FruktService">
+    <bean id = "fruktService" class = "com.evry.fruktkorgservice.FruktService">
         <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
 
@@ -28,7 +28,7 @@
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
-    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.domain.service.FruktkorgService">
+    <bean id = "fruktkorgService" class = "com.evry.fruktkorgservice.FruktkorgService">
         <constructor-arg ref="fruktkorgRepositoryHibernate"/>
         <constructor-arg ref="fruktRepositoryHibernate"/>
     </bean>
@@ -39,7 +39,7 @@
         <constructor-arg ref="reportService" />
     </bean>
 
-    <bean id = "reportService" class = "com.evry.fruktkorgservice.domain.service.ReportService">
+    <bean id = "reportService" class = "com.evry.fruktkorgservice.ReportService">
         <constructor-arg ref="reportRepositoryHibernate" />
         <constructor-arg ref="fruktkorgService" />
     </bean>

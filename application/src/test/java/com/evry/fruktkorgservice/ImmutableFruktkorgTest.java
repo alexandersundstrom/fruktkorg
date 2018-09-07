@@ -1,7 +1,7 @@
 package com.evry.fruktkorgservice;
 
-import com.evry.fruktkorgservice.domain.model.ImmutableFrukt;
-import com.evry.fruktkorgservice.domain.model.ImmutableFruktkorg;
+import com.evry.fruktkorgservice.model.ImmutableFrukt;
+import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

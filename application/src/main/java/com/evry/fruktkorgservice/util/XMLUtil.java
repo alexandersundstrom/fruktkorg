@@ -1,10 +1,10 @@
-package com.evry.fruktkorgservice.utils;
+package com.evry.fruktkorgservice.util;
 
 import com.evry.fruktkorg.domain.model.Report;
-import com.evry.fruktkorgservice.xml.Fruktkorgar;
-import com.evry.fruktkorgservice.xml.FruktkorgarRestore;
-import com.evry.fruktkorgservice.xml.FruktkorgarUpdate;
-import com.evry.fruktkorgservice.xml.ReportValidationEventHandler;
+import com.evry.fruktkorgservice.model.xml.Fruktkorgar;
+import com.evry.fruktkorgservice.model.xml.FruktkorgarRestore;
+import com.evry.fruktkorgservice.model.xml.FruktkorgarUpdate;
+import com.evry.fruktkorgservice.model.xml.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -19,18 +19,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class XMLUtils {
+public class XMLUtil {
 
     public static final String RESTORE_XSD = "fruktkorg-restore.xsd";
     public static final String UPDATE_XSD = "fruktkorg-update.xsd";
     public static final String REPORT_XSD = "fruktkorg-report.xsd";
-    private static final Logger logger = LogManager.getLogger(XMLUtils.class);
+    private static final Logger logger = LogManager.getLogger(XMLUtil.class);
 
     public static Marshaller getFruktkorgarMarshaller() {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
         try {
-            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.getReportXSD()));
+            schema = schemaFactory.newSchema(new StreamSource(XMLUtil.getReportXSD()));
         } catch (SAXException e) {
             logger.error("Error creating schema", e);
             return null;
@@ -75,7 +75,7 @@ public class XMLUtils {
         Schema schema;
 
         try {
-            schema = schemaFactory.newSchema(new StreamSource(XMLUtils.class.getClassLoader().getResourceAsStream(schemaXSD)));
+            schema = schemaFactory.newSchema(new StreamSource(XMLUtil.class.getClassLoader().getResourceAsStream(schemaXSD)));
         } catch (SAXException e) {
             logger.error("Error getting update xml schema", e);
             return null;
@@ -119,15 +119,15 @@ public class XMLUtils {
     }
 
     public static InputStream getReportXSD() {
-        return XMLUtils.class.getClassLoader().getResourceAsStream(REPORT_XSD);
+        return XMLUtil.class.getClassLoader().getResourceAsStream(REPORT_XSD);
     }
 
     public static InputStream getUpdateXSD() {
-        return XMLUtils.class.getClassLoader().getResourceAsStream(UPDATE_XSD);
+        return XMLUtil.class.getClassLoader().getResourceAsStream(UPDATE_XSD);
     }
 
     public static InputStream getRestoreXSD() {
-        return XMLUtils.class.getClassLoader().getResourceAsStream(RESTORE_XSD);
+        return XMLUtil.class.getClassLoader().getResourceAsStream(RESTORE_XSD);
     }
 
     public static InputStream getReport(Report report) throws FileNotFoundException {

@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.domain.service;
+package com.evry.fruktkorgservice;
 
 import com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate;
 import org.apache.log4j.LogManager;

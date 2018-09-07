@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.exception;
+package com.evry.fruktkorg.domain.model.handling;
 
 public class FruktkorgMissingException extends Exception {
     private long fruktkorgId;
