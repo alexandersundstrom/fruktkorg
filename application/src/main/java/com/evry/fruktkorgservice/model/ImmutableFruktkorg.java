@@ -1,6 +1,6 @@
 package com.evry.fruktkorgservice.model;
 
-import com.evry.fruktkorgservice.model.xml.InstantAdapter;
+import com.evry.fruktkorgservice.model.xml.convert.InstantAdapter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

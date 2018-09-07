@@ -76,14 +76,14 @@ class ReportRestTest {
     void getReportList() throws IOException {
         ImmutableReport immutableReport1 = new ImmutableReportBuilder()
                 .setId(1)
-                .setLocation("fake/location/report1.xml")
+                .setLocation("fake/location/report1.xmlconversion")
                 .setCreated(Instant.now())
                 .setRead(false)
                 .createImmutableReport();
 
         ImmutableReport immutableReport2 = new ImmutableReportBuilder()
                 .setId(2)
-                .setLocation("fake/location/report2.xml")
+                .setLocation("fake/location/report2.xmlconversion")
                 .setCreated(Instant.now().minus(4, ChronoUnit.DAYS))
                 .setRead(false)
                 .createImmutableReport();
@@ -119,14 +119,14 @@ class ReportRestTest {
     void getReportListWithOffsetAndLimit() throws IOException {
         ImmutableReport immutableReport1 = new ImmutableReportBuilder()
                 .setId(1)
-                .setLocation("fake/location/report1.xml")
+                .setLocation("fake/location/report1.xmlconversion")
                 .setCreated(Instant.now())
                 .setRead(false)
                 .createImmutableReport();
 
         ImmutableReport immutableReport2 = new ImmutableReportBuilder()
                 .setId(2)
-                .setLocation("fake/location/report2.xml")
+                .setLocation("fake/location/report2.xmlconversion")
                 .setCreated(Instant.now().minus(4, ChronoUnit.DAYS))
                 .setRead(false)
                 .createImmutableReport();

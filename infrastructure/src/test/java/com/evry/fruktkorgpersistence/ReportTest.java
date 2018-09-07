@@ -26,7 +26,7 @@ class ReportTest {
     void persistReport() {
         Report report = new Report();
         report.setCreated(Instant.now());
-        report.setLocation("fake/location/test/report.xml");
+        report.setLocation("fake/location/test/report.xmlconversion");
         report.setRead(false);
 
         reportRepository.persist(report);
@@ -37,14 +37,14 @@ class ReportTest {
         Assertions.assertEquals(1, report.getId());
         Assertions.assertFalse(report.isRead());
         Assertions.assertNotNull(report.getCreated());
-        Assertions.assertEquals("fake/location/test/report.xml", report.getLocation());
+        Assertions.assertEquals("fake/location/test/report.xmlconversion", report.getLocation());
     }
 
     @Test
     void mergeReport() {
         Report report = new Report();
         report.setCreated(Instant.now());
-        report.setLocation("fake/location/test/report.xml");
+        report.setLocation("fake/location/test/report.xmlconversion");
         report.setRead(false);
 
         reportRepository.persist(report);
@@ -59,14 +59,14 @@ class ReportTest {
 
         Assertions.assertTrue(report.isRead());
         Assertions.assertNotNull(report.getCreated());
-        Assertions.assertEquals("fake/location/test/report.xml", report.getLocation());
+        Assertions.assertEquals("fake/location/test/report.xmlconversion", report.getLocation());
     }
 
     @Test
     void removeReport() {
         Report report = new Report();
         report.setCreated(Instant.now());
-        report.setLocation("fake/location/test/report.xml");
+        report.setLocation("fake/location/test/report.xmlconversion");
         report.setRead(false);
 
         reportRepository.persist(report);
@@ -84,21 +84,21 @@ class ReportTest {
     void listReport() {
         Report report1 = new Report();
         report1.setCreated(Instant.now());
-        report1.setLocation("fake/location/test/report1.xml");
+        report1.setLocation("fake/location/test/report1.xmlconversion");
         report1.setRead(false);
 
         reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
-        report2.setLocation("fake/location/test/report2.xml");
+        report2.setLocation("fake/location/test/report2.xmlconversion");
         report2.setRead(false);
 
         reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
-        report3.setLocation("fake/location/test/report2.xml");
+        report3.setLocation("fake/location/test/report2.xmlconversion");
         report3.setRead(false);
 
         reportRepository.persist(report3);
@@ -115,21 +115,21 @@ class ReportTest {
     void findReportById() {
         Report report1 = new Report();
         report1.setCreated(Instant.now());
-        report1.setLocation("fake/location/test/report1.xml");
+        report1.setLocation("fake/location/test/report1.xmlconversion");
         report1.setRead(false);
 
         reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
-        report2.setLocation("fake/location/test/report2.xml");
+        report2.setLocation("fake/location/test/report2.xmlconversion");
         report2.setRead(false);
 
         reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
-        report3.setLocation("fake/location/test/report2.xml");
+        report3.setLocation("fake/location/test/report2.xmlconversion");
         report3.setRead(false);
 
         reportRepository.persist(report3);
@@ -140,28 +140,28 @@ class ReportTest {
         Assertions.assertEquals(2, report.getId());
         Assertions.assertFalse(report.isRead());
         Assertions.assertNotNull(report.getCreated());
-        Assertions.assertEquals("fake/location/test/report2.xml", report.getLocation());
+        Assertions.assertEquals("fake/location/test/report2.xmlconversion", report.getLocation());
     }
 
     @Test
     void listReportWithLimitAndOffset() {
         Report report1 = new Report();
         report1.setCreated(Instant.now());
-        report1.setLocation("fake/location/test/report1.xml");
+        report1.setLocation("fake/location/test/report1.xmlconversion");
         report1.setRead(false);
 
         reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
-        report2.setLocation("fake/location/test/report2.xml");
+        report2.setLocation("fake/location/test/report2.xmlconversion");
         report2.setRead(false);
 
         reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
-        report3.setLocation("fake/location/test/report2.xml");
+        report3.setLocation("fake/location/test/report2.xmlconversion");
         report3.setRead(false);
 
         reportRepository.persist(report3);
@@ -182,21 +182,21 @@ class ReportTest {
     void removeReadReports() {
         Report report1 = new Report();
         report1.setCreated(Instant.now());
-        report1.setLocation("fake/location/test/report1.xml");
+        report1.setLocation("fake/location/test/report1.xmlconversion");
         report1.setRead(false);
 
         reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
-        report2.setLocation("fake/location/test/report2.xml");
+        report2.setLocation("fake/location/test/report2.xmlconversion");
         report2.setRead(true);
 
         reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
-        report3.setLocation("fake/location/test/report3.xml");
+        report3.setLocation("fake/location/test/report3.xmlconversion");
         report3.setRead(false);
 
         reportRepository.persist(report3);
@@ -212,21 +212,21 @@ class ReportTest {
     void getReadReports() {
         Report report1 = new Report();
         report1.setCreated(Instant.now());
-        report1.setLocation("fake/location/test/report1.xml");
+        report1.setLocation("fake/location/test/report1.xmlconversion");
         report1.setRead(false);
 
         reportRepository.persist(report1);
 
         Report report2 = new Report();
         report2.setCreated(Instant.now());
-        report2.setLocation("fake/location/test/report2.xml");
+        report2.setLocation("fake/location/test/report2.xmlconversion");
         report2.setRead(true);
 
         reportRepository.persist(report2);
 
         Report report3 = new Report();
         report3.setCreated(Instant.now());
-        report3.setLocation("fake/location/test/report3.xml");
+        report3.setLocation("fake/location/test/report3.xmlconversion");
         report3.setRead(false);
 
         reportRepository.persist(report3);

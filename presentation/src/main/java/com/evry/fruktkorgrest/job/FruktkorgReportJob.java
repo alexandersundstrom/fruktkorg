@@ -30,7 +30,7 @@ public class FruktkorgReportJob extends QuartzJobBean {
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        File reportFile = new File(REPORTS_DIRECTORY + "fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
+        File reportFile = new File(REPORTS_DIRECTORY + "fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xmlconversion");
 
         reportService.createReport(reportFile.getAbsolutePath());
 

@@ -116,7 +116,7 @@ class ModelUtilTest {
 
         Report report = new Report();
         report.setId(1);
-        report.setLocation("fake/location/report.xml");
+        report.setLocation("fake/location/report.xmlconversion");
         report.setCreated(created);
         report.setRead(false);
 
@@ -132,7 +132,7 @@ class ModelUtilTest {
         Instant created = Instant.now();
         ImmutableReport immutableReport = new ImmutableReportBuilder()
                 .setId(1)
-                .setLocation("fake/location/report.xml")
+                .setLocation("fake/location/report.xmlconversion")
                 .setCreated(created)
                 .setRead(false)
                 .createImmutableReport();

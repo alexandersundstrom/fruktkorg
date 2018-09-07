@@ -4,7 +4,7 @@ import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgservice.model.xml.Fruktkorgar;
 import com.evry.fruktkorgservice.model.xml.FruktkorgarRestore;
 import com.evry.fruktkorgservice.model.xml.FruktkorgarUpdate;
-import com.evry.fruktkorgservice.model.xml.ReportValidationEventHandler;
+import com.evry.fruktkorgservice.model.xml.convert.ReportValidationEventHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -77,7 +77,7 @@ public class XMLUtil {
         try {
             schema = schemaFactory.newSchema(new StreamSource(XMLUtil.class.getClassLoader().getResourceAsStream(schemaXSD)));
         } catch (SAXException e) {
-            logger.error("Error getting update xml schema", e);
+            logger.error("Error getting update xmlconversion schema", e);
             return null;
         }
 

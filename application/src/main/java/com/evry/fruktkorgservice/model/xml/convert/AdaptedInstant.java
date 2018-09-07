@@ -1,4 +1,4 @@
-package com.evry.fruktkorgservice.model.xml;
+package com.evry.fruktkorgservice.model.xml.convert;
 
 public class AdaptedInstant {
     private long epochMilli;
