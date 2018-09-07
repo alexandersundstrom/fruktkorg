@@ -1,4 +1,4 @@
-package com.evry.fruktkorgrest.model;
+package com.evry.fruktkorgrest.servlet.controller.dto;
 
 import com.evry.fruktkorgservice.model.ImmutableFrukt;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;

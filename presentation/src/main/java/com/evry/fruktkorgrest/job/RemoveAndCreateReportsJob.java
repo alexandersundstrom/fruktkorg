@@ -11,9 +11,9 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FruktkorgReportJob extends QuartzJobBean {
+public class RemoveAndCreateReportsJob extends QuartzJobBean {
     private ReportService reportService;
-    private static final Logger logger = LogManager.getLogger(FruktkorgReportJob.class);
+    private static final Logger logger = LogManager.getLogger(RemoveAndCreateReportsJob.class);
     private final String REPORTS_DIRECTORY = "generated-reports/";
 
     @Override

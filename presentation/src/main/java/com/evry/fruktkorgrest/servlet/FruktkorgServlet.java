@@ -1,8 +1,8 @@
 package com.evry.fruktkorgrest.servlet;
 
-import com.evry.fruktkorgrest.controller.FruktController;
-import com.evry.fruktkorgrest.controller.FruktkorgController;
-import com.evry.fruktkorgrest.controller.ReportController;
+import com.evry.fruktkorgrest.servlet.controller.FruktController;
+import com.evry.fruktkorgrest.servlet.controller.FruktkorgController;
+import com.evry.fruktkorgrest.servlet.controller.ReportController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

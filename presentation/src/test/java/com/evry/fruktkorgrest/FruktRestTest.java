@@ -1,8 +1,8 @@
 package com.evry.fruktkorgrest;
 
-import com.evry.fruktkorgrest.controller.FruktController;
-import com.evry.fruktkorgrest.controller.FruktkorgController;
-import com.evry.fruktkorgrest.controller.ReportController;
+import com.evry.fruktkorgrest.servlet.controller.FruktController;
+import com.evry.fruktkorgrest.servlet.controller.FruktkorgController;
+import com.evry.fruktkorgrest.servlet.controller.ReportController;
 import com.evry.fruktkorgrest.server.JettyServer;
 import com.evry.fruktkorgrest.servlet.FruktkorgServlet;
 import com.evry.fruktkorgservice.FruktService;

@@ -1,6 +1,6 @@
-package com.evry.fruktkorgrest.controller;
+package com.evry.fruktkorgrest.servlet.controller;
 
-import com.evry.fruktkorgrest.model.FruktkorgDTO;
+import com.evry.fruktkorgrest.servlet.controller.dto.FruktkorgDTO;
 import com.evry.fruktkorgrest.utils.NumberUtils;
 import com.evry.fruktkorgservice.exception.FruktMissingException;
 import com.evry.fruktkorgservice.exception.FruktkorgMissingException;

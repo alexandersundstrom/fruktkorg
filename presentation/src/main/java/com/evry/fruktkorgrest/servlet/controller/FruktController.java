@@ -1,4 +1,4 @@
-package com.evry.fruktkorgrest.controller;
+package com.evry.fruktkorgrest.servlet.controller;
 
 import com.evry.fruktkorgservice.FruktService;
 import com.fasterxml.jackson.databind.DeserializationFeature;

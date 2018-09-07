@@ -14,7 +14,7 @@
         <constructor-arg ref="reportController" />
     </bean>
 
-    <bean id = "fruktController" class = "com.evry.fruktkorgrest.controller.FruktController">
+    <bean id = "fruktController" class = "com.evry.fruktkorgrest.servlet.controller.FruktController">
         <constructor-arg ref="fruktService" />
     </bean>
 
@@ -24,7 +24,7 @@
 
     <bean id = "fruktRepositoryHibernate" class="com.evry.fruktkorgpersistence.hibernate.FruktRepositoryHibernate" />
 
-    <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.controller.FruktkorgController">
+    <bean id = "fruktkorgController" class = "com.evry.fruktkorgrest.servlet.controller.FruktkorgController">
         <constructor-arg ref="fruktkorgService" />
     </bean>
 
@@ -35,7 +35,7 @@
 
     <bean id = "fruktkorgRepositoryHibernate" class="com.evry.fruktkorgpersistence.hibernate.FruktkorgRepositoryHibernate" />
 
-    <bean id = "reportController" class = "com.evry.fruktkorgrest.controller.ReportController">
+    <bean id = "reportController" class = "com.evry.fruktkorgrest.servlet.controller.ReportController">
         <constructor-arg ref="reportService" />
     </bean>
 
@@ -68,7 +68,7 @@
     <!--</bean>-->
 
     <bean name="complexJobDetail"    class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <property name="jobClass" value="com.evry.fruktkorgrest.job.FruktkorgReportJob" />
+        <property name="jobClass" value="com.evry.fruktkorgrest.job.RemoveAndCreateReportsJob" />
         <property name="jobDataMap">
             <map>
                 <entry key="reportService" value-ref="reportService" />
