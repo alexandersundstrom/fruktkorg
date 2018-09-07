@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class FruktkorgReportJob extends QuartzJobBean {
     private ReportService reportService;
     private static final Logger logger = LogManager.getLogger(FruktkorgReportJob.class);
+    private final String REPORTS_DIRECTORY = "generated-reports/";
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -29,7 +30,7 @@ public class FruktkorgReportJob extends QuartzJobBean {
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        File reportFile = new File("reports/fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
+        File reportFile = new File(REPORTS_DIRECTORY + "fruktkorg-report-" + LocalDateTime.now().format(dateTimeFormatter) + ".xml");
 
         reportService.createReport(reportFile.getAbsolutePath());
 
