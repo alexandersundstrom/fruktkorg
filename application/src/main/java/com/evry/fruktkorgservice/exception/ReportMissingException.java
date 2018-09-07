@@ -1,4 +1,4 @@
-package com.evry.fruktkorg.domain.model.handling;
+package com.evry.fruktkorgservice.exception;
 
 public class ReportMissingException extends Exception {
     private long reportId;

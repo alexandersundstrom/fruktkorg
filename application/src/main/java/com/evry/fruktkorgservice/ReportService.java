@@ -4,7 +4,7 @@ import com.evry.fruktkorg.domain.model.Report;
 import com.evry.fruktkorgpersistence.hibernate.ReportRepositoryHibernate;
 import com.evry.fruktkorgservice.model.ImmutableFruktkorg;
 import com.evry.fruktkorgservice.model.ImmutableReport;
-import com.evry.fruktkorg.domain.model.handling.ReportMissingException;
+import com.evry.fruktkorgservice.exception.ReportMissingException;
 import com.evry.fruktkorgservice.util.ModelUtil;
 import com.evry.fruktkorgservice.util.XMLUtil;
 import com.evry.fruktkorgservice.model.xml.Fruktkorgar;
