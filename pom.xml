@@ -11,7 +11,7 @@
     <modules>
         <module>infrastructure</module>
         <module>application</module>
-        <module>presentation</module>
+        <module>interfaces</module>
         <module>domain</module>
     </modules>
 
